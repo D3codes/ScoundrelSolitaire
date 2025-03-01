@@ -1,0 +1,109 @@
+//
+//  TopBarView.swift
+//  Scoundrel
+//
+//  Created by David Freeman on 2/24/25.
+//
+
+import SwiftUI
+
+struct TopBarView: View {
+    @ObservedObject var room: Room
+    @ObservedObject var deck: Deck
+    var pause: () -> Void
+    
+    @State var showingDeckCountPopover: Bool = false
+    
+    var body: some View {
+        HStack {
+            Button(action: { pause() }, label: {
+                ZStack {
+                    Image("stoneButton")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    Text("||")
+                        .foregroundStyle(.white)
+                        .font(.custom("MorrisRoman-Black", size: 30))
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                }
+            })
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: 50, height: 50)
+                    .foregroundStyle(.regularMaterial)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    
+                VStack(spacing: 0) {
+                    Image("deck")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                    Text("\(deck.cards.count)")
+                        .font(.custom("MorrisRoman-Black", size: 20))
+                }
+            }
+            .onTapGesture { showingDeckCountPopover = true }
+            .popover(isPresented: $showingDeckCountPopover) {
+                Text("\(deck.cards.count) cards left in deck")
+                    .font(.headline)
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+            
+            ZStack {
+                Button(action: { room.flee(deck: deck) }, label: {
+                    ZStack {
+                        Image("stoneButton")
+                            .resizable()
+                            .frame(width: 100, height: 50)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        Text("Flee")
+                            .foregroundStyle(room.canFlee ? .white : .black)
+                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    }
+                })
+                .disabled(!room.canFlee)
+                .blur(radius: room.canFlee ? 0 : 0.5)
+                
+                if(!room.canFlee) {
+                    RoundedRectangle(cornerRadius: 20)
+                        .frame(width: 100, height: 50)
+                        .foregroundStyle(.ultraThinMaterial)
+                        .opacity(0.5)
+                }
+            }
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, maxHeight: 80)
+        .background(
+            Image("stoneSlab2")
+                .resizable()
+                .frame(width: 800)
+                .ignoresSafeArea()
+                .shadow(color: .black, radius: 15, x: 0, y: 5)
+        )
+    }
+}
+
+#Preview {
+    struct TopBarView_Preview: View {
+        
+        @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
+        @StateObject var deck: Deck = Deck()
+        
+        var body: some View {
+            TopBarView(
+                room: room,
+                deck: deck,
+                pause: {}
+            )
+        }
+    }
+    
+    return TopBarView_Preview()
+}
