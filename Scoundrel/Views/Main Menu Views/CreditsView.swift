@@ -20,12 +20,8 @@ struct CreditsView: View {
                     .padding()
                 
                 
-                Text("Scoundrel Solitaire")
-                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 Text("Created by David Freeman")
-                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                    .font(.custom("ModernAntiqua-Regular", size: 20))
                     .foregroundStyle(.black)
                     .padding(.bottom)
                 
@@ -61,6 +57,15 @@ struct CreditsView: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text("Music was generated with Suno.")
+                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                    .foregroundStyle(.black)
+                    .padding(.bottom)
+                
+                Text("Sound Effect")
+                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("Sound effects were generated with Infinity SFX.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .padding(.bottom)

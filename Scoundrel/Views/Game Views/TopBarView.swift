@@ -33,11 +33,12 @@ struct TopBarView: View {
             
             ZStack {
                 ForEach(0..<4) { index in
-                    if room.cards[index] == nil {
+                    if room.cards[index] == nil && room.destinations[index] == .deck {
                         Rectangle()
                             .opacity(0)
                             .frame(width: 50, height: 50)
                             .matchedGeometryEffect(id: "Card\(index)", in: animationNamespace)
+                            .transition(.opacityAndScale)
                     }
                 }
                 

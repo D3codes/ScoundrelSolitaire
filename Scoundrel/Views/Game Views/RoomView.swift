@@ -15,13 +15,9 @@ struct RoomView: View {
     let cardTapped: (Int, Bool) -> Void
     
     @Binding var cardSelected: Int?
-    @State var topCard: Int = 5
     
     func closeSelectedView() {
         withAnimation { cardSelected = nil }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            topCard = 5
-        }
     }
     
     func firstActionTapped() {
@@ -65,7 +61,6 @@ struct RoomView: View {
                         room: room,
                         cardIndex: 0,
                         cardSelected: $cardSelected,
-                        topCard: $topCard,
                         animationNamespace: animationNamespace
                     )
                     
@@ -73,7 +68,6 @@ struct RoomView: View {
                         room: room,
                         cardIndex: 1,
                         cardSelected: $cardSelected,
-                        topCard: $topCard,
                         animationNamespace: animationNamespace
                     )
                 }
@@ -84,7 +78,6 @@ struct RoomView: View {
                         room: room,
                         cardIndex: 2,
                         cardSelected: $cardSelected,
-                        topCard: $topCard,
                         animationNamespace: animationNamespace
                     )
                     
@@ -92,11 +85,9 @@ struct RoomView: View {
                         room: room,
                         cardIndex: 3,
                         cardSelected: $cardSelected,
-                        topCard: $topCard,
                         animationNamespace: animationNamespace
                     )
                 }
-                .zIndex(1)
             }
             
             if cardSelected != nil {

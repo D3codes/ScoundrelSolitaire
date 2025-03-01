@@ -22,35 +22,30 @@ struct SelectedCardView: View {
                 .ignoresSafeArea(.all)
                 .foregroundStyle(.ultraThinMaterial)
                 .opacity(0.5)
-                .allowsHitTesting(true)
                 .onTapGesture { cancel() }
             
             VStack {
                 switch cardSelected {
                 case 0:
                     CardView(card: room.cards[cardSelected!]!)
-                        .zIndex(100)
                         .matchedGeometryEffect(id: "Card0", in: animationNamespace)
                         .scaleEffect(1.2)
                         .padding(.bottom, 50)
                         .transition(.opacityAndScale)
                 case 1:
                     CardView(card: room.cards[cardSelected!]!)
-                        .zIndex(100)
                         .matchedGeometryEffect(id: "Card1", in: animationNamespace)
                         .scaleEffect(1.2)
                         .padding(.bottom, 50)
                         .transition(.opacityAndScale)
                 case 2:
                     CardView(card: room.cards[cardSelected!]!)
-                        .zIndex(100)
                         .matchedGeometryEffect(id: "Card2", in: animationNamespace)
                         .scaleEffect(1.2)
                         .padding(.bottom, 50)
                         .transition(.opacityAndScale)
                 case 3:
                     CardView(card: room.cards[cardSelected!]!)
-                        .zIndex(100)
                         .matchedGeometryEffect(id: "Card3", in: animationNamespace)
                         .scaleEffect(1.2)
                         .padding(.bottom, 50)
@@ -62,7 +57,7 @@ struct SelectedCardView: View {
                         .opacity(0)
                 }
                 
-                Button(action: { firstAction() }, label: {
+                Button(action: { if cardSelected != nil { firstAction() } }, label: {
                     ZStack {
                         Image("plank1")
                             .resizable()

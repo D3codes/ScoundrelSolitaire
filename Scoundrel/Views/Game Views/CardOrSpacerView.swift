@@ -11,7 +11,6 @@ struct CardOrSpacerView: View {
     @ObservedObject var room: Room
     var cardIndex: Int
     @Binding var cardSelected: Int?
-    @Binding var topCard: Int
     var animationNamespace: Namespace.ID
     
     var body: some View {
@@ -22,12 +21,8 @@ struct CardOrSpacerView: View {
                     .frame(width: 150, height: 200)
             } else {
                 CardView(card: room.cards[cardIndex]!)
-                    .onTapGesture {
-                        topCard = cardIndex
-                        withAnimation { cardSelected = cardIndex }
-                    }
+                    .onTapGesture { withAnimation { cardSelected = cardIndex } }
                     .matchedGeometryEffect(id: "Card\(cardIndex)", in: animationNamespace)
-                    .zIndex(topCard == cardIndex ? 100 : 1)
                     .transition(.opacityAndScale)
             }
         }
@@ -38,7 +33,6 @@ struct CardOrSpacerView: View {
     struct CardOrSpacerView_Preview: View {
         @StateObject var room: Room = Room(cards: [Card(suit: .monster, strength: 11), nil, nil, nil], fleedLastRoom: false)
         @State var cardSelected: Int? = 1
-        @State var topCard = 0
         @Namespace var animation
         
         var body: some View {
@@ -46,7 +40,6 @@ struct CardOrSpacerView: View {
                 room: room,
                 cardIndex: 0,
                 cardSelected: $cardSelected,
-                topCard: $topCard,
                 animationNamespace: animation
             )
         }

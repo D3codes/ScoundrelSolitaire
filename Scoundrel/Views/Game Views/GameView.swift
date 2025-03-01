@@ -61,7 +61,9 @@ struct GameView: View {
         }
         
         if room.cards.filter({ $0 == nil }).count == 3 {
-            room.nextRoom(deck: deck, fleedLastRoom: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                room.nextRoom(deck: deck, fleedLastRoom: false)
+            }
         }
     }
     

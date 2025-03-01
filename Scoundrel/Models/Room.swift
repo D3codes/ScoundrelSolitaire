@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 class Room: ObservableObject {
     @Published var canFlee: Bool
     @Published var cards: [Card?]
     @Published var usedHealthPotion: Bool
     let animationDelay: Double = 0.5
+    
+    var dealCardSound: AVAudioPlayer?
+    var shuffleSound: AVAudioPlayer?
     
     enum CardDestination: String, CaseIterable {
         case health
@@ -35,8 +39,8 @@ class Room: ObservableObject {
             case .weapon:
                 destinations[i] = .weapon
                 break
-            default:
-                destinations[i] = .deck
+            case .monster:
+                destinations[i] = .weapon
             }
         }
     }
@@ -44,6 +48,19 @@ class Room: ObservableObject {
     init(cards: [Card?], fleedLastRoom: Bool) {
         guard cards.count == 4 else {
             fatalError("")
+        }
+
+        do {
+            dealCardSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+        } catch {
+            // couldn't load file :(
+        }
+
+        do {
+            shuffleSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "shuffle.mp3", ofType:nil)!))
+            shuffleSound?.setVolume(5, fadeDuration: .zero)
+        } catch {
+            // couldn't load file :(
         }
         
         self.cards = cards
@@ -65,6 +82,9 @@ class Room: ObservableObject {
     }
     
     func flee(deck: Deck) {
+        destinations = [.deck, .deck, .deck, .deck]
+        shuffleSound?.play()
+        
         for i in 0...3 {
             if cards[i] != nil {
                 deck.appendCards([cards[i]!])
@@ -80,13 +100,17 @@ class Room: ObservableObject {
     }
     
     func nextRoom(deck: Deck, fleedLastRoom: Bool) {
+        setDestinations()
         var dealingGap: Double = animationDelay
         for i in 0...3 {
             if cards[i] == nil {
                 if !deck.cards.isEmpty {
                     DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
                         withAnimation(.spring()) {
+                            self.dealCardSound?.stop()
+                            self.dealCardSound?.play()
                             self.cards[i] = deck.getTopCard()
+                            self.setDestinations()
                         }
                     }
                     dealingGap += animationDelay
@@ -96,6 +120,5 @@ class Room: ObservableObject {
         
         canFlee = !fleedLastRoom
         usedHealthPotion = false
-        setDestinations()
     }
 }
