@@ -13,6 +13,34 @@ class Room: ObservableObject {
     @Published var usedHealthPotion: Bool
     let animationDelay: Double = 0.5
     
+    enum CardDestination: String, CaseIterable {
+        case health
+        case weapon
+        case deck
+    }
+    
+    @Published var destinations: [CardDestination] = [.deck, .deck, .deck, .deck]
+    
+    func setDestinations() {
+        for i in 0...3 {
+            if cards[i] == nil {
+                destinations[i] = .deck
+                continue
+            }
+            
+            switch cards[i]!.suit {
+            case .healthPotion:
+                destinations[i] = .health
+                break
+            case .weapon:
+                destinations[i] = .weapon
+                break
+            default:
+                destinations[i] = .deck
+            }
+        }
+    }
+    
     init(cards: [Card?], fleedLastRoom: Bool) {
         guard cards.count == 4 else {
             fatalError("")
@@ -21,6 +49,7 @@ class Room: ObservableObject {
         self.cards = cards
         self.canFlee = !fleedLastRoom
         self.usedHealthPotion = false
+        setDestinations()
     }
     
     func reset(deck: Deck) {
@@ -67,5 +96,6 @@ class Room: ObservableObject {
         
         canFlee = !fleedLastRoom
         usedHealthPotion = false
+        setDestinations()
     }
 }

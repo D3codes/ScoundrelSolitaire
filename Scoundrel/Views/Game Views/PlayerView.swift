@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PlayerView: View {
     @ObservedObject var player: Player
+    @ObservedObject var room: Room
+    var animationNamespace: Namespace.ID
     
     var body: some View {
         VStack {
@@ -63,6 +65,15 @@ struct PlayerView: View {
             
             HStack {
                 ZStack {
+                    ForEach(0..<4) { index in
+                        if room.cards[index] == nil {
+                            Rectangle()
+                                .opacity(0)
+                                .frame(width: 50, height: 50)
+                                .matchedGeometryEffect(id: "Card\(index)", in: animationNamespace)
+                        }
+                    }
+                    
                     RoundedRectangle(cornerRadius: 10)
                         .frame(width: 50, height: 50)
                         .foregroundStyle(.regularMaterial)
@@ -142,6 +153,8 @@ struct PlayerView: View {
     
     struct PlayerView_Preview: View {
         @StateObject var player: Player = Player()
+        @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
+        @Namespace var animation
         
         var body: some View {
             
@@ -157,7 +170,11 @@ struct PlayerView: View {
                     Button("+") { player.equipWeapon(weaponStrength: 5) }
                 }
                 
-                PlayerView(player: player)
+                PlayerView(
+                    player: player,
+                    room: room,
+                    animationNamespace: animation
+                )
             }
         }
     }

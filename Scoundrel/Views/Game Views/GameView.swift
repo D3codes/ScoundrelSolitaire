@@ -114,7 +114,11 @@ struct GameView: View {
                 
                 Spacer()
                 
-                PlayerView(player: player)
+                PlayerView(
+                    player: player,
+                    room: room,
+                    animationNamespace: animation
+                )
             }
             
             if gameOver {
