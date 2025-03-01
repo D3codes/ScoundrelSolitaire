@@ -11,6 +11,7 @@ class Room: ObservableObject {
     @Published var canFlee: Bool
     @Published var cards: [Card?]
     @Published var usedHealthPotion: Bool
+    let animationDelay: Double = 0.5
     
     init(cards: [Card?], fleedLastRoom: Bool) {
         guard cards.count == 4 else {
@@ -22,32 +23,44 @@ class Room: ObservableObject {
         self.usedHealthPotion = false
     }
     
-    func reset(cards: [Card?], fleedLastRoom: Bool) {
-        self.cards = cards
-        self.canFlee = !fleedLastRoom
+    func reset(deck: Deck) {
         self.usedHealthPotion = false
+        cards = [nil, nil, nil, nil]
+        nextRoom(deck: deck, fleedLastRoom: false)
     }
     
     func removeCard(at index: Int) {
-        cards[index] = nil
+        withAnimation {
+            cards[index] = nil
+        }
     }
     
     func flee(deck: Deck) {
         for i in 0...3 {
             if cards[i] != nil {
                 deck.appendCards([cards[i]!])
-                cards[i] = nil
+                withAnimation(.spring()) {
+                    cards[i] = nil
+                }
             }
         }
         
-        nextRoom(deck: deck, fleedLastRoom: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + animationDelay) {
+            self.nextRoom(deck: deck, fleedLastRoom: true)
+        }
     }
     
     func nextRoom(deck: Deck, fleedLastRoom: Bool) {
+        var dealingGap: Double = animationDelay
         for i in 0...3 {
             if cards[i] == nil {
                 if !deck.cards.isEmpty {
-                    cards[i] = deck.cards.removeFirst()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
+                        withAnimation(.spring()) {
+                            self.cards[i] = deck.getTopCard()
+                        }
+                    }
+                    dealingGap += animationDelay
                 }
             }
         }

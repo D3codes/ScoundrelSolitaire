@@ -16,6 +16,7 @@ class Player: ObservableObject {
     let scaleAmount: CGFloat = 0.1
     @Published var healthIconSize: CGFloat = 1
     @Published var weaponIconSize: CGFloat = 1
+    @Published var shieldIconSize: CGFloat = 1
     
     init() {
         health = 20
@@ -36,8 +37,10 @@ class Player: ObservableObject {
         }
         
         self.weaponIconSize += scaleAmount
+        self.shieldIconSize += scaleAmount
         DispatchQueue.main.asyncAfter(deadline: .now() + animationDelay) {
             self.weaponIconSize = 1
+            self.shieldIconSize = 1
         }
     }
     
@@ -86,6 +89,12 @@ class Player: ObservableObject {
             if lastAttacked == 2 {
                 weapon = nil
                 lastAttacked = nil
+                self.weaponIconSize -= scaleAmount
+                self.shieldIconSize -= scaleAmount
+                DispatchQueue.main.asyncAfter(deadline: .now() + animationDelay) {
+                    self.weaponIconSize = 1
+                    self.shieldIconSize = 1
+                }
             }
             
         } else {

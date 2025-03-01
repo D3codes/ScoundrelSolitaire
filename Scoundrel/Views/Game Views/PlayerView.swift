@@ -26,6 +26,7 @@ struct PlayerView: View {
                             .frame(width: 30, height: 30)
                         Text("\(player.health)")
                             .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
                     }
                 }
                 .scaleEffect(player.healthIconSize)
@@ -73,8 +74,11 @@ struct PlayerView: View {
                             .frame(width: 30, height: 30)
                         Text("\(player.weapon ?? 0)")
                             .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
                     }
                 }
+                .scaleEffect(player.shieldIconSize)
+                .animation(.spring(duration: 0.5, bounce: 0.6), value: player.shieldIconSize)
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
@@ -88,6 +92,7 @@ struct PlayerView: View {
                             .frame(width: 30, height: 30)
                         Text("\(player.strongestMonsterThatCanBeAttacked())")
                             .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
                     }
                 }
                 .scaleEffect(player.weaponIconSize)

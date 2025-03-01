@@ -38,10 +38,7 @@ struct ScoundrelApp: App {
     func startGame() {
         player.reset()
         deck.reset()
-        room.reset(
-            cards: [deck.cards.remove(at: 0), deck.cards.remove(at: 0), deck.cards.remove(at: 0), deck.cards.remove(at: 0)],
-            fleedLastRoom: false
-        )
+        room.reset(deck: deck)
         dungeon = dungeons.randomElement()!
         
         gameState = .game

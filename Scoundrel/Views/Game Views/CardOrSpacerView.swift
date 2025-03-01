@@ -28,9 +28,9 @@ struct CardOrSpacerView: View {
                     }
                     .matchedGeometryEffect(id: "Card\(cardIndex)", in: animationNamespace)
                     .zIndex(topCard == cardIndex ? 100 : 1)
+                    .transition(.opacityAndScale)
             }
         }
-        .frame(width: .infinity, height: .infinity)
     }
 }
 

@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct GameView: View {
+    @Namespace var animation
     
     @ObservedObject var deck: Deck
     @ObservedObject var player: Player
@@ -17,6 +18,8 @@ struct GameView: View {
     @State var gameOver: Bool = false
     @State var showAttackOptionAlert: Bool = false
     @State var pauseMenuShown: Bool = false
+    
+    @State var selectedCardIndex: Int?
     
     var startGame: () -> Void
     var mainMenu: () -> Void
@@ -53,7 +56,7 @@ struct GameView: View {
             return
         }
         
-        withAnimation {
+        withAnimation(.spring()) {
             room.removeCard(at: index)
         }
         
@@ -75,6 +78,14 @@ struct GameView: View {
     }
     
     func newGame() {
+        withAnimation(.spring()) {
+            for i in 0...3 {
+                withAnimation(.spring()) {
+                    room.cards[i] = nil
+                }
+            }
+        }
+        
         startGame()
         gameOver = false
         pauseMenuShown = false
@@ -86,15 +97,19 @@ struct GameView: View {
                 TopBarView(
                     room: room,
                     deck: deck,
-                    pause: { pauseMenuShown = true }
+                    pause: { pauseMenuShown = true },
+                    animationNamespace: animation,
+                    selectedCardIndex: $selectedCardIndex
                 )
                 
                 Spacer()
                 
                 RoomView(
+                    animationNamespace: animation,
                     room: room,
                     player: player,
-                    cardTapped: cardTapped
+                    cardTapped: cardTapped,
+                    cardSelected: $selectedCardIndex
                 )
                 
                 Spacer()

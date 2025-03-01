@@ -11,6 +11,8 @@ struct TopBarView: View {
     @ObservedObject var room: Room
     @ObservedObject var deck: Deck
     var pause: () -> Void
+    var animationNamespace: Namespace.ID
+    @Binding var selectedCardIndex: Int?
     
     @State var showingDeckCountPopover: Bool = false
     
@@ -30,6 +32,15 @@ struct TopBarView: View {
             })
             
             ZStack {
+                ForEach(0..<4) { index in
+                    if room.cards[index] == nil {
+                        Rectangle()
+                            .opacity(0)
+                            .frame(width: 50, height: 50)
+                            .matchedGeometryEffect(id: "Card\(index)", in: animationNamespace)
+                    }
+                }
+                
                 RoundedRectangle(cornerRadius: 10)
                     .frame(width: 50, height: 50)
                     .foregroundStyle(.regularMaterial)
@@ -41,8 +52,12 @@ struct TopBarView: View {
                         .frame(width: 30, height: 30)
                     Text("\(deck.cards.count)")
                         .font(.custom("MorrisRoman-Black", size: 20))
+                        .contentTransition(.numericText())
                 }
             }
+            .sensoryFeedback(.increase, trigger: deck.iconSize)
+            .scaleEffect(deck.iconSize)
+            .animation(.spring(duration: 0.5, bounce: 0.6), value: deck.iconSize)
             .onTapGesture { showingDeckCountPopover = true }
             .popover(isPresented: $showingDeckCountPopover) {
                 Text("\(deck.cards.count) cards left in deck")
@@ -55,7 +70,10 @@ struct TopBarView: View {
             Spacer()
             
             ZStack {
-                Button(action: { room.flee(deck: deck) }, label: {
+                Button(action: {
+                    selectedCardIndex = nil
+                    room.flee(deck: deck)
+                }, label: {
                     ZStack {
                         Image("stoneButton")
                             .resizable()
@@ -95,12 +113,16 @@ struct TopBarView: View {
         
         @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
         @StateObject var deck: Deck = Deck()
+        @Namespace var animation
+        @State var selectedCardIndex: Int?
         
         var body: some View {
             TopBarView(
                 room: room,
                 deck: deck,
-                pause: {}
+                pause: {},
+                animationNamespace: animation,
+                selectedCardIndex: $selectedCardIndex
             )
         }
     }

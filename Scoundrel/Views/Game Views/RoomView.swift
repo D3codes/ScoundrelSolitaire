@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct RoomView: View {
-    @Namespace private var animation
+    var animationNamespace: Namespace.ID
     
     @ObservedObject var room: Room
     @ObservedObject var player: Player
     let cardTapped: (Int, Bool) -> Void
     
-    @State var cardSelected: Int?
+    @Binding var cardSelected: Int?
     @State var topCard: Int = 5
     
     func closeSelectedView() {
@@ -66,7 +66,7 @@ struct RoomView: View {
                         cardIndex: 0,
                         cardSelected: $cardSelected,
                         topCard: $topCard,
-                        animationNamespace: animation
+                        animationNamespace: animationNamespace
                     )
                     
                     CardOrSpacerView(
@@ -74,7 +74,7 @@ struct RoomView: View {
                         cardIndex: 1,
                         cardSelected: $cardSelected,
                         topCard: $topCard,
-                        animationNamespace: animation
+                        animationNamespace: animationNamespace
                     )
                 }
                 .zIndex(1)
@@ -85,7 +85,7 @@ struct RoomView: View {
                         cardIndex: 2,
                         cardSelected: $cardSelected,
                         topCard: $topCard,
-                        animationNamespace: animation
+                        animationNamespace: animationNamespace
                     )
                     
                     CardOrSpacerView(
@@ -93,7 +93,7 @@ struct RoomView: View {
                         cardIndex: 3,
                         cardSelected: $cardSelected,
                         topCard: $topCard,
-                        animationNamespace: animation
+                        animationNamespace: animationNamespace
                     )
                 }
                 .zIndex(1)
@@ -104,7 +104,7 @@ struct RoomView: View {
                     cardSelected: $cardSelected,
                     room: room,
                     player: player,
-                    animationNamespace: animation,
+                    animationNamespace: animationNamespace,
                     cancel: closeSelectedView,
                     firstAction: firstActionTapped,
                     secondAction: secondActionTapped
@@ -133,13 +133,18 @@ struct RoomView: View {
         }
         
         @StateObject var player = Player()
+        @Namespace var animation
+        
+        @State var cardSelected: Int?
         
         var body: some View {
             ZStack {
                 RoomView(
+                    animationNamespace: animation,
                     room: room,
                     player: player,
-                    cardTapped: cardTapped
+                    cardTapped: cardTapped,
+                    cardSelected: $cardSelected
                 )
                 
                 VStack {
