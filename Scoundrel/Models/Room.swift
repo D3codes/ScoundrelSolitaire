@@ -104,17 +104,17 @@ class Room: ObservableObject {
         var dealingGap: Double = animationDelay
         for i in 0...3 {
             if cards[i] == nil {
-                if !deck.cards.isEmpty {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
-                        withAnimation(.spring()) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
+                    withAnimation(.spring()) {
+                        self.cards[i] = deck.getTopCard()
+                        if self.cards[i] != nil {
                             self.dealCardSound?.stop()
                             self.dealCardSound?.play()
-                            self.cards[i] = deck.getTopCard()
-                            self.setDestinations()
                         }
+                        self.setDestinations()
                     }
-                    dealingGap += animationDelay
                 }
+                dealingGap += animationDelay
             }
         }
         

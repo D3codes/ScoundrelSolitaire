@@ -15,21 +15,20 @@ class Deck: ObservableObject {
     @Published var iconSize: CGFloat = 1
     
     init() {
-        for i in 2...14 {
-            cards.append(Card(suit: .monster, strength: i))
-            cards.append(Card(suit: .monster, strength: i))
-            
-            if i < 11 {
-                cards.append(Card(suit: .healthPotion, strength: i))
-                cards.append(Card(suit: .weapon, strength: i))
-            }
-        }
-        
-        cards.shuffle()
+        reset()
     }
     
     func reset() {
         cards = []
+        
+//        cards = [
+//            Card(suit: .monster, strength: 2),
+//            Card(suit: .monster, strength: 2),
+//            Card(suit: .healthPotion, strength: 2),
+//            Card(suit: .weapon, strength: 2),
+//            Card(suit: .monster, strength: 2),
+//            Card(suit: .monster, strength: 2)
+//        ]
         
         for i in 2...14 {
             cards.append(Card(suit: .monster, strength: i))
@@ -54,6 +53,10 @@ class Deck: ObservableObject {
     }
     
     func getTopCard() -> Card? {
+        if cards.isEmpty {
+            return nil
+        }
+        
         self.iconSize -= scaleAmount
         DispatchQueue.main.asyncAfter(deadline: .now() + animationDelay) {
             self.iconSize = 1

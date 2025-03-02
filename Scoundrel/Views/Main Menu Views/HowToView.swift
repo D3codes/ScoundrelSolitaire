@@ -156,7 +156,7 @@ struct HowToView: View {
                 Text("Scoring")
                     .font(.custom("ModernAntiqua-Regular", size: 25))
                     .foregroundStyle(.black)
-                Text("If your life has reached zero, your score is a negative value determined by subtracting the sum of all remaining monsters in the deck from 0.")
+                Text("If your life has reached zero, your score is a negative value determined by subtracting the sum of the strength of all remaining Monster cards in the deck from 0.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -167,6 +167,7 @@ struct HowToView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom)
             }
+            .scrollIndicators(.hidden)
             .padding()
         }
     }

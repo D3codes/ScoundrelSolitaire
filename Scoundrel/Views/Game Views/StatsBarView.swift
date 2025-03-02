@@ -1,5 +1,5 @@
 //
-//  PlayerView.swift
+//  StatsBarView.swift
 //  Scoundrel
 //
 //  Created by David Freeman on 2/25/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PlayerView: View {
+struct StatsBarView: View {
     @ObservedObject var player: Player
     @ObservedObject var room: Room
     var animationNamespace: Namespace.ID
@@ -44,7 +44,7 @@ struct PlayerView: View {
 
 #Preview {
     
-    struct PlayerView_Preview: View {
+    struct StatsBarView_Preview: View {
         @StateObject var player: Player = Player()
         @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
         @Namespace var animation
@@ -63,7 +63,7 @@ struct PlayerView: View {
                     Button("+") { player.equipWeapon(weaponStrength: 5) }
                 }
                 
-                PlayerView(
+                StatsBarView(
                     player: player,
                     room: room,
                     animationNamespace: animation
@@ -72,6 +72,6 @@ struct PlayerView: View {
         }
     }
     
-    return PlayerView_Preview()
+    return StatsBarView_Preview()
 }
 

@@ -51,7 +51,7 @@ struct GameView: View {
     }
     
     func endAction(_ index: Int) {
-        if player.health <= 0 || (deck.cards.isEmpty && room.cards.isEmpty) {
+        if player.health <= 0 {
             gameOver = true
             return
         }
@@ -60,10 +60,14 @@ struct GameView: View {
             room.removeCard(at: index)
         }
         
-        if room.cards.filter({ $0 == nil }).count == 3 {
+        if room.cards.filter({ $0 == nil }).count == 3 && !deck.cards.isEmpty {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 room.nextRoom(deck: deck, fleedLastRoom: false)
             }
+        }
+        
+        if deck.cards.isEmpty && room.cards.filter({ $0 == nil }).count == 4 {
+            gameOver = true
         }
     }
     
@@ -116,7 +120,7 @@ struct GameView: View {
                 
                 Spacer()
                 
-                PlayerView(
+                StatsBarView(
                     player: player,
                     room: room,
                     animationNamespace: animation

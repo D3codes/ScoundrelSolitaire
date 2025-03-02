@@ -61,7 +61,7 @@ struct CreditsView: View {
                     .foregroundStyle(.black)
                     .padding(.bottom)
                 
-                Text("Sound Effect")
+                Text("Sound Effects")
                     .font(.custom("ModernAntiqua-Regular", size: 20))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -79,6 +79,7 @@ struct CreditsView: View {
                     .foregroundStyle(.black)
                     .padding(.bottom)
             }
+            .scrollIndicators(.hidden)
             .padding()
         }
     }

@@ -71,7 +71,6 @@ struct RoomView: View {
                         animationNamespace: animationNamespace
                     )
                 }
-                .zIndex(1)
                 
                 HStack {
                     CardOrSpacerView(
