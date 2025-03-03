@@ -21,7 +21,11 @@ struct CardOrSpacerView: View {
                     .frame(width: 150, height: 200)
             } else {
                 CardView(card: room.cards[cardIndex]!)
-                    .onTapGesture { withAnimation { cardSelected = cardIndex } }
+                    .onTapGesture {
+                        if !room.lockCardSelection {
+                            withAnimation { cardSelected = cardIndex }
+                        }
+                    }
                     .matchedGeometryEffect(id: "Card\(cardIndex)", in: animationNamespace)
                     .transition(.opacityAndScale)
             }
@@ -31,7 +35,15 @@ struct CardOrSpacerView: View {
 
 #Preview {
     struct CardOrSpacerView_Preview: View {
-        @StateObject var room: Room = Room(cards: [Card(suit: .monster, strength: 11), nil, nil, nil], fleedLastRoom: false)
+        @StateObject var room: Room = Room(
+            cards: [
+                Card(suit: .monster, strength: 11),
+                nil,
+                nil,
+                nil
+            ],
+            fleedLastRoom: false
+        )
         @State var cardSelected: Int? = 1
         @Namespace var animation
         

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct MainMenuView: View {
     @ObservedObject var musicPlayer: MusicPlayer
@@ -14,6 +15,16 @@ struct MainMenuView: View {
     
     @State var showHowToModal: Bool = false
     @State var showCreditsModal: Bool = false
+    
+    @State var page2Sound: AVAudioPlayer?
+    
+    func initializeSounds() {
+        do {
+            page2Sound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "page2.mp3", ofType:nil)!))
+        } catch {
+            // couldn't load file :(
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -26,18 +37,24 @@ struct MainMenuView: View {
                 PlankButtonView(text: "New Game", action: startGame)
                     .padding(.bottom, 40)
                 
-                PlankButtonView(text: "How to Play", action: { showHowToModal = true })
+                PlankButtonView(text: "How to Play", action: {
+                    showHowToModal = true
+                    page2Sound?.play()
+                })
                 
-                PlankButtonView(text: "Credits", action: { showCreditsModal = true })
+                PlankButtonView(text: "Credits", action: {
+                    showCreditsModal = true
+                    page2Sound?.play()
+                })
                 
                 Spacer()
                 
                 ControlBarView(musicPlayer: musicPlayer)
             }
-            
-            if showHowToModal { HowToView(isPresented: $showHowToModal) }
-            if showCreditsModal { CreditsView(isPresented: $showCreditsModal) }
         }
+        .popover(isPresented: $showHowToModal) { HowToView() }
+        .popover(isPresented: $showCreditsModal) { CreditsView() }
+        .onAppear { initializeSounds() }
     }
 }
 

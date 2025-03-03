@@ -25,9 +25,9 @@ class Deck: ObservableObject {
 //            Card(suit: .monster, strength: 2),
 //            Card(suit: .monster, strength: 2),
 //            Card(suit: .healthPotion, strength: 2),
+//            Card(suit: .healthPotion, strength: 2),
 //            Card(suit: .weapon, strength: 2),
-//            Card(suit: .monster, strength: 2),
-//            Card(suit: .monster, strength: 2)
+//            Card(suit: .weapon, strength: 2)
 //        ]
         
         for i in 2...14 {

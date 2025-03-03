@@ -17,6 +17,8 @@ class Room: ObservableObject {
     var dealCardSound: AVAudioPlayer?
     var shuffleSound: AVAudioPlayer?
     
+    @Published var lockCardSelection: Bool = false
+    
     enum CardDestination: String, CaseIterable {
         case health
         case weapon
@@ -66,6 +68,7 @@ class Room: ObservableObject {
         self.cards = cards
         self.canFlee = !fleedLastRoom
         self.usedHealthPotion = false
+        self.lockCardSelection = false
         setDestinations()
     }
     
@@ -73,6 +76,7 @@ class Room: ObservableObject {
         self.usedHealthPotion = false
         cards = [nil, nil, nil, nil]
         nextRoom(deck: deck, fleedLastRoom: false)
+        lockCardSelection = false
     }
     
     func removeCard(at index: Int) {
@@ -115,6 +119,12 @@ class Room: ObservableObject {
                     }
                 }
                 dealingGap += animationDelay
+            }
+            
+            if i == 3 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
+                    self.lockCardSelection = false
+                }
             }
         }
         

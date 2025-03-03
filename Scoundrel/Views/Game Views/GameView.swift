@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AVFoundation
 
 struct GameView: View {
     @Namespace var animation
@@ -23,6 +24,17 @@ struct GameView: View {
     
     var startGame: () -> Void
     var mainMenu: () -> Void
+    
+    @State var pageSound: AVAudioPlayer?
+    
+    func initializeSounds() {
+        do {
+            pageSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "page.mp3", ofType:nil)!))
+            pageSound?.setVolume(3, fadeDuration: .zero)
+        } catch {
+            // couldn't load file :(
+        }
+    }
 
     func cardTapped(_ index: Int, attackWithFist: Bool) {
         room.canFlee = false
@@ -52,7 +64,7 @@ struct GameView: View {
     
     func endAction(_ index: Int) {
         if player.health <= 0 {
-            gameOver = true
+            withAnimation { gameOver = true }
             return
         }
         
@@ -61,13 +73,14 @@ struct GameView: View {
         }
         
         if room.cards.filter({ $0 == nil }).count == 3 && !deck.cards.isEmpty {
+            room.lockCardSelection = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 room.nextRoom(deck: deck, fleedLastRoom: false)
             }
         }
         
         if deck.cards.isEmpty && room.cards.filter({ $0 == nil }).count == 4 {
-            gameOver = true
+            withAnimation { gameOver = true }
         }
     }
     
@@ -84,6 +97,8 @@ struct GameView: View {
     }
     
     func newGame() {
+        selectedCardIndex = nil
+        
         withAnimation(.spring()) {
             for i in 0...3 {
                 withAnimation(.spring()) {
@@ -93,8 +108,8 @@ struct GameView: View {
         }
         
         startGame()
-        gameOver = false
-        pauseMenuShown = false
+        withAnimation { gameOver = false }
+        withAnimation { pauseMenuShown = false }
     }
     
     var body: some View {
@@ -103,7 +118,10 @@ struct GameView: View {
                 TopBarView(
                     room: room,
                     deck: deck,
-                    pause: { pauseMenuShown = true },
+                    pause: {
+                        withAnimation { pauseMenuShown = true }
+                        pageSound?.play()
+                    },
                     animationNamespace: animation,
                     selectedCardIndex: $selectedCardIndex
                 )
@@ -127,22 +145,32 @@ struct GameView: View {
                 )
             }
             
+            if gameOver || pauseMenuShown {
+                Rectangle()
+                    .ignoresSafeArea(.all)
+                    .foregroundStyle(.ultraThinMaterial)
+                    .opacity(0.7)
+            }
+            
             if gameOver {
                 GameOverModalView(
                     score: getScore(),
                     newGame: newGame,
                     mainMenu: mainMenu
                 )
+                .transition(.opacityAndMoveFromBottom)
             }
             
             if pauseMenuShown {
                 PauseModalView(
-                    continueGame: { pauseMenuShown = false },
+                    continueGame: { withAnimation { pauseMenuShown = false } },
                     newGame: newGame,
                     mainMenu: mainMenu
                 )
+                .transition(.opacityAndMoveFromBottom)
             }
         }
+        .onAppear() { initializeSounds() }
     }
 }
 

@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct HowToView: View {
-    @Binding var isPresented: Bool
-    
     var body: some View {
-        ModalView(isPresented: $isPresented) {
+        ZStack {
+            Image("paper")
+                .resizable()
+                .ignoresSafeArea(edges: .all)
+            
             ScrollView {
                 Text("How to Play")
                     .font(.custom("ModernAntiqua-Regular", size: 40))
@@ -179,7 +181,7 @@ struct HowToView: View {
         @State var isPresented: Bool = true
         
         var body: some View {
-            HowToView(isPresented: $isPresented)
+            HowToView()
         }
     }
     
