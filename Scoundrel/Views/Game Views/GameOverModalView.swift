@@ -8,17 +8,27 @@
 import SwiftUI
 
 struct GameOverModalView: View {
+    @ObservedObject var gameKitHelper: GameKitHelper
+    
     var score: Int
     var newGame: () -> Void
     var mainMenu: () -> Void
     
+    func submitScoreToGameCenter() async {
+        print("submitting...")
+        if gameKitHelper.localPlayerIsAuthenticated {
+            print("player is authenticated")
+            do {
+                try await gameKitHelper.submitScore(score)
+                print("score submitted")
+            } catch {
+                print("Failed to submit score: \(error)")
+            }
+        }
+    }
+    
     var body: some View {
         ZStack {
-//            Rectangle()
-//                .ignoresSafeArea(.all)
-//                .foregroundStyle(.ultraThinMaterial)
-//                .opacity(0.7)
-            
             Group{
                 Image("paper")
                     .resizable()
@@ -67,18 +77,21 @@ struct GameOverModalView: View {
                 }
             }
             .frame(width: 300, height: 400)
+            .onAppear() { Task { await submitScoreToGameCenter() } }
         }
     }
 }
 
 #Preview {
     struct GameOverModalView_Preview: View {
+        @StateObject var gameKitHelper = GameKitHelper()
         
         func newGame() { }
         func mainMenu() { }
         
         var body: some View {
             GameOverModalView(
+                gameKitHelper: gameKitHelper,
                 score: -13,
                 newGame: newGame,
                 mainMenu: mainMenu

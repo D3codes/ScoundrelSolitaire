@@ -14,11 +14,6 @@ struct PauseModalView: View {
     
     var body: some View {
         ZStack {
-//            Rectangle()
-//                .ignoresSafeArea(.all)
-//                .foregroundStyle(.ultraThinMaterial)
-//                .opacity(0.7)
-            
             Group{
                 Image("paper")
                     .resizable()

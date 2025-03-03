@@ -11,6 +11,7 @@ import AVFoundation
 
 struct GameView: View {
     @Namespace var animation
+    @ObservedObject var gameKitHelper: GameKitHelper
     
     @ObservedObject var deck: Deck
     @ObservedObject var player: Player
@@ -154,6 +155,7 @@ struct GameView: View {
             
             if gameOver {
                 GameOverModalView(
+                    gameKitHelper: gameKitHelper,
                     score: getScore(),
                     newGame: newGame,
                     mainMenu: mainMenu
@@ -191,8 +193,11 @@ struct GameView: View {
         func startGame() { }
         func mainMenu() { }
         
+        @StateObject var gameKitHelper = GameKitHelper()
+        
         var body: some View {
             GameView(
+                gameKitHelper: gameKitHelper,
                 deck: deck,
                 player: player,
                 room: room,

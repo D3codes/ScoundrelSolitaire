@@ -6,14 +6,28 @@
 //
 
 import SwiftUI
+import GameKit
 
-struct ControlBarView: View {
+struct ControlBarView: View {    
     @ObservedObject var musicPlayer: MusicPlayer
+    @ObservedObject var gameKitHelper: GameKitHelper
+    
+    @State var page2Sound: AVAudioPlayer?
+    
+    func initializeSounds() {
+        do {
+            page2Sound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "page2.mp3", ofType:nil)!))
+        } catch {
+            // couldn't load file :(
+        }
+    }
+    
+    @State var isPresentingLeaderboards: Bool = false
     
     var body: some View {
         ZStack {
             HStack {
-                Button(action: { musicPlayer.isPlaying.toggle() },label: {
+                Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
                     ZStack {
                         Image("stoneButton")
                             .resizable()
@@ -33,6 +47,27 @@ struct ControlBarView: View {
                         }
                     }
                 })
+                .padding(.trailing, 50)
+                
+                Button(action: {
+                    //gameKitHelper.displayLeaderboards()
+                    page2Sound?.play()
+                    isPresentingLeaderboards = true
+                },label: {
+                    ZStack {
+                        Image("stoneButton")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+
+                        Image(systemName: "trophy.fill")
+                            .foregroundStyle(gameKitHelper.localPlayerIsAuthenticated ? .white : .black)
+                            .font(.title2)
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    }
+                })
+                .disabled(!gameKitHelper.localPlayerIsAuthenticated)
+                .blur(radius: gameKitHelper.localPlayerIsAuthenticated ? 0 : 0.5)
                 
 //                Button(action: { },label: {
 //                    ZStack {
@@ -57,15 +92,21 @@ struct ControlBarView: View {
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 5, x: 0, y: -5)
         )
+        .popover(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
+        .onAppear() { initializeSounds() }
     }
 }
 
 #Preview {
     struct ControlBarView_Preview: View {
         @StateObject var musicPlayer = MusicPlayer()
+        @StateObject var gameKitHelper = GameKitHelper()
         
         var body: some View {
-            ControlBarView(musicPlayer: musicPlayer)
+            ControlBarView(
+                musicPlayer: musicPlayer,
+                gameKitHelper: gameKitHelper
+            )
         }
     }
     

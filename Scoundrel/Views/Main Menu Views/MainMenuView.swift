@@ -10,6 +10,7 @@ import AVFoundation
 
 struct MainMenuView: View {
     @ObservedObject var musicPlayer: MusicPlayer
+    @ObservedObject var gameKitHelper: GameKitHelper
     
     var startGame: () -> Void
     
@@ -49,7 +50,10 @@ struct MainMenuView: View {
                 
                 Spacer()
                 
-                ControlBarView(musicPlayer: musicPlayer)
+                ControlBarView(
+                    musicPlayer: musicPlayer,
+                    gameKitHelper: gameKitHelper
+                )
             }
         }
         .popover(isPresented: $showHowToModal) { HowToView() }
@@ -61,10 +65,12 @@ struct MainMenuView: View {
 #Preview {
     struct MainMenuView_Preview: View {
         @StateObject var musicPlayer = MusicPlayer()
+        @StateObject var gameKitHelper = GameKitHelper()
         
         var body: some View {
             MainMenuView(
                 musicPlayer: musicPlayer,
+                gameKitHelper: gameKitHelper,
                 startGame: {}
             )
         }
