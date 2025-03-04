@@ -1,0 +1,22 @@
+Scoundrel Solitaire is a rogue-like card game.
+
+Features:
+• 
+
+Business model:
+$0.99 one-time purchase. no subscriptions. eligible for family sharing
+
+Accolades:
+
+
+Links:
+App Store: 
+Website: https://d3.codes/apps/scoundrelsolitaire/
+
+Developer: David Freeman
+Location: Kansas City, Kansas
+Contact Email: david@d3.codes
+Website: https://d3.codes/
+
+Mastodon: https://mas.to/@D3codes
+Support Email: david@d3.codes
