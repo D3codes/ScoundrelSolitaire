@@ -168,6 +168,121 @@ struct HowToView: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom)
+                
+                Text("UI")
+                    .font(.custom("ModernAntiqua-Regular", size: 25))
+                    .foregroundStyle(.black)
+                HStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                        
+                        VStack(spacing: 0) {
+                            Image("deck")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("40")
+                                .font(.custom("MorrisRoman-Black", size: 20))
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    
+                    Text("The number of cards remaining in the deck.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
+                HStack {
+                    ZStack {
+                        Image("stoneButton")
+                            .resizable()
+                            .frame(width: 100, height: 50)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        Text("Flee")
+                            .foregroundStyle(.white)
+                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    }
+
+                    
+                    Text("Use this button to flee the current room.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
+                HStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                            
+                        VStack(spacing: 0) {
+                            Image("heart1")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("20")
+                                .font(.custom("MorrisRoman-Black", size: 20))
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    
+                    Text("Your life.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
+                HStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                        
+                        VStack(spacing: 0) {
+                            Image("shield1")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("10")
+                                .font(.custom("MorrisRoman-Black", size: 20))
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    
+                    Text("The strength of your equipped shield. This number will be subtracted from the strength of a Monster card when attacking with a weapon.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
+                HStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                        
+                        VStack(spacing: 0) {
+                            Image("sword1")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("14")
+                                .font(.custom("MorrisRoman-Black", size: 20))
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    
+                    Text("The strength of your equipped weapon. This signifies the strongest Monster card you can attack with the weapon.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
             }
             .scrollIndicators(.hidden)
             .padding(.horizontal)
