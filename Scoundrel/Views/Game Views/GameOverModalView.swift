@@ -46,6 +46,14 @@ struct GameOverModalView: View {
         }
     }
     
+    func getSharePreviewTitle() -> String {
+        return "I scored \(score) in Scoundrel Solitaire!"
+    }
+    
+    func getShareItem() -> String {
+        return "\(getSharePreviewTitle())\nCan you beat me?\nhttps://apps.apple.com/app/id6742526198"
+    }
+    
     var body: some View {
         ZStack {
             Group{
@@ -54,7 +62,21 @@ struct GameOverModalView: View {
                     .cornerRadius(20)
                 
                 VStack {
-                    Spacer()
+                    HStack {
+                        Spacer()
+                        ShareLink(item: getShareItem(), preview: SharePreview(
+                            getSharePreviewTitle(),
+                            image: Image("logo")
+                        )) {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 25))
+                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        }
+                    }
+                    .padding(.top, 20)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 1)
                     
                     Text("Game Over")
                         .font(.custom("MorrisRoman-Black", size: 50))

@@ -24,9 +24,9 @@ struct ScoundrelApp: App {
     @StateObject var deck: Deck = Deck()
     @StateObject var player: Player = Player()
     @StateObject var room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
-    @State var dungeon: String = "dungeon1"
+    @State var background: String = "dungeon1"
     
-    let dungeons: [String] = [
+    let backgrounds: [String] = [
         "dungeon1",
         "dungeon2",
         "dungeon3",
@@ -40,7 +40,7 @@ struct ScoundrelApp: App {
         player.reset()
         deck.reset()
         room.reset(deck: deck)
-        dungeon = dungeons.randomElement()!
+        background = backgrounds.randomElement()!
         
         gameState = .game
     }
@@ -68,9 +68,9 @@ struct ScoundrelApp: App {
                     .onAppear { gameKitHelper.hideAccessPoint() }
                 }
             }
-            .background(Image(dungeon))
+            .background(Image(background))
             .onAppear {
-                dungeon = dungeons.randomElement()!
+                background = backgrounds.randomElement()!
                 musicPlayer.isPlaying = true
                 gameKitHelper.authenticateLocalPlayer()
             }
