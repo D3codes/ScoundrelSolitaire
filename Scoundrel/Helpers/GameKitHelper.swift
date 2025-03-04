@@ -49,7 +49,6 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
             
             GKAccessPoint.shared.location = .topTrailing
             GKAccessPoint.shared.showHighlights = true
-            self.showAccessPoint()
         }
     }
     

@@ -33,6 +33,9 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var music = AVAudioPlayer()
 
     override init() {
+        try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.ambient)
+        try? AVAudioSession.sharedInstance().setActive(true)
+        
         super.init()
     }
     

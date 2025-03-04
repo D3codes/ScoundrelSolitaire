@@ -193,7 +193,10 @@ struct GameView: View {
                 .transition(.opacityAndMoveFromBottom)
             }
         }
-        .onAppear() { initializeSounds() }
+        .onAppear() {
+            gameKitHelper.hideAccessPoint()
+            initializeSounds()
+        }
     }
 }
 
