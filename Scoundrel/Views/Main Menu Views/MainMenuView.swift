@@ -56,8 +56,16 @@ struct MainMenuView: View {
                 )
             }
         }
-        .popover(isPresented: $showHowToModal) { HowToView() }
-        .popover(isPresented: $showCreditsModal) { CreditsView() }
+        .popover(isPresented: $showHowToModal) {
+            HowToView()
+                .onAppear { gameKitHelper.hideAccessPoint() }
+                .onDisappear { gameKitHelper.showAccessPoint() }
+        }
+        .popover(isPresented: $showCreditsModal) {
+            CreditsView()
+                .onAppear { gameKitHelper.hideAccessPoint() }
+                .onDisappear { gameKitHelper.showAccessPoint() }
+        }
         .onAppear { initializeSounds() }
     }
 }

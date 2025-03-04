@@ -14,6 +14,8 @@ class Room: ObservableObject {
     @Published var usedHealthPotion: Bool
     let animationDelay: Double = 0.5
     
+    @Published var playerFleed: Bool = false
+    
     var dealCardSound: AVAudioPlayer?
     var shuffleSound: AVAudioPlayer?
     
@@ -69,6 +71,7 @@ class Room: ObservableObject {
         self.canFlee = !fleedLastRoom
         self.usedHealthPotion = false
         self.lockCardSelection = false
+        self.playerFleed = false
         setDestinations()
     }
     
@@ -77,6 +80,7 @@ class Room: ObservableObject {
         cards = [nil, nil, nil, nil]
         nextRoom(deck: deck, fleedLastRoom: false)
         lockCardSelection = false
+        self.playerFleed = false
     }
     
     func removeCard(at index: Int) {
@@ -86,6 +90,7 @@ class Room: ObservableObject {
     }
     
     func flee(deck: Deck) {
+        self.playerFleed = true
         destinations = [.deck, .deck, .deck, .deck]
         shuffleSound?.play()
         

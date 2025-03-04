@@ -170,7 +170,7 @@ struct HowToView: View {
                     .padding(.bottom)
             }
             .scrollIndicators(.hidden)
-            .padding()
+            .padding(.horizontal)
         }
     }
 }

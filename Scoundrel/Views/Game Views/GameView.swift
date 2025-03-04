@@ -53,10 +53,27 @@ struct GameView: View {
             endAction(index)
             break
         case .monster:
+            // Check for achievements pre-attack
+            if !attackWithFist && player.lastAttacked ?? 0 == 15 && room.cards[index]!.strength == 2 {
+                Task { await gameKitHelper.unlockAchievement(.WhatAWaste) }
+            }
+            
+            // Attack
             if attackWithFist {
                 player.attack(monsterStrength: room.cards[index]!.strength)
             } else {
                 player.attack(withWeapon: true, monsterStrength: room.cards[index]!.strength)
+            }
+            
+            // Check for achievements post-attack
+            if player.health > 0 {
+                if player.weapon ?? 0 == 2 && room.cards[index]!.strength == 14 {
+                    Task { await gameKitHelper.unlockAchievement(.DavidAndGoliath) }
+                }
+            } else {
+                if room.cards[index]!.strength == 2 {
+                    Task { await gameKitHelper.unlockAchievement(.DefinitelyMeantToDoThat) }
+                }
             }
             endAction(index)
             break
@@ -81,6 +98,10 @@ struct GameView: View {
         }
         
         if deck.cards.isEmpty && room.cards.filter({ $0 == nil }).count == 4 {
+            if !room.playerFleed {
+                Task { await gameKitHelper.unlockAchievement(.CowardsNeedNotApply) }
+            }
+            
             withAnimation { gameOver = true }
         }
     }

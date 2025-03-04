@@ -13,6 +13,14 @@ struct LeaderboardView: View {
     
     @State private var leaderboardEntries: [GKLeaderboard.Entry] = []
 
+    func fetchLeaderboardEntries() async {
+        do {
+            leaderboardEntries = try await gameKitHelper.fetchLeaderboard(id: "ScoundrelAllTimeHighScore", count: 100)
+        } catch {
+            // Failed to fetch leaderboard
+        }
+    }
+    
     var body: some View {
         ZStack {
             Image("paper")
@@ -31,12 +39,14 @@ struct LeaderboardView: View {
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                 
                 if !leaderboardEntries.isEmpty {
-                    List(leaderboardEntries, id: \.player.gamePlayerID) { entry in
+                    List(leaderboardEntries.indices, id: \.self) { index in
                         HStack {
-                            Text("\(entry.player.displayName)")
+                            Text("\(index+1).")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            Text("\(leaderboardEntries[index].player.displayName)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                             Spacer()
-                            Text("\(entry.formattedScore)")
+                            Text("\(leaderboardEntries[index].formattedScore)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
@@ -52,13 +62,7 @@ struct LeaderboardView: View {
                 }
             }
         }
-        .task {
-            do {
-                leaderboardEntries = try await gameKitHelper.fetchLeaderboard(id: "ScoundrelAllTimeHighScore", count: 100)
-            } catch {
-                print("Failed to fetch leaderboard: \(error)")
-            }
-        }
+        .task { await fetchLeaderboardEntries() }
     }
 }
 

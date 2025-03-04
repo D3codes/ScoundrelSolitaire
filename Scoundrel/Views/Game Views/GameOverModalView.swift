@@ -14,15 +14,34 @@ struct GameOverModalView: View {
     var newGame: () -> Void
     var mainMenu: () -> Void
     
+    func checkForAchievements() async {
+        if score == -202 {
+            await gameKitHelper.unlockAchievement(.WereYouEvenTrying)
+        }
+        
+        if score > 0 {
+            await gameKitHelper.unlockAchievement(.Survivor)
+        }
+        
+        if score >= 10 {
+            await gameKitHelper.unlockAchievement(.SeasonedAdventurer)
+        }
+        
+        if score >= 20 {
+            await gameKitHelper.unlockAchievement(.DungeonMaster)
+        }
+        
+        if score == 30 {
+            await gameKitHelper.unlockAchievement(.Untouchable)
+        }
+    }
+    
     func submitScoreToGameCenter() async {
-        print("submitting...")
         if gameKitHelper.localPlayerIsAuthenticated {
-            print("player is authenticated")
             do {
                 try await gameKitHelper.submitScore(score)
-                print("score submitted")
             } catch {
-                print("Failed to submit score: \(error)")
+                // Failed to submit score
             }
         }
     }
@@ -77,7 +96,10 @@ struct GameOverModalView: View {
                 }
             }
             .frame(width: 300, height: 400)
-            .onAppear() { Task { await submitScoreToGameCenter() } }
+            .task {
+                await submitScoreToGameCenter()
+                await checkForAchievements()
+            }
         }
     }
 }

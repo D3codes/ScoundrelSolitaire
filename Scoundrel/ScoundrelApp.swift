@@ -11,7 +11,6 @@ import GameKit
 
 @main
 struct ScoundrelApp: App {
-    
     @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
     @StateObject var gameKitHelper: GameKitHelper = GameKitHelper()
     
@@ -46,40 +45,6 @@ struct ScoundrelApp: App {
         gameState = .game
     }
     
-    func initializeGameKit() {
-        GKLocalPlayer.local.authenticateHandler = { viewController, error in
-            if let viewController = viewController {
-                // Present the view controller so the player can sign in.
-                return
-            }
-            if error != nil {
-                // Player could not be authenticated.
-                // Disable Game Center in the game.
-                return
-            }
-            
-            // Player was successfully authenticated.
-            // Check if there are any player restrictions before starting the game.
-            gameKitHelper.localPlayerIsAuthenticated = true
-                    
-            if GKLocalPlayer.local.isUnderage {
-                // Hide explicit game content.
-            }
-
-
-            if GKLocalPlayer.local.isMultiplayerGamingRestricted {
-                // Disable multiplayer game features.
-            }
-
-
-            if GKLocalPlayer.local.isPersonalizedCommunicationRestricted {
-                // Disable in game communication UI.
-            }
-            
-            // Perform any other configurations as needed (for example, access point).
-        }
-    }
-    
     var body: some Scene {
         WindowGroup {
             Group {
@@ -90,6 +55,7 @@ struct ScoundrelApp: App {
                         gameKitHelper: gameKitHelper,
                         startGame: startGame
                     )
+                    .onAppear { gameKitHelper.showAccessPoint() }
                 case .game:
                     GameView(
                         gameKitHelper: gameKitHelper,
@@ -99,13 +65,14 @@ struct ScoundrelApp: App {
                         startGame: startGame,
                         mainMenu: { gameState = .mainMenu }
                     )
+                    .onAppear { gameKitHelper.hideAccessPoint() }
                 }
             }
             .background(Image(dungeon))
             .onAppear {
                 dungeon = dungeons.randomElement()!
                 musicPlayer.isPlaying = true
-                initializeGameKit()
+                gameKitHelper.authenticateLocalPlayer()
             }
         }
     }

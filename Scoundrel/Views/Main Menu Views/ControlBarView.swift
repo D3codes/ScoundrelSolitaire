@@ -50,7 +50,7 @@ struct ControlBarView: View {
                 .padding(.trailing, 50)
                 
                 Button(action: {
-                    //gameKitHelper.displayLeaderboards()
+                    //gameKitHelper.displayDashboard()
                     page2Sound?.play()
                     isPresentingLeaderboards = true
                 },label: {
