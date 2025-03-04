@@ -14,25 +14,44 @@ struct GameOverModalView: View {
     var newGame: () -> Void
     var mainMenu: () -> Void
     
+    @State var achievementName: String?
+    @State var achievementDescription: String?
+    @State var achievementImage: String?
+    
     func checkForAchievements() async {
         if score == -202 {
             await gameKitHelper.unlockAchievement(.WereYouEvenTrying)
+            achievementName = "Were You Even Trying?"
+            achievementDescription = "Get the lowest possible score"
+            achievementImage = "WereYouEvenTrying"
         }
         
         if score > 0 {
             await gameKitHelper.unlockAchievement(.Survivor)
+            achievementName = "Survivor"
+            achievementDescription = "Make it through a dungeon without dying"
+            achievementImage = "Survivor"
         }
         
         if score >= 10 {
             await gameKitHelper.unlockAchievement(.SeasonedAdventurer)
+            achievementName = "Seasoned Adventurer"
+            achievementDescription = "Beat a dungeon with at least 10 life remaining"
+            achievementImage = "SeasonedAdventurer"
         }
         
         if score >= 20 {
             await gameKitHelper.unlockAchievement(.DungeonMaster)
+            achievementName = "Dungeon Master"
+            achievementDescription = "Beat a dungeon with at least 20 life remaining"
+            achievementImage = "DungeonMaster"
         }
         
         if score == 30 {
             await gameKitHelper.unlockAchievement(.Untouchable)
+            achievementName = "Untouchable"
+            achievementDescription = "Beat a dungeon with the highest possible score"
+            achievementImage = "Untouchable"
         }
     }
     
@@ -55,8 +74,16 @@ struct GameOverModalView: View {
     }
     
     var body: some View {
-        ZStack {
-            Group{
+        VStack {
+            if achievementName != nil {
+                GameOverAchievementView(
+                    achievementName: achievementName!,
+                    achievementDescription: achievementDescription!,
+                    achievementImage: achievementImage!
+                )
+            }
+            
+            ZStack {
                 Image("paper")
                     .resizable()
                     .cornerRadius(20)
@@ -136,7 +163,7 @@ struct GameOverModalView: View {
         var body: some View {
             GameOverModalView(
                 gameKitHelper: gameKitHelper,
-                score: -13,
+                score: -202,
                 newGame: newGame,
                 mainMenu: mainMenu
             )
