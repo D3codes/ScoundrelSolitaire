@@ -54,10 +54,12 @@ struct LeaderboardView: View {
                     .scrollContentBackground(.hidden)
                 } else {
                     Spacer()
+                    ProgressView()
                     Text("Loading...")
                         .font(.custom("ModernAntiqua-Regular", size: 20))
                         .foregroundStyle(.white)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    Spacer()
                     Spacer()
                 }
             }

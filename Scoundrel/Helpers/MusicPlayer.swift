@@ -5,8 +5,6 @@
 //  Created by David Freeman on 2/26/25.
 //
 
-import Foundation
-import SwiftUI
 import AVFoundation
 
 class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
