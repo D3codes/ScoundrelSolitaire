@@ -110,7 +110,7 @@ class Room: ObservableObject {
     
     func nextRoom(deck: Deck, fleedLastRoom: Bool) {
         setDestinations()
-        var dealingGap: Double = animationDelay
+        var dealingGap: Double = 0.55
         for i in 0...3 {
             if cards[i] == nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
@@ -123,7 +123,7 @@ class Room: ObservableObject {
                         self.setDestinations()
                     }
                 }
-                dealingGap += animationDelay
+                dealingGap += 0.55
             }
             
             if i == 3 {
