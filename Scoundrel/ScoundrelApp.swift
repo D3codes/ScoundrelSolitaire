@@ -75,7 +75,6 @@ struct ScoundrelApp: App {
             }
             .background(Image(background))
             .onAppear {
-                background = backgrounds.randomElement()!
                 musicPlayer.isPlaying = true
                 gameKitHelper.authenticateLocalPlayer()
             }

@@ -9,5 +9,13 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array/>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UILaunchScreen</key>
+		<dict>
+			<key>UIImageName</key>
+			<string>launchscreen</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
