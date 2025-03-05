@@ -65,7 +65,12 @@ struct ScoundrelApp: App {
                         startGame: startGame,
                         mainMenu: { gameState = .mainMenu }
                     )
-                    .onAppear { gameKitHelper.hideAccessPoint() }
+                    .onAppear {
+                        gameKitHelper.hideAccessPoint()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            gameKitHelper.hideAccessPoint()
+                        }
+                    }
                 }
             }
             .background(Image(background))
