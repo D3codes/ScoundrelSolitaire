@@ -23,6 +23,7 @@ struct ControlBarView: View {
     }
     
     @State var isPresentingLeaderboards: Bool = false
+    @State var showSignInPopup: Bool = false
     
     var body: some View {
         ZStack {
@@ -68,6 +69,14 @@ struct ControlBarView: View {
                 })
                 .disabled(!gameKitHelper.localPlayerIsAuthenticated)
                 .blur(radius: gameKitHelper.localPlayerIsAuthenticated ? 0 : 0.5)
+                .onTapGesture { if !gameKitHelper.localPlayerIsAuthenticated { showSignInPopup = true } }
+                .popover(isPresented: $showSignInPopup) {
+                    Text("Sign in to Game Center to view Leaderboard")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.headline)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                }
                 
 //                Button(action: { },label: {
 //                    ZStack {
