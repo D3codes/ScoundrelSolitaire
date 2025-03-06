@@ -15,9 +15,12 @@ struct GameOverModalView: View {
     var newGame: () -> Void
     var mainMenu: () -> Void
     
+    @State var strengthOfMonsterThatKilledPlayer: Int
+    
     @State var achievementName: String?
     @State var achievementDescription: String?
     @State var achievementImage: String?
+    
     
     func checkForAchievements() async {
         if score == -202 {
@@ -25,6 +28,12 @@ struct GameOverModalView: View {
             achievementName = "Were You Even Trying?"
             achievementDescription = "Get the lowest possible score"
             achievementImage = "WereYouEvenTrying"
+        }
+        
+        if strengthOfMonsterThatKilledPlayer == 2 {
+            achievementName = "Meant To Do That!"
+            achievementDescription = "Die from the weakest monster"
+            achievementImage = "DefinitelyMeantToDoThat"
         }
         
         if score > 0 {
@@ -83,6 +92,7 @@ struct GameOverModalView: View {
                         achievementDescription: achievementDescription!,
                         achievementImage: achievementImage!
                     )
+                    .zIndex(10)
                 }
                 
                 ZStack {
@@ -152,6 +162,7 @@ struct GameOverModalView: View {
                     await checkForAchievements()
                 }
             }
+            
             if score > 0 {
                 VortexView(.fireworks) {
                     Circle()
@@ -176,9 +187,10 @@ struct GameOverModalView: View {
         var body: some View {
             GameOverModalView(
                 gameKitHelper: gameKitHelper,
-                score: -202,
+                score: 20,
                 newGame: newGame,
-                mainMenu: mainMenu
+                mainMenu: mainMenu,
+                strengthOfMonsterThatKilledPlayer: 0
             )
         }
     }

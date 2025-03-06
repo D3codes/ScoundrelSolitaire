@@ -28,6 +28,8 @@ struct GameView: View {
     
     @State var pageSound: AVAudioPlayer?
     
+    @State var strengthOfMonsterThatKilledPlayer: Int = 0
+    
     func initializeSounds() {
         do {
             pageSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "page.mp3", ofType:nil)!))
@@ -82,6 +84,7 @@ struct GameView: View {
     
     func endAction(_ index: Int) {
         if player.health <= 0 {
+            strengthOfMonsterThatKilledPlayer = room.cards[index]!.strength
             withAnimation { gameOver = true }
             return
         }
@@ -120,6 +123,7 @@ struct GameView: View {
     
     func newGame() {
         selectedCardIndex = nil
+        strengthOfMonsterThatKilledPlayer = 0
         
         withAnimation(.spring()) {
             for i in 0...3 {
@@ -179,7 +183,8 @@ struct GameView: View {
                     gameKitHelper: gameKitHelper,
                     score: getScore(),
                     newGame: newGame,
-                    mainMenu: mainMenu
+                    mainMenu: mainMenu,
+                    strengthOfMonsterThatKilledPlayer: strengthOfMonsterThatKilledPlayer
                 )
                 .transition(.opacityAndMoveFromBottom)
             }
