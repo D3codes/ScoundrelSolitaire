@@ -47,12 +47,21 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
             if GKLocalPlayer.local.isMultiplayerGamingRestricted { /* Disable multiplayer game features. */ }
             if GKLocalPlayer.local.isPersonalizedCommunicationRestricted { /* Disable in game communication UI. */ }
             
-            GKAccessPoint.shared.location = .topTrailing
             GKAccessPoint.shared.showHighlights = true
         }
     }
     
     func showAccessPoint() {
+        if localPlayerIsAuthenticated {
+            GKAccessPoint.shared.location = .topTrailing
+        } else {
+            if #available(iOS 18, *) {
+                GKAccessPoint.shared.location = .topTrailing
+            } else {
+                GKAccessPoint.shared.location = .bottomTrailing
+            }
+        }
+        
         GKAccessPoint.shared.isActive = true
     }
     

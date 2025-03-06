@@ -28,20 +28,31 @@ struct HealthBarView: View {
                     .frame(width: 50, height: 50)
                     .foregroundStyle(.regularMaterial)
                     .shadow(color: .black, radius: 5, x: 2, y: 2)
-                    
-                VStack(spacing: 0) {
-                    Image("heart1")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                    Text("\(player.health)")
-                        .font(.custom("MorrisRoman-Black", size: 20))
-                        .contentTransition(.numericText())
-                }
-                .sensoryFeedback(trigger: player.health) { oldValue, newValue in
-                    if oldValue > newValue {
-                        return .error
+                
+                if #available(iOS 17.0, *) {
+                    VStack(spacing: 0) {
+                        Image("heart1")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("\(player.health)")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
                     }
-                    return .success
+                    .sensoryFeedback(trigger: player.health) { oldValue, newValue in
+                        if oldValue > newValue {
+                            return .error
+                        }
+                        return .success
+                    }
+                } else {
+                    VStack(spacing: 0) {
+                        Image("heart1")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("\(player.health)")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
+                    }
                 }
             }
             .scaleEffect(player.healthIconSize)

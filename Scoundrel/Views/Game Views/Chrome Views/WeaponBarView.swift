@@ -49,25 +49,42 @@ struct WeaponBarView: View {
                     .foregroundStyle(.regularMaterial)
                     .shadow(color: .black, radius: 5, x: 2, y: 2)
                 
-                VStack(spacing: 0) {
-                    Image("sword1")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                    Text("\(player.strongestMonsterThatCanBeAttacked())")
-                        .font(.custom("MorrisRoman-Black", size: 20))
-                        .contentTransition(.numericText())
+                if #available(iOS 17.0, *) {
+                    VStack(spacing: 0) {
+                        Image("sword1")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("\(player.strongestMonsterThatCanBeAttacked())")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
+                    }
+                    .sensoryFeedback(.impact, trigger: player.lastAttacked ?? 0)
+                } else {
+                    VStack(spacing: 0) {
+                        Image("sword1")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("\(player.strongestMonsterThatCanBeAttacked())")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
+                    }
                 }
             }
             .scaleEffect(player.weaponIconSize)
             .animation(.spring(duration: 0.5, bounce: 0.6), value: player.weaponIconSize)
-            .sensoryFeedback(.impact, trigger: player.lastAttacked ?? 0)
-            .onTapGesture { isShowingWeaponPopover = true }
+            .onTapGesture {
+                if #available(iOS 16.4, *) {
+                    isShowingWeaponPopover = true
+                }
+            }
             .popover(isPresented: $isShowingWeaponPopover) {
-                Text("Can attack monsters with strength \(player.strongestMonsterThatCanBeAttacked()) or less")
-                    .fixedSize(horizontal: false, vertical: true)
-                    .font(.headline)
-                    .padding()
-                    .presentationCompactAdaptation(.popover)
+                if #available(iOS 16.4, *) {
+                    Text("Can attack monsters with strength \(player.strongestMonsterThatCanBeAttacked()) or less")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.headline)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                }
             }
             
             ZStack {

@@ -47,24 +47,41 @@ struct TopBarView: View {
                     .foregroundStyle(.regularMaterial)
                     .shadow(color: .black, radius: 5, x: 2, y: 2)
                     
-                VStack(spacing: 0) {
-                    Image("deck")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                    Text("\(deck.cards.count)")
-                        .font(.custom("MorrisRoman-Black", size: 20))
-                        .contentTransition(.numericText())
+                if #available(iOS 17.0, *) {
+                    VStack(spacing: 0) {
+                        Image("deck")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("\(deck.cards.count)")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
+                    }
+                    .sensoryFeedback(.increase, trigger: deck.iconSize)
+                } else {
+                    VStack(spacing: 0) {
+                        Image("deck")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("\(deck.cards.count)")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                            .contentTransition(.numericText())
+                    }
                 }
             }
-            .sensoryFeedback(.increase, trigger: deck.iconSize)
             .scaleEffect(deck.iconSize)
             .animation(.spring(duration: 0.5, bounce: 0.6), value: deck.iconSize)
-            .onTapGesture { showingDeckCountPopover = true }
+            .onTapGesture {
+                if #available(iOS 16.4, *) {
+                    showingDeckCountPopover = true
+                }
+            }
             .popover(isPresented: $showingDeckCountPopover) {
-                Text("\(deck.cards.count) cards left in deck")
-                    .font(.headline)
-                    .padding()
-                    .presentationCompactAdaptation(.popover)
+                if #available(iOS 16.4, *) {
+                    Text("\(deck.cards.count) cards left in deck")
+                        .font(.headline)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                }
             }
             .padding(.horizontal)
             
