@@ -34,7 +34,7 @@ struct LeaderboardView: View {
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                     .padding(.top)
                 Text("(All Time)")
-                    .font(.custom("ModernAntiqua-Regular", size: 40))
+                    .font(.custom("ModernAntiqua-Regular", size: 30))
                     .foregroundStyle(.white)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                 
