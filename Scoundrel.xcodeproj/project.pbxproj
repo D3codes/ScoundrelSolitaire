@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0EE2E8DB2D79210B00653BEC /* Vortex in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE2E8DA2D79210B00653BEC /* Vortex */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0E5458662D6BA5590085024A /* Scoundrel Solitaire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scoundrel Solitaire.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE2E8DB2D79210B00653BEC /* Vortex in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Scoundrel;
 			packageProductDependencies = (
+				0EE2E8DA2D79210B00653BEC /* Vortex */,
 			);
 			productName = Scoundrel;
 			productReference = 0E5458662D6BA5590085024A /* Scoundrel Solitaire.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 0E54585D2D6BA5590085024A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				0EE2E8D92D79210B00653BEC /* XCRemoteSwiftPackageReference "Vortex" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0E5458672D6BA5590085024A /* Products */;
 			projectDirPath = "";
@@ -347,6 +356,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0EE2E8D92D79210B00653BEC /* XCRemoteSwiftPackageReference "Vortex" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/Vortex";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0EE2E8DA2D79210B00653BEC /* Vortex */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE2E8D92D79210B00653BEC /* XCRemoteSwiftPackageReference "Vortex" */;
+			productName = Vortex;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0E54585E2D6BA5590085024A /* Project object */;
 }

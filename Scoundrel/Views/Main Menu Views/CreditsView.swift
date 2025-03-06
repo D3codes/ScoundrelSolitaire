@@ -85,6 +85,15 @@ struct CreditsView: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom)
+                
+                Text("Packages")
+                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                    .foregroundStyle(.black)
+                Text("Vortex - by Paul Hudson")
+                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom)
             }
             .scrollIndicators(.hidden)
             .padding(.horizontal)

@@ -90,6 +90,7 @@ class Room: ObservableObject {
     }
     
     func flee(deck: Deck) {
+        self.isDealingCards = true
         self.playerFleed = true
         destinations = [.deck, .deck, .deck, .deck]
         shuffleSound?.play()

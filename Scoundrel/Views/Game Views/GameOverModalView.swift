@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Vortex
 
 struct GameOverModalView: View {
     @ObservedObject var gameKitHelper: GameKitHelper
@@ -74,80 +75,92 @@ struct GameOverModalView: View {
     }
     
     var body: some View {
-        VStack {
-            if achievementName != nil {
-                GameOverAchievementView(
-                    achievementName: achievementName!,
-                    achievementDescription: achievementDescription!,
-                    achievementImage: achievementImage!
-                )
-            }
-            
-            ZStack {
-                Image("paper")
-                    .resizable()
-                    .cornerRadius(20)
+        ZStack {
+            VStack {
+                if achievementName != nil {
+                    GameOverAchievementView(
+                        achievementName: achievementName!,
+                        achievementDescription: achievementDescription!,
+                        achievementImage: achievementImage!
+                    )
+                }
                 
-                VStack {
-                    HStack {
+                ZStack {
+                    Image("paper")
+                        .resizable()
+                        .cornerRadius(20)
+                    
+                    VStack {
+                        HStack {
+                            Spacer()
+                            ShareLink(item: getShareItem(), preview: SharePreview(
+                                getSharePreviewTitle(),
+                                image: Image("logo")
+                            )) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.white)
+                                    .font(.system(size: 25))
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            }
+                        }
+                        .padding(.top, 20)
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 1)
+                        
+                        Text("Game Over")
+                            .font(.custom("MorrisRoman-Black", size: 50))
+                            .foregroundStyle(.white)
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            .padding(.bottom, 2)
+                        
+                        Text("Score: \(score)")
+                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .foregroundStyle(.black)
+                        
                         Spacer()
-                        ShareLink(item: getShareItem(), preview: SharePreview(
-                            getSharePreviewTitle(),
-                            image: Image("logo")
-                        )) {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundStyle(.white)
-                                .font(.system(size: 25))
-                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        }
+                        
+                        Button(action: { newGame() }, label: {
+                            ZStack {
+                                Image("plank1")
+                                    .resizable()
+                                    .frame(width: 200, height: 50)
+                                Text("New Game")
+                                    .font(.custom("ModernAntiqua-Regular", size: 30))
+                                    .foregroundStyle(.white)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            }
+                        })
+                        
+                        Button(action: { mainMenu() }, label: {
+                            ZStack {
+                                Image("plank1")
+                                    .resizable()
+                                    .frame(width: 200, height: 50)
+                                Text("Main Menu")
+                                    .font(.custom("ModernAntiqua-Regular", size: 30))
+                                    .foregroundStyle(.white)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            }
+                        })
+                        
+                        Spacer()
                     }
-                    .padding(.top, 20)
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 1)
-                    
-                    Text("Game Over")
-                        .font(.custom("MorrisRoman-Black", size: 50))
-                        .foregroundStyle(.white)
-                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        .padding(.bottom, 2)
-                    
-                    Text("Score: \(score)")
-                        .font(.custom("ModernAntiqua-Regular", size: 30))
-                        .foregroundStyle(.black)
-                    
-                    Spacer()
-                    
-                    Button(action: { newGame() }, label: {
-                        ZStack {
-                            Image("plank1")
-                                .resizable()
-                                .frame(width: 200, height: 50)
-                            Text("New Game")
-                                .font(.custom("ModernAntiqua-Regular", size: 30))
-                                .foregroundStyle(.white)
-                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        }
-                    })
-                    
-                    Button(action: { mainMenu() }, label: {
-                        ZStack {
-                            Image("plank1")
-                                .resizable()
-                                .frame(width: 200, height: 50)
-                            Text("Main Menu")
-                                .font(.custom("ModernAntiqua-Regular", size: 30))
-                                .foregroundStyle(.white)
-                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        }
-                    })
-                    
-                    Spacer()
+                }
+                .frame(width: 300, height: 400)
+                .task {
+                    await submitScoreToGameCenter()
+                    await checkForAchievements()
                 }
             }
-            .frame(width: 300, height: 400)
-            .task {
-                await submitScoreToGameCenter()
-                await checkForAchievements()
+            if score > 0 {
+                VortexView(.fireworks) {
+                    Circle()
+                        .fill(.white)
+                        .blendMode(.plusLighter)
+                        .frame(width: 32)
+                        .tag("circle")
+                }
+                .allowsHitTesting(false)
             }
         }
     }

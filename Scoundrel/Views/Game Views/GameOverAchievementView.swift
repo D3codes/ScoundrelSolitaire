@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Vortex
 
 struct GameOverAchievementView: View {
     var achievementName: String
