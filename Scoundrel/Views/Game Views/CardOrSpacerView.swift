@@ -22,7 +22,7 @@ struct CardOrSpacerView: View {
             } else {
                 CardView(card: room.cards[cardIndex]!)
                     .onTapGesture {
-                        if !room.lockCardSelection {
+                        if !room.isDealingCards {
                             withAnimation { cardSelected = cardIndex }
                         }
                     }

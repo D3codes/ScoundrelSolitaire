@@ -19,7 +19,7 @@ class Room: ObservableObject {
     var dealCardSound: AVAudioPlayer?
     var shuffleSound: AVAudioPlayer?
     
-    @Published var lockCardSelection: Bool = false
+    @Published var isDealingCards: Bool = false
     
     enum CardDestination: String, CaseIterable {
         case health
@@ -70,7 +70,7 @@ class Room: ObservableObject {
         self.cards = cards
         self.canFlee = !fleedLastRoom
         self.usedHealthPotion = false
-        self.lockCardSelection = false
+        self.isDealingCards = false
         self.playerFleed = false
         setDestinations()
     }
@@ -78,8 +78,8 @@ class Room: ObservableObject {
     func reset(deck: Deck) {
         self.usedHealthPotion = false
         cards = [nil, nil, nil, nil]
+        isDealingCards = true
         nextRoom(deck: deck, fleedLastRoom: false)
-        lockCardSelection = false
         self.playerFleed = false
     }
     
@@ -128,7 +128,7 @@ class Room: ObservableObject {
             
             if i == 3 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
-                    self.lockCardSelection = false
+                    self.isDealingCards = false
                 }
             }
         }

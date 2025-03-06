@@ -81,15 +81,15 @@ struct TopBarView: View {
                             .frame(width: 100, height: 50)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                         Text("Flee")
-                            .foregroundStyle(room.canFlee ? .white : .black)
+                            .foregroundStyle(room.canFlee && !room.isDealingCards ? .white : .black)
                             .font(.custom("ModernAntiqua-Regular", size: 30))
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
-                .disabled(!room.canFlee)
-                .blur(radius: room.canFlee ? 0 : 0.5)
+                .disabled(!room.canFlee || room.isDealingCards)
+                .blur(radius: room.canFlee && !room.isDealingCards ? 0 : 0.5)
                 
-                if(!room.canFlee) {
+                if(!room.canFlee || room.isDealingCards) {
                     RoundedRectangle(cornerRadius: 20)
                         .frame(width: 100, height: 50)
                         .foregroundStyle(.ultraThinMaterial)

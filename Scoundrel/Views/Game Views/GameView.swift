@@ -91,7 +91,7 @@ struct GameView: View {
         }
         
         if room.cards.filter({ $0 == nil }).count == 3 && !deck.cards.isEmpty {
-            room.lockCardSelection = true
+            room.isDealingCards = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 room.nextRoom(deck: deck, fleedLastRoom: false)
             }
@@ -188,7 +188,8 @@ struct GameView: View {
                 PauseModalView(
                     continueGame: { withAnimation { pauseMenuShown = false } },
                     newGame: newGame,
-                    mainMenu: mainMenu
+                    mainMenu: mainMenu,
+                    room: room
                 )
                 .transition(.opacityAndMoveFromBottom)
             }
