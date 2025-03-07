@@ -49,7 +49,7 @@ struct WeaponBarView: View {
                     .foregroundStyle(.regularMaterial)
                     .shadow(color: .black, radius: 5, x: 2, y: 2)
                 
-                if #available(iOS 17.0, *) {
+                if #available(iOS 17.0, *) { // sensory feedback not available on older OS versions
                     VStack(spacing: 0) {
                         Image("sword1")
                             .resizable()
@@ -73,12 +73,12 @@ struct WeaponBarView: View {
             .scaleEffect(player.weaponIconSize)
             .animation(.spring(duration: 0.5, bounce: 0.6), value: player.weaponIconSize)
             .onTapGesture {
-                if #available(iOS 16.4, *) {
+                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
                     isShowingWeaponPopover = true
                 }
             }
             .popover(isPresented: $isShowingWeaponPopover) {
-                if #available(iOS 16.4, *) {
+                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
                     Text("Can attack monsters with strength \(player.strongestMonsterThatCanBeAttacked()) or less")
                         .fixedSize(horizontal: false, vertical: true)
                         .font(.headline)

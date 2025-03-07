@@ -29,6 +29,7 @@ struct GameView: View {
     @State var pageSound: AVAudioPlayer?
     
     @State var strengthOfMonsterThatKilledPlayer: Int = 0
+    @State var bonusPoints: Int = 0
     
     func initializeSounds() {
         do {
@@ -48,6 +49,9 @@ struct GameView: View {
             endAction(index)
             break
         case .healthPotion:
+            if player.health == 20 {
+                bonusPoints = room.cards[index]!.strength
+            }
             if !room.usedHealthPotion {
                 player.useHealthPotion(potionStrength: room.cards[index]!.strength)
                 room.usedHealthPotion = true
@@ -106,16 +110,14 @@ struct GameView: View {
             }
             
             withAnimation { gameOver = true }
+        } else {
+            bonusPoints = 0
         }
     }
     
     func getScore() -> Int {
         if player.health > 0 {
-            if player.health < 20 {
-                return player.health
-            }
-            
-            return room.cards.reduce(player.health) { $0 + (($1 != nil && $1!.suit == .healthPotion) ? $1!.strength : 0) }
+            return player.health + deck.combinedStrengthOfAllMonsterCards + bonusPoints
         }
         
         return room.cards.reduce(deck.getScore()) { $0 - (($1 != nil && $1!.suit == .monster) ? $1!.strength : 0)}
@@ -124,6 +126,7 @@ struct GameView: View {
     func newGame() {
         selectedCardIndex = nil
         strengthOfMonsterThatKilledPlayer = 0
+        bonusPoints = 0
         
         withAnimation(.spring()) {
             for i in 0...3 {

@@ -10,6 +10,7 @@ import SwiftUI
 class Deck: ObservableObject {
     var cards: [Card] = []
     
+    let combinedStrengthOfAllMonsterCards: Int = 208
     let animationDelay: CGFloat = 0.3
     let scaleAmount: CGFloat = 0.1
     @Published var iconSize: CGFloat = 1
@@ -22,8 +23,8 @@ class Deck: ObservableObject {
         cards = []
         
 //        cards = [
-//            Card(suit: .monster, strength: 2),
-//            Card(suit: .monster, strength: 2),
+//            Card(suit: .monster, strength: 14),
+//            Card(suit: .monster, strength: 5),
 //            Card(suit: .healthPotion, strength: 2),
 //            Card(suit: .healthPotion, strength: 2),
 //            Card(suit: .weapon, strength: 2),
@@ -66,6 +67,6 @@ class Deck: ObservableObject {
     }
     
     func getScore() -> Int {
-        return cards.reduce(0) { $0 - ($1.suit == .monster ? $1.strength : 0) }
+        return cards.reduce(combinedStrengthOfAllMonsterCards) { $0 - ($1.suit == .monster ? $1.strength : 0) }
     }
 }

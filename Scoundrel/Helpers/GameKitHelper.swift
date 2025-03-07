@@ -55,7 +55,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         if localPlayerIsAuthenticated {
             GKAccessPoint.shared.location = .topTrailing
         } else {
-            if #available(iOS 18, *) {
+            if #available(iOS 18, *) { // Access point is too large on older OS versions
                 GKAccessPoint.shared.location = .topTrailing
             } else {
                 GKAccessPoint.shared.location = .bottomTrailing
