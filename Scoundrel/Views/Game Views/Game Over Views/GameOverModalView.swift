@@ -164,8 +164,8 @@ struct GameOverModalView: View {
                 }
                 .frame(width: 300, height: 400)
                 .task {
-                    //await submitScoreToGameCenter()
-                    //await checkForAchievements()
+                    await submitScoreToGameCenter()
+                    await checkForAchievements()
                 }
             }
             
