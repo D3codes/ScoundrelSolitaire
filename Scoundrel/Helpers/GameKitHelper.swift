@@ -94,8 +94,8 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
     func fetchLeaderboard(id: String, count: Int) async throws -> [GKLeaderboard.Entry] {
         if !localPlayerIsAuthenticated { return [] }
         
-        let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [Leaderboard.ScoundrelAllTimeHighScore.rawValue]).first
-        return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...10)).1 ?? []
+        let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id]).first
+        return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
     }
     
     func fetchAchievements() async throws -> [GKAchievement] {
