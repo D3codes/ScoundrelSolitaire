@@ -73,22 +73,32 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         gameCenterViewController.dismiss(animated:true)
     }
     
-    func displayDashboard() {
-        let viewController = GKGameCenterViewController(state: .dashboard)
-        viewController.gameCenterDelegate = self
-        present(viewController, animated: true, completion: nil)
-    }
+//    func displayDashboard() {
+//        let viewController = GKGameCenterViewController(state: .dashboard)
+//        viewController.gameCenterDelegate = self
+//        present(viewController, animated: true, completion: nil)
+//    }
+//    
+//    func displayLeaderboards() {
+//        let viewController = GKGameCenterViewController(state: .achievements)
+//        viewController.gameCenterDelegate = self
+//        present(viewController, animated: true, completion: nil)
+//    }
+//
+//    func fetchAchievements() async throws -> [GKAchievement] {
+//        if !localPlayerIsAuthenticated { return [] }
+//
+//        return try await GKAchievement.loadAchievements()
+//    }
     
-    func displayLeaderboards() {
-        let viewController = GKGameCenterViewController(state: .achievements)
-        viewController.gameCenterDelegate = self
-        present(viewController, animated: true, completion: nil)
-    }
-    
-    func submitScore(_ score: Int) async throws {
+    func submitScore(_ score: Int) async {
         if !localPlayerIsAuthenticated { return }
         
-        try await GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [Leaderboard.ScoundrelAllTimeHighScore.rawValue])
+        do {
+            try await GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [Leaderboard.ScoundrelAllTimeHighScore.rawValue])
+        } catch {
+            
+        }
     }
     
     func fetchLeaderboard(id: String, count: Int) async throws -> [GKLeaderboard.Entry] {
@@ -96,12 +106,6 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         
         let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id]).first
         return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
-    }
-    
-    func fetchAchievements() async throws -> [GKAchievement] {
-        if !localPlayerIsAuthenticated { return [] }
-        
-        return try await GKAchievement.loadAchievements()
     }
     
     func unlockAchievement(_ achievementId: Achievement) async {

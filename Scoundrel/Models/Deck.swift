@@ -65,8 +65,4 @@ class Deck: ObservableObject {
         
         return cards.removeFirst()
     }
-    
-    func getScore() -> Int {
-        return cards.reduce(combinedStrengthOfAllMonsterCards) { $0 - ($1.suit == .monster ? $1.strength : 0) }
-    }
 }

@@ -86,8 +86,6 @@ struct TopBarView: View {
             }
             .padding(.horizontal)
             
-            //Spacer()
-            
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .frame(height: 50)
@@ -146,7 +144,7 @@ struct TopBarView: View {
 #Preview {
     struct TopBarView_Preview: View {
         
-        @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
+        @StateObject var room: Room = Room()
         @StateObject var deck: Deck = Deck()
         @Namespace var animation
         @State var selectedCardIndex: Int?

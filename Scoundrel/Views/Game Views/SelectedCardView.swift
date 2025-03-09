@@ -95,15 +95,7 @@ struct SelectedCardView: View {
 
 #Preview {
     struct SelectedCardView_Preview: View {
-        @StateObject var room: Room = Room(
-            cards: [
-                Card(suit: .monster, strength: 3),
-                nil,
-                nil,
-                nil
-            ],
-            fleedLastRoom: false
-        )
+        @StateObject var room: Room = Room([Card(suit: .monster, strength: 11), nil, nil, nil])
         @StateObject var player: Player = Player()
         @State var cardSelected: Int? = 0
         @Namespace var animation
