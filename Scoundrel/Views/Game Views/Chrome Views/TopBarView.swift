@@ -13,6 +13,7 @@ struct TopBarView: View {
     var pause: () -> Void
     var animationNamespace: Namespace.ID
     @Binding var selectedCardIndex: Int?
+    var score: Int
     
     @State var showingDeckCountPopover: Bool = false
     
@@ -85,7 +86,23 @@ struct TopBarView: View {
             }
             .padding(.horizontal)
             
-            Spacer()
+            //Spacer()
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(height: 50)
+                    .foregroundStyle(.regularMaterial)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    
+                VStack(spacing: 0) {
+                    Text("Score")
+                        .font(.custom("MorrisRoman-Black", size: 20))
+                    Text("\(score)")
+                        .font(.custom("MorrisRoman-Black", size: 20))
+                        .contentTransition(.numericText())
+                }
+            }
+            .padding(.trailing)
             
             ZStack {
                 Button(action: {
@@ -133,6 +150,7 @@ struct TopBarView: View {
         @StateObject var deck: Deck = Deck()
         @Namespace var animation
         @State var selectedCardIndex: Int?
+        @State var score: Int = 202
         
         var body: some View {
             TopBarView(
@@ -140,7 +158,8 @@ struct TopBarView: View {
                 deck: deck,
                 pause: {},
                 animationNamespace: animation,
-                selectedCardIndex: $selectedCardIndex
+                selectedCardIndex: $selectedCardIndex,
+                score: score
             )
         }
     }
