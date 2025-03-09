@@ -29,6 +29,8 @@ struct GameView: View {
     @State var pageSound: AVAudioPlayer?
     
     @State var strengthOfMonsterThatKilledPlayer: Int = 0
+    
+    @State var score: Int = 0
     @State var bonusPoints: Int = 0
     
     func initializeSounds() {
@@ -76,6 +78,7 @@ struct GameView: View {
                 if player.weapon ?? 0 == 2 && room.cards[index]!.strength == 14 {
                     Task { await gameKitHelper.unlockAchievement(.DavidAndGoliath) }
                 }
+                withAnimation { score += room.cards[index]!.strength }
             } else {
                 if room.cards[index]!.strength == 2 {
                     Task { await gameKitHelper.unlockAchievement(.DefinitelyMeantToDoThat) }
@@ -127,6 +130,7 @@ struct GameView: View {
         selectedCardIndex = nil
         strengthOfMonsterThatKilledPlayer = 0
         bonusPoints = 0
+        score = 0
         
         withAnimation(.spring()) {
             for i in 0...3 {
@@ -152,7 +156,8 @@ struct GameView: View {
                         pageSound?.play()
                     },
                     animationNamespace: animation,
-                    selectedCardIndex: $selectedCardIndex
+                    selectedCardIndex: $selectedCardIndex,
+                    score: score
                 )
                 
                 Spacer()
