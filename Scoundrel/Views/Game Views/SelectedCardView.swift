@@ -25,32 +25,13 @@ struct SelectedCardView: View {
                 .onTapGesture { cancel() }
             
             VStack {
-                switch cardSelected {
-                case 0:
+                if cardSelected != nil {
                     CardView(card: room.cards[cardSelected!]!)
-                        .matchedGeometryEffect(id: "Card0", in: animationNamespace)
+                        .matchedGeometryEffect(id: "Card\(cardSelected!)", in: animationNamespace)
                         .scaleEffect(1.2)
                         .padding(.bottom, 50)
                         .transition(.opacityAndScale)
-                case 1:
-                    CardView(card: room.cards[cardSelected!]!)
-                        .matchedGeometryEffect(id: "Card1", in: animationNamespace)
-                        .scaleEffect(1.2)
-                        .padding(.bottom, 50)
-                        .transition(.opacityAndScale)
-                case 2:
-                    CardView(card: room.cards[cardSelected!]!)
-                        .matchedGeometryEffect(id: "Card2", in: animationNamespace)
-                        .scaleEffect(1.2)
-                        .padding(.bottom, 50)
-                        .transition(.opacityAndScale)
-                case 3:
-                    CardView(card: room.cards[cardSelected!]!)
-                        .matchedGeometryEffect(id: "Card3", in: animationNamespace)
-                        .scaleEffect(1.2)
-                        .padding(.bottom, 50)
-                        .transition(.opacityAndScale)
-                default:
+                } else {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(.ultraThinMaterial)
                         .frame(width: 150, height: 200)

@@ -106,7 +106,7 @@ struct RoomView: View {
 
 #Preview {
     struct RoomView_Preview: View {
-        @StateObject var room = Room()
+        @StateObject var room = Room([nil, nil, nil, Card(suit: .monster, strength: 5)])
         
         func actionSelected(index: Int, bool: Bool) {
             withAnimation {
