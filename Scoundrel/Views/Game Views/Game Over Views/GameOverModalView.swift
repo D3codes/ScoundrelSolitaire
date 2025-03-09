@@ -71,16 +71,6 @@ struct GameOverModalView: View {
         }
     }
     
-    func submitScoreToGameCenter() async {
-        if gameKitHelper.localPlayerIsAuthenticated {
-            do {
-                try await gameKitHelper.submitScore(score)
-            } catch {
-                // Failed to submit score
-            }
-        }
-    }
-    
     func getSharePreviewTitle() -> String {
         return "I scored \(score) in Scoundrel Solitaire!"
     }
@@ -163,10 +153,7 @@ struct GameOverModalView: View {
                     }
                 }
                 .frame(width: 300, height: 400)
-                .task {
-                    await submitScoreToGameCenter()
-                    await checkForAchievements()
-                }
+                .task { await checkForAchievements() }
             }
             
             if score > lowestWinningScore {

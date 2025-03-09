@@ -46,7 +46,7 @@ struct StatsBarView: View {
     
     struct StatsBarView_Preview: View {
         @StateObject var player: Player = Player()
-        @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
+        @StateObject var room: Room = Room()
         @Namespace var animation
         
         var body: some View {

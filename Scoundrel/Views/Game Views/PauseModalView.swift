@@ -45,7 +45,7 @@ struct PauseModalView: View {
 
 #Preview {
     struct PauseModalView_Preview: View {
-        @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
+        @StateObject var room: Room = Room()
         
         var body: some View {
             PauseModalView(

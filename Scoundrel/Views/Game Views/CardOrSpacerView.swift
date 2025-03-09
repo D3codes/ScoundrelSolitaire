@@ -35,15 +35,7 @@ struct CardOrSpacerView: View {
 
 #Preview {
     struct CardOrSpacerView_Preview: View {
-        @StateObject var room: Room = Room(
-            cards: [
-                Card(suit: .monster, strength: 11),
-                nil,
-                nil,
-                nil
-            ],
-            fleedLastRoom: false
-        )
+        @StateObject var room: Room = Room([Card(suit: .monster, strength: 11), nil, nil, nil])
         @State var cardSelected: Int? = 1
         @Namespace var animation
         

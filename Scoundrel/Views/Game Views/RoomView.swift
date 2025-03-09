@@ -12,7 +12,7 @@ struct RoomView: View {
     
     @ObservedObject var room: Room
     @ObservedObject var player: Player
-    let cardTapped: (Int, Bool) -> Void
+    let actionSelected: (Int, Bool) -> Void
     
     @Binding var cardSelected: Int?
     
@@ -23,13 +23,13 @@ struct RoomView: View {
     func firstActionTapped() {
         let selectedCard: Int = cardSelected!
         closeSelectedView()
-        cardTapped(selectedCard, true)
+        actionSelected(selectedCard, true)
     }
     
     func secondActionTapped() {
         let selectedCard: Int = cardSelected!
         closeSelectedView()
-        cardTapped(selectedCard, false)
+        actionSelected(selectedCard, false)
     }
     
     var body: some View {
@@ -106,17 +106,9 @@ struct RoomView: View {
 
 #Preview {
     struct RoomView_Preview: View {
-        @StateObject var room = Room(
-            cards: [
-                Card(suit: .monster, strength: 5),
-                Card(suit: .healthPotion, strength: 5),
-                Card(suit: .weapon, strength: 5),
-                nil
-            ],
-            fleedLastRoom: false
-        )
+        @StateObject var room = Room([nil, nil, nil, Card(suit: .monster, strength: 5)])
         
-        func cardTapped(index: Int, bool: Bool) {
+        func actionSelected(index: Int, bool: Bool) {
             withAnimation {
                 room.cards[index] = nil
             }
@@ -133,7 +125,7 @@ struct RoomView: View {
                     animationNamespace: animation,
                     room: room,
                     player: player,
-                    cardTapped: cardTapped,
+                    actionSelected: actionSelected,
                     cardSelected: $cardSelected
                 )
                 

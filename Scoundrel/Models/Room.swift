@@ -21,13 +21,12 @@ class Room: ObservableObject {
     
     @Published var isDealingCards: Bool = false
     
+    @Published var destinations: [CardDestination] = [.deck, .deck, .deck, .deck]
     enum CardDestination: String, CaseIterable {
         case health
         case weapon
         case deck
     }
-    
-    @Published var destinations: [CardDestination] = [.deck, .deck, .deck, .deck]
     
     func setDestinations() {
         for i in 0...3 {
@@ -49,11 +48,7 @@ class Room: ObservableObject {
         }
     }
     
-    init(cards: [Card?], fleedLastRoom: Bool) {
-        guard cards.count == 4 else {
-            fatalError("")
-        }
-
+    init(_ cards: [Card?] = [nil, nil, nil, nil]) {
         do {
             dealCardSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
         } catch {
@@ -68,7 +63,7 @@ class Room: ObservableObject {
         }
         
         self.cards = cards
-        self.canFlee = !fleedLastRoom
+        self.canFlee = true
         self.usedHealthPotion = false
         self.isDealingCards = false
         self.playerFleed = false
