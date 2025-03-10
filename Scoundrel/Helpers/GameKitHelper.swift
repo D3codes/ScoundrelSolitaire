@@ -113,11 +113,23 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
     func incrementAchievementProgress(_ achievementId: Achievement, by incrementAmount: Double) {
         if !localPlayerIsAuthenticated { return }
         
-        let achievement = GKAchievement(identifier: achievementId.rawValue)
-        achievement.percentComplete = achievement.percentComplete + incrementAmount
         Task {
             do {
-                try await GKAchievement.report([achievement])
+                // Load the player's active achievements.
+                let achievements = try await GKAchievement.loadAchievements()
+                
+                // Find an existing achievement.
+                var achievement = achievements.first(where: { $0.identifier == achievementId.rawValue })
+
+                // Otherwise, create a new achievement.
+                if achievement == nil {
+                    achievement = GKAchievement(identifier: achievementId.rawValue)
+                }
+                
+                achievement!.percentComplete = achievement!.percentComplete + incrementAmount
+                      
+                // Report the progress to Game Center.
+                try await GKAchievement.report([achievement!])
             } catch {
                 
             }
