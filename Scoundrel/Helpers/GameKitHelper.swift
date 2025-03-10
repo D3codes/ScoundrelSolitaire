@@ -24,6 +24,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case DungeonMaster
         case Untouchable
         case HangingByAThread
+        case MasterOfEvasion
     }
     
     @Published var localPlayerIsAuthenticated: Bool = false
@@ -107,6 +108,32 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         
         let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id]).first
         return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
+    }
+    
+    func incrementAchievementProgress(_ achievementId: Achievement, by incrementAmount: Double) {
+        if !localPlayerIsAuthenticated { return }
+        
+        Task {
+            do {
+                // Load the player's active achievements.
+                let achievements = try await GKAchievement.loadAchievements()
+                
+                // Find an existing achievement.
+                var achievement = achievements.first(where: { $0.identifier == achievementId.rawValue })
+
+                // Otherwise, create a new achievement.
+                if achievement == nil {
+                    achievement = GKAchievement(identifier: achievementId.rawValue)
+                }
+                
+                achievement!.percentComplete = achievement!.percentComplete + incrementAmount
+                      
+                // Report the progress to Game Center.
+                try await GKAchievement.report([achievement!])
+            } catch {
+                
+            }
+        }
     }
     
     func unlockAchievement(_ achievementId: Achievement) {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 class Game: ObservableObject {
     @Published var gameKitHelper: GameKitHelper = GameKitHelper()
@@ -26,10 +27,25 @@ class Game: ObservableObject {
     let twentyLifeRemainingScore: Int = 228
     let highestPossibleScore: Int = 238
     
+    var deckCancellable: AnyCancellable? = nil
+    var playerCancellable: AnyCancellable? = nil
+    var roomCancellable: AnyCancellable? = nil
+    
     init() {
         self.deck = Deck()
         self.player = Player()
         self.room = Room()
+        
+        // Required to propagate changes from sub-objects
+        deckCancellable = deck.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
+        }
+        playerCancellable = player.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
+        }
+        roomCancellable = room.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
+        }
         
         gameKitHelper.authenticateLocalPlayer()
     }
@@ -45,6 +61,11 @@ class Game: ObservableObject {
         room.reset(deck: deck)
         
         withAnimation { gameOver = false }
+    }
+    
+    func flee() {
+        gameKitHelper.incrementAchievementProgress(.MasterOfEvasion, by: 1)
+        room.flee(deck: deck)
     }
     
     func equipWeapon(cardIndex: Int) {
