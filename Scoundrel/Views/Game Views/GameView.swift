@@ -14,7 +14,6 @@ struct GameView: View {
     @ObservedObject var game: Game
     var mainMenu: () -> Void
     
-    @State var showAttackOptionAlert: Bool = false
     @State var pauseMenuShown: Bool = false
     @State var selectedCardIndex: Int?
     
@@ -40,6 +39,7 @@ struct GameView: View {
     }
     
     func newGame() {
+        selectedCardIndex = nil
         withAnimation { pauseMenuShown = false }
         background = backgrounds.randomElement()!
         game.newGame()
