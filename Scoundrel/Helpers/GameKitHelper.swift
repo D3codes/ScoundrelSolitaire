@@ -23,6 +23,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case SeasonedAdventurer
         case DungeonMaster
         case Untouchable
+        case HangingByAThread
     }
     
     @Published var localPlayerIsAuthenticated: Bool = false

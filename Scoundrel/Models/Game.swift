@@ -153,6 +153,11 @@ class Game: ObservableObject {
             gameOverModalAchievement = .Survivor
         }
         
+        if player.health == 1 {
+            gameKitHelper.unlockAchievement(.HangingByAThread)
+            gameOverModalAchievement = .HangingByAThread
+        }
+        
         if score >= tenLifeRemainingScore {
             gameKitHelper.unlockAchievement(.SeasonedAdventurer)
             gameOverModalAchievement = .SeasonedAdventurer

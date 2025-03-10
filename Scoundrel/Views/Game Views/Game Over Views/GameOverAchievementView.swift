@@ -51,6 +51,11 @@ struct GameOverAchievementView: View {
             achievementName = "Cowards Need Not Apply"
             achievementDescription = "Beat the dungeon without fleeing any rooms"
             achievementImage = "CowardsNeedNotApply"
+        case .HangingByAThread:
+            achievementName = "Hanging by a Thread"
+            achievementDescription = "Complete a dungeon with exactly 1 life remaining"
+            achievementImage = "HangingByAThread"
+            break
         default:
             achievementName = ""
             achievementDescription = ""
@@ -99,7 +104,7 @@ struct GameOverAchievementView: View {
 
         var body: some View {
             GameOverAchievementView(
-                achievement: .CowardsNeedNotApply
+                achievement: .HangingByAThread
             )
         }
     }
