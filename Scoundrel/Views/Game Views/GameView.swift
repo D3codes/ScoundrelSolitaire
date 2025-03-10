@@ -102,11 +102,9 @@ struct GameView: View {
             
             if game.gameOver {
                 GameOverModalView(
-                    gameKitHelper: game.gameKitHelper,
-                    score: game.score,
+                    game: game,
                     newGame: newGame,
-                    mainMenu: mainMenu,
-                    strengthOfMonsterThatKilledPlayer: game.strengthOfMonsterThatKilledPlayer
+                    mainMenu: mainMenu
                 )
                 .transition(.opacityAndMoveFromBottom)
             }

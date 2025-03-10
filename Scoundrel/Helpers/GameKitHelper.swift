@@ -108,15 +108,17 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
     }
     
-    func unlockAchievement(_ achievementId: Achievement) async {
+    func unlockAchievement(_ achievementId: Achievement) {
         if !localPlayerIsAuthenticated { return }
         
         let achievement = GKAchievement(identifier: achievementId.rawValue)
         achievement.percentComplete = 100
-        do {
-            try await GKAchievement.report([achievement])
-        } catch {
-            
+        Task {
+            do {
+                try await GKAchievement.report([achievement])
+            } catch {
+                
+            }
         }
     }
 }
