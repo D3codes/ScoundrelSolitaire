@@ -63,15 +63,13 @@ struct GameView: View {
         ZStack {
             VStack {
                 TopBarView(
-                    room: game.room,
-                    deck: game.deck,
+                    game: game,
                     pause: {
                         withAnimation { pauseMenuShown = true }
                         pageSound?.play()
                     },
                     animationNamespace: animation,
-                    selectedCardIndex: $selectedCardIndex,
-                    score: game.score
+                    selectedCardIndex: $selectedCardIndex
                 )
                 
                 Spacer()
