@@ -131,9 +131,9 @@ class Game: ObservableObject {
     }
     
     func endGame() {
-        withAnimation { gameOver = true }
-        
         checkForAchievements()
+        
+        withAnimation { gameOver = true }
         
         Task { await gameKitHelper.submitScore(score) }
     }
@@ -144,13 +144,8 @@ class Game: ObservableObject {
             gameOverModalAchievement = .WereYouEvenTrying
         }
         
-        if strengthOfMonsterThatKilledPlayer == 2 {
+        if player.health <= 0 && strengthOfMonsterThatKilledPlayer == 2 {
             gameOverModalAchievement = .DefinitelyMeantToDoThat
-        }
-        
-        if player.health > 0 && !room.playerFleed {
-            gameKitHelper.unlockAchievement(.CowardsNeedNotApply)
-            gameOverModalAchievement = .CowardsNeedNotApply
         }
         
         if score >= lowestWinningScore {
@@ -166,6 +161,11 @@ class Game: ObservableObject {
         if score >= twentyLifeRemainingScore {
             gameKitHelper.unlockAchievement(.DungeonMaster)
             gameOverModalAchievement = .DungeonMaster
+        }
+        
+        if player.health > 0 && !room.playerFleed {
+            gameKitHelper.unlockAchievement(.CowardsNeedNotApply)
+            gameOverModalAchievement = .CowardsNeedNotApply
         }
         
         if score == highestPossibleScore {
