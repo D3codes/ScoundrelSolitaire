@@ -18,6 +18,13 @@ class Game: ObservableObject {
     @Published var score: Int = 0
     @Published var bonusPoints: Int = 0
     @Published var strengthOfMonsterThatKilledPlayer: Int = 0
+    @Published var gameOverModalAchievement: GameKitHelper.Achievement? = nil
+    
+    let lowestPossibleScore: Int = 6 // killed strength 6 monster unarmed, tried to kill strength 14 monster unarmed
+    let lowestWinningScore: Int = 209 // killed all monsters with 1 health remaining
+    let tenLifeRemainingScore: Int = 218
+    let twentyLifeRemainingScore: Int = 228
+    let highestPossibleScore: Int = 238
     
     init() {
         self.deck = Deck()
@@ -31,6 +38,7 @@ class Game: ObservableObject {
         score = 0
         bonusPoints = 0
         strengthOfMonsterThatKilledPlayer = 0
+        gameOverModalAchievement = nil
         
         player.reset()
         deck.reset()
@@ -85,7 +93,7 @@ class Game: ObservableObject {
         
         if player.health <= 0 {
             strengthOfMonsterThatKilledPlayer = room.cards[cardIndex]!.strength
-            withAnimation { gameOver = true }
+            endGame()
             return
         }
         
@@ -114,16 +122,55 @@ class Game: ObservableObject {
     }
     
     func handleDungeonCompletion() {
-        if !room.playerFleed {
-            Task { await gameKitHelper.unlockAchievement(.CowardsNeedNotApply) }
-        }
-        
         withAnimation {
             score += player.health
             score += bonusPoints
-            gameOver = true
         }
         
+        endGame()
+    }
+    
+    func endGame() {
+        checkForAchievements()
+        
+        withAnimation { gameOver = true }
+        
         Task { await gameKitHelper.submitScore(score) }
+    }
+    
+    func checkForAchievements() {
+        if score == lowestPossibleScore {
+            gameKitHelper.unlockAchievement(.WereYouEvenTrying)
+            gameOverModalAchievement = .WereYouEvenTrying
+        }
+        
+        if player.health <= 0 && strengthOfMonsterThatKilledPlayer == 2 {
+            gameOverModalAchievement = .DefinitelyMeantToDoThat
+        }
+        
+        if score >= lowestWinningScore {
+            gameKitHelper.unlockAchievement(.Survivor)
+            gameOverModalAchievement = .Survivor
+        }
+        
+        if score >= tenLifeRemainingScore {
+            gameKitHelper.unlockAchievement(.SeasonedAdventurer)
+            gameOverModalAchievement = .SeasonedAdventurer
+        }
+        
+        if score >= twentyLifeRemainingScore {
+            gameKitHelper.unlockAchievement(.DungeonMaster)
+            gameOverModalAchievement = .DungeonMaster
+        }
+        
+        if player.health > 0 && !room.playerFleed {
+            gameKitHelper.unlockAchievement(.CowardsNeedNotApply)
+            gameOverModalAchievement = .CowardsNeedNotApply
+        }
+        
+        if score == highestPossibleScore {
+            gameKitHelper.unlockAchievement(.Untouchable)
+            gameOverModalAchievement = .Untouchable
+        }
     }
 }
