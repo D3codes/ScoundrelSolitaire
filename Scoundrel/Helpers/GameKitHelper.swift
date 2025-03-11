@@ -13,7 +13,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case ScoundrelAllTimeHighScore
     }
     
-    enum Achievement: String, CaseIterable {
+    enum BinaryAchievement: String, CaseIterable {
         case DavidAndGoliath
         case WhatAWaste
         case WereYouEvenTrying
@@ -24,6 +24,9 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case DungeonMaster
         case Untouchable
         case HangingByAThread
+    }
+    
+    enum ProgressAchievement: String, CaseIterable {
         case MasterOfEvasion
     }
     
@@ -103,14 +106,14 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         }
     }
     
-    func fetchLeaderboard(id: String, count: Int) async throws -> [GKLeaderboard.Entry] {
+    func fetchLeaderboard(_ id: Leaderboard, top count: Int) async throws -> [GKLeaderboard.Entry] {
         if !localPlayerIsAuthenticated { return [] }
         
-        let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id]).first
+        let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id.rawValue]).first
         return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
     }
     
-    func incrementAchievementProgress(_ achievementId: Achievement, by incrementAmount: Double) {
+    func incrementAchievementProgress(_ achievementId: ProgressAchievement, by incrementAmount: Double) {
         if !localPlayerIsAuthenticated { return }
         
         Task {
@@ -136,7 +139,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         }
     }
     
-    func unlockAchievement(_ achievementId: Achievement) {
+    func unlockAchievement(_ achievementId: BinaryAchievement) {
         if !localPlayerIsAuthenticated { return }
         
         let achievement = GKAchievement(identifier: achievementId.rawValue)

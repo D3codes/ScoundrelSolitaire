@@ -9,7 +9,7 @@ import SwiftUI
 import Vortex
 
 struct GameOverAchievementView: View {
-    var achievement: GameKitHelper.Achievement
+    var achievement: GameKitHelper.BinaryAchievement
     
     @State var achievementName: String = ""
     @State var achievementDescription: String = ""

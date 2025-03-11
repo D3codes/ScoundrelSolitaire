@@ -19,7 +19,7 @@ class Game: ObservableObject {
     @Published var score: Int = 0
     @Published var bonusPoints: Int = 0
     @Published var strengthOfMonsterThatKilledPlayer: Int = 0
-    @Published var gameOverModalAchievement: GameKitHelper.Achievement? = nil
+    @Published var gameOverModalAchievement: GameKitHelper.BinaryAchievement? = nil
     
     let lowestPossibleScore: Int = 6 // killed strength 6 monster unarmed, tried to kill strength 14 monster unarmed
     let lowestWinningScore: Int = 209 // killed all monsters with 1 health remaining
