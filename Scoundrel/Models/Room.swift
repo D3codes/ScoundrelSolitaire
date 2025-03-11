@@ -17,6 +17,7 @@ class Room: ObservableObject {
     @Published var playerFleed: Bool = false
     
     var dealCardSound: AVAudioPlayer?
+    var dealCardSound2: AVAudioPlayer?
     var shuffleSound: AVAudioPlayer?
     
     @Published var isDealingCards: Bool = false
@@ -51,6 +52,7 @@ class Room: ObservableObject {
     init(_ cards: [Card?] = [nil, nil, nil, nil]) {
         do {
             dealCardSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSound2 = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
         } catch {
             // couldn't load file :(
         }
@@ -106,20 +108,25 @@ class Room: ObservableObject {
     
     func nextRoom(deck: Deck, fleedLastRoom: Bool) {
         setDestinations()
-        var dealingGap: Double = 0.55
+        var dealingGap: Double = animationDelay
         for i in 0...3 {
             if cards[i] == nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
                     withAnimation(.spring()) {
                         self.cards[i] = deck.getTopCard()
                         if self.cards[i] != nil {
-                            self.dealCardSound?.stop()
-                            self.dealCardSound?.play()
+                            if i % 2 == 0 {
+                                self.dealCardSound?.stop()
+                                self.dealCardSound?.play()
+                            } else {
+                                self.dealCardSound2?.stop()
+                                self.dealCardSound2?.play()
+                            }
                         }
                         self.setDestinations()
                     }
                 }
-                dealingGap += 0.55
+                dealingGap += animationDelay
             }
             
             if i == 3 {
