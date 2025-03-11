@@ -15,7 +15,7 @@ struct LeaderboardView: View {
 
     func fetchLeaderboardEntries() async {
         do {
-            leaderboardEntries = try await gameKitHelper.fetchLeaderboard(id: "ScoundrelAllTimeHighScore", count: 100)
+            leaderboardEntries = try await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
         } catch {
             // Failed to fetch leaderboard
         }
