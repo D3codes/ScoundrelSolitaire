@@ -25,7 +25,10 @@ struct GameView: View {
         "dungeon4",
         "dungeon5",
         "dungeon6",
-        "dungeon7"
+        "dungeon7",
+        "dungeon8",
+        "dungeon9",
+        "dungeon10"
     ]
 
     @State var pageSound: AVAudioPlayer?
