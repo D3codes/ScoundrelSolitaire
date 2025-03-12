@@ -13,7 +13,7 @@ struct LeaderboardView: View {
     
     @State private var leaderboardEntries: [GKLeaderboard.Entry] = []
     @State private var playerEntry: GKLeaderboard.Entry? = nil
-
+    
     func fetchLeaderboardEntries() async {
         do {
             leaderboardEntries = try await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
