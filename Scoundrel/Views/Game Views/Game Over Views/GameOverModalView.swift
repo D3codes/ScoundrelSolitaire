@@ -66,7 +66,7 @@ struct GameOverModalView: View {
                             .font(.custom("ModernAntiqua-Regular", size: 30))
                             .foregroundStyle(.black)
                         
-                        if game.score > game.previousBestScore ?? 0 {
+                        if game.previousBestScore != nil && game.score > game.previousBestScore! {
                             Text("New Personal Best!")
                                 .font(.custom("ModernAntiqua-Regular", size: 15))
                                 .foregroundStyle(.black)
