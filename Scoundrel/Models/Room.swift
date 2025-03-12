@@ -16,9 +16,8 @@ class Room: ObservableObject {
     
     @Published var playerFleed: Bool = false
     
-    var dealCardSound: AVAudioPlayer?
-    var dealCardSound2: AVAudioPlayer?
     var shuffleSound: AVAudioPlayer?
+    var dealCardSounds: [AVAudioPlayer?] = [nil, nil, nil, nil]
     
     @Published var isDealingCards: Bool = false
     
@@ -51,8 +50,10 @@ class Room: ObservableObject {
     
     init(_ cards: [Card?] = [nil, nil, nil, nil]) {
         do {
-            dealCardSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
-            dealCardSound2 = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[2] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[3] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
         } catch {
             // couldn't load file :(
         }
@@ -115,13 +116,7 @@ class Room: ObservableObject {
                     withAnimation(.spring()) {
                         self.cards[i] = deck.getTopCard()
                         if self.cards[i] != nil {
-                            if i % 2 == 0 {
-                                self.dealCardSound?.stop()
-                                self.dealCardSound?.play()
-                            } else {
-                                self.dealCardSound2?.stop()
-                                self.dealCardSound2?.play()
-                            }
+                            self.dealCardSounds[i]?.play()
                         }
                         self.setDestinations()
                     }
