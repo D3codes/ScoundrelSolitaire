@@ -8,7 +8,7 @@
 import SwiftUI
 import GameKit
 
-struct ControlBarView: View {    
+struct ControlBarView: View {
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
     

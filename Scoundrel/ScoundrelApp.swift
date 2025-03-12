@@ -11,6 +11,8 @@ import GameKit
 
 @main
 struct ScoundrelApp: App {
+    @AppStorage(UserDefaultsKeys().backgroundMusicMuted) private var backgroundMusicMuted: Bool = false
+    
     @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
     @StateObject var game: Game = Game()
     
@@ -51,7 +53,7 @@ struct ScoundrelApp: App {
             }
             .background(Image("dungeon1"))
             .onAppear {
-                musicPlayer.isPlaying = true
+                musicPlayer.isPlaying = !backgroundMusicMuted
                 game.gameKitHelper.authenticateLocalPlayer()
             }
         }
