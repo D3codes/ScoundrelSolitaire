@@ -96,6 +96,18 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
 //        return try await GKAchievement.loadAchievements()
 //    }
     
+    func fetchPlayerScore(leaderboardId: Leaderboard) async -> GKLeaderboard.Entry? {
+        if !localPlayerIsAuthenticated { return nil }
+        
+        do {
+            let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [leaderboardId.rawValue]).first
+            let entries = try await leaderboard?.loadEntries(for: [GKLocalPlayer.local], timeScope: .allTime).1 ?? []
+            return entries.isEmpty ? nil : entries[0]
+        } catch {
+            return nil
+        }
+    }
+    
     func submitScore(_ score: Int) async {
         if !localPlayerIsAuthenticated { return }
         

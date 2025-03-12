@@ -12,10 +12,12 @@ struct LeaderboardView: View {
     @ObservedObject var gameKitHelper: GameKitHelper
     
     @State private var leaderboardEntries: [GKLeaderboard.Entry] = []
+    @State private var playerEntry: GKLeaderboard.Entry? = nil
 
     func fetchLeaderboardEntries() async {
         do {
             leaderboardEntries = try await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
+            playerEntry = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)
         } catch {
             // Failed to fetch leaderboard
         }
@@ -57,14 +59,23 @@ struct LeaderboardView: View {
                                 Text("\(index+1).")
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
                             }
-                            Text("\(leaderboardEntries[index].player.displayName)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            VStack {
+                                Text("\(leaderboardEntries[index].player.displayName)")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                if leaderboardEntries[index].player.displayName == playerEntry?.player.displayName {
+                                    Text("You")
+                                        .font(.custom("ModernAntiqua-Regular", size: 10))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
                             
                             Spacer()
-                            Text("\(leaderboardEntries[index].formattedScore)")
+                            Text("\(leaderboardEntries[index].score)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .listRowBackground(Rectangle().fill(leaderboardEntries[index].player.displayName == playerEntry?.player.displayName ? .regularMaterial : .thinMaterial))
                     }
                     .scrollContentBackground(.hidden)
                 } else {
