@@ -20,6 +20,7 @@ class Game: ObservableObject {
     @Published var bonusPoints: Int = 0
     @Published var strengthOfMonsterThatKilledPlayer: Int = 0
     @Published var gameOverModalAchievement: GameKitHelper.BinaryAchievement? = nil
+    @Published var previousBestScore: Int? = nil
     
     let lowestPossibleScore: Int = 6 // killed strength 6 monster unarmed, tried to kill strength 14 monster unarmed
     let lowestWinningScore: Int = 209 // killed all monsters with 1 health remaining
@@ -55,6 +56,10 @@ class Game: ObservableObject {
         bonusPoints = 0
         strengthOfMonsterThatKilledPlayer = 0
         gameOverModalAchievement = nil
+        previousBestScore = nil
+        Task { @MainActor in
+            previousBestScore = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.score ?? nil
+        }
         
         player.reset()
         deck.reset()
