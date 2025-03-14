@@ -29,7 +29,7 @@ struct SettingsView: View {
                     .padding(.top)
                 
                 List {
-                    Button(action: { withAnimation { self.musicPlayer.isPlaying.toggle() } },label: {
+                    Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
                         HStack {
                             ZStack {
                                 Image("stoneButton")
@@ -57,7 +57,7 @@ struct SettingsView: View {
                     })
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Button(action: { withAnimation { self.soundEffectsMuted.toggle() } },label: {
+                    Button(action: { self.soundEffectsMuted.toggle() },label: {
                         HStack {
                             ZStack {
                                 Image("stoneButton")
@@ -85,7 +85,7 @@ struct SettingsView: View {
                     })
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Button(action: { withAnimation { self.hapticsEnabled.toggle() } },label: {
+                    Button(action: { self.hapticsEnabled.toggle() },label: {
                         HStack {
                             ZStack {
                                 Image("stoneButton")
