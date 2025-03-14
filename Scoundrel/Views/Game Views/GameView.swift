@@ -10,6 +10,8 @@ import SwiftData
 import AVFoundation
 
 struct GameView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @Namespace var animation
     @ObservedObject var game: Game
     var mainMenu: () -> Void
@@ -69,7 +71,7 @@ struct GameView: View {
                     game: game,
                     pause: {
                         withAnimation { pauseMenuShown = true }
-                        pageSound?.play()
+                        if !soundEffectsMuted { pageSound?.play() }
                     },
                     animationNamespace: animation,
                     selectedCardIndex: $selectedCardIndex

@@ -9,6 +9,8 @@ import SwiftUI
 import AVFoundation
 
 struct MainMenuView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
     
@@ -40,12 +42,12 @@ struct MainMenuView: View {
                 
                 PlankButtonView(text: "How to Play", action: {
                     showHowToModal = true
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                 })
                 
                 PlankButtonView(text: "Credits", action: {
                     showCreditsModal = true
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                 })
                 
                 Spacer()

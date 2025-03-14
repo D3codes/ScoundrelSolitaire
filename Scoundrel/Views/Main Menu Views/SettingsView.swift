@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @ObservedObject var musicPlayer: MusicPlayer
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -54,7 +56,7 @@ struct SettingsView: View {
                     })
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Button(action: { withAnimation { self.musicPlayer.isPlaying.toggle() } },label: {
+                    Button(action: { withAnimation { self.soundEffectsMuted.toggle() } },label: {
                         HStack {
                             ZStack {
                                 Image("stoneButton")
@@ -62,7 +64,7 @@ struct SettingsView: View {
                                     .frame(width: 50, height: 50)
                                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                                 
-                                if musicPlayer.isPlaying {
+                                if !soundEffectsMuted {
                                     Image(systemName: "speaker.wave.2.fill")
                                         .foregroundStyle(.white)
                                         .font(.title2)
@@ -75,7 +77,7 @@ struct SettingsView: View {
                                 }
                             }
                             
-                            Text("Sound Effects: \(self.musicPlayer.isPlaying ? "On" : "Off")")
+                            Text("Sound Effects: \(!self.soundEffectsMuted ? "On" : "Off")")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                                 .foregroundStyle(.foreground)
                         }
