@@ -9,6 +9,8 @@ import SwiftUI
 import AVFoundation
 
 class Room: ObservableObject {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @Published var canFlee: Bool
     @Published var cards: [Card?]
     @Published var usedHealthPotion: Bool
@@ -91,7 +93,7 @@ class Room: ObservableObject {
         self.isDealingCards = true
         self.playerFleed = true
         destinations = [.deck, .deck, .deck, .deck]
-        shuffleSound?.play()
+        if !soundEffectsMuted { shuffleSound?.play() }
         
         for i in 0...3 {
             if cards[i] != nil {
@@ -115,7 +117,7 @@ class Room: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
                     withAnimation(.spring()) {
                         self.cards[i] = deck.getTopCard()
-                        if self.cards[i] != nil {
+                        if self.cards[i] != nil && !self.soundEffectsMuted {
                             self.dealCardSounds[i]?.play()
                         }
                         self.setDestinations()

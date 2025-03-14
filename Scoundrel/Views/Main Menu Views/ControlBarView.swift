@@ -9,6 +9,8 @@ import SwiftUI
 import GameKit
 
 struct ControlBarView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
     
@@ -30,7 +32,7 @@ struct ControlBarView: View {
         ZStack {
             HStack {
                 Button(action: {
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                     isPresentingSettings = true
                 },label: {
                     ZStack {
@@ -48,7 +50,7 @@ struct ControlBarView: View {
                 .padding(.trailing, 50)
                 
                 Button(action: {
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                     isPresentingLeaderboards = true
                 },label: {
                     ZStack {
