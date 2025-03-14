@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TopBarView: View {
+    @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
+    
     @ObservedObject var game: Game
     var pause: () -> Void
     var animationNamespace: Namespace.ID
@@ -46,7 +48,7 @@ struct TopBarView: View {
                     .foregroundStyle(.regularMaterial)
                     .shadow(color: .black, radius: 5, x: 2, y: 2)
                     
-                if #available(iOS 17.0, *) { // sensory feedback not available on older OS versions
+                if #available(iOS 17.0, *), hapticsEnabled { // sensory feedback not available on older OS versions
                     VStack(spacing: 0) {
                         Image("deck")
                             .resizable()

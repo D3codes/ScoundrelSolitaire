@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
     
     @ObservedObject var musicPlayer: MusicPlayer
     
@@ -84,7 +85,7 @@ struct SettingsView: View {
                     })
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Button(action: { withAnimation { self.musicPlayer.isPlaying.toggle() } },label: {
+                    Button(action: { withAnimation { self.hapticsEnabled.toggle() } },label: {
                         HStack {
                             ZStack {
                                 Image("stoneButton")
@@ -92,7 +93,7 @@ struct SettingsView: View {
                                     .frame(width: 50, height: 50)
                                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                                 
-                                if musicPlayer.isPlaying {
+                                if hapticsEnabled {
                                     Image(systemName: "hand.tap.fill")
                                         .foregroundStyle(.white)
                                         .font(.title2)
@@ -105,7 +106,7 @@ struct SettingsView: View {
                                 }
                             }
                             
-                            Text("Haptic Feedback: \(self.musicPlayer.isPlaying ? "On" : "Off")")
+                            Text("Haptic Feedback: \(self.hapticsEnabled ? "On" : "Off")")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                                 .foregroundStyle(.foreground)
                         }
