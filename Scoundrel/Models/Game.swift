@@ -71,6 +71,8 @@ class Game: ObservableObject {
     }
     
     func nextDungeon() {
+        gameKitHelper.unlockAchievement(.GoingDeeper)
+        
         bonusPoints = 0
         strengthOfMonsterThatKilledPlayer = 0
         gameOverModalAchievement = nil

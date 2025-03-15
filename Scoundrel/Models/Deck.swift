@@ -22,14 +22,13 @@ class Deck: ObservableObject {
     func reset() {
         cards = []
         
-//        cards = [
-//            Card(suit: .monster, strength: 14),
-//            Card(suit: .monster, strength: 5),
-//            Card(suit: .healthPotion, strength: 2),
-//            Card(suit: .healthPotion, strength: 10),
-//            Card(suit: .weapon, strength: 2),
-//            Card(suit: .weapon, strength: 2)
-//        ]
+        // Test Data
+//        cards.append(Card(suit: .monster, strength: 14))
+//        cards.append(Card(suit: .monster, strength: 5))
+//        cards.append(Card(suit: .healthPotion, strength: 2))
+//        cards.append(Card(suit: .healthPotion, strength: 10))
+//        cards.append(Card(suit: .weapon, strength: 2))
+//        cards.append(Card(suit: .weapon, strength: 2))
         
         for i in 2...14 {
             cards.append(Card(suit: .monster, strength: i))
