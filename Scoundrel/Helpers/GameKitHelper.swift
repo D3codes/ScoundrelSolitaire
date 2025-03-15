@@ -29,6 +29,10 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
     
     enum ProgressAchievement: String, CaseIterable {
         case MasterOfEvasion
+        case DarknessBeckons
+        case SeasonedDelver
+        case MasterOfTheMaze
+        case UntoldTrials100Triumphs
     }
     
     @Published var localPlayerIsAuthenticated: Bool = false

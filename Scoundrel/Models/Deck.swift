@@ -24,21 +24,21 @@ class Deck: ObservableObject {
         
         // Test Data
 //        cards.append(Card(suit: .monster, strength: 14))
-//        cards.append(Card(suit: .monster, strength: 5))
+        cards.append(Card(suit: .monster, strength: 5))
 //        cards.append(Card(suit: .healthPotion, strength: 2))
 //        cards.append(Card(suit: .healthPotion, strength: 10))
 //        cards.append(Card(suit: .weapon, strength: 2))
 //        cards.append(Card(suit: .weapon, strength: 2))
         
-        for i in 2...14 {
-            cards.append(Card(suit: .monster, strength: i))
-            cards.append(Card(suit: .monster, strength: i))
-            
-            if i < 11 {
-                cards.append(Card(suit: .healthPotion, strength: i))
-                cards.append(Card(suit: .weapon, strength: i))
-            }
-        }
+//        for i in 2...14 {
+//            cards.append(Card(suit: .monster, strength: i))
+//            cards.append(Card(suit: .monster, strength: i))
+//            
+//            if i < 11 {
+//                cards.append(Card(suit: .healthPotion, strength: i))
+//                cards.append(Card(suit: .weapon, strength: i))
+//            }
+//        }
         
         cards.shuffle()
     }
