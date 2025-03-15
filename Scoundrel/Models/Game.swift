@@ -22,6 +22,7 @@ class Game: ObservableObject {
     @Published var gameOverModalAchievement: GameKitHelper.BinaryAchievement? = nil
     @Published var previousBestScore: Int? = nil
     @Published var dungeonBeat: Bool = false
+    @Published var dungeonDepth: Int = 0
     
     let lowestPossibleScore: Int = 6 // killed strength 6 monster unarmed, tried to kill strength 14 monster unarmed
 //    let lowestWinningScore: Int = 209 // killed all monsters with 1 health remaining
@@ -62,6 +63,7 @@ class Game: ObservableObject {
             previousBestScore = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.score ?? nil
         }
         dungeonBeat = false
+        dungeonDepth = 0
         
         player.reset()
         deck.reset()
@@ -71,7 +73,19 @@ class Game: ObservableObject {
     }
     
     func nextDungeon() {
-        gameKitHelper.unlockAchievement(.GoingDeeper)
+        dungeonDepth += 1
+        
+        switch dungeonDepth {
+        case 1: // Entering 2nd Dungeon
+            gameKitHelper.unlockAchievement(.GoingDeeper)
+            break
+        case 4: // Entering 5th Dungeon
+            break
+        case 9: // Entering 10th Dungeon
+            break
+        default:
+            break
+        }
         
         bonusPoints = 0
         strengthOfMonsterThatKilledPlayer = 0
