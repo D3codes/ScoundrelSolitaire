@@ -5,12 +5,17 @@
 //  Created by David Freeman on 2/26/25.
 //
 
+import SwiftUI
 import AVFoundation
 
 class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
+    @AppStorage(UserDefaultsKeys().backgroundMusicMuted) private var backgroundMusicMuted: Bool = false
+    
     @Published var isPlaying: Bool = false {
         willSet {
+            backgroundMusicMuted = !newValue
+            
             if newValue == true {
                 playRandomSong()
             } else {

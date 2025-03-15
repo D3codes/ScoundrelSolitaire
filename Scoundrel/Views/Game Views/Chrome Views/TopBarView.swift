@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct TopBarView: View {
-    @ObservedObject var room: Room
-    @ObservedObject var deck: Deck
+    @ObservedObject var game: Game
     var pause: () -> Void
     var animationNamespace: Namespace.ID
     @Binding var selectedCardIndex: Int?
@@ -33,7 +32,7 @@ struct TopBarView: View {
             
             ZStack {
                 ForEach(0..<4) { index in
-                    if room.cards[index] == nil && room.destinations[index] == .deck {
+                    if game.room.cards[index] == nil && game.room.destinations[index] == .deck {
                         Rectangle()
                             .opacity(0)
                             .frame(width: 50, height: 50)
@@ -52,24 +51,24 @@ struct TopBarView: View {
                         Image("deck")
                             .resizable()
                             .frame(width: 30, height: 30)
-                        Text("\(deck.cards.count)")
+                        Text("\(game.deck.cards.count)")
                             .font(.custom("MorrisRoman-Black", size: 20))
                             .contentTransition(.numericText())
                     }
-                    .sensoryFeedback(.increase, trigger: deck.iconSize)
+                    .sensoryFeedback(.increase, trigger: game.deck.iconSize)
                 } else {
                     VStack(spacing: 0) {
                         Image("deck")
                             .resizable()
                             .frame(width: 30, height: 30)
-                        Text("\(deck.cards.count)")
+                        Text("\(game.deck.cards.count)")
                             .font(.custom("MorrisRoman-Black", size: 20))
                             .contentTransition(.numericText())
                     }
                 }
             }
-            .scaleEffect(deck.iconSize)
-            .animation(.spring(duration: 0.5, bounce: 0.6), value: deck.iconSize)
+            .scaleEffect(game.deck.iconSize)
+            .animation(.spring(duration: 0.5, bounce: 0.6), value: game.deck.iconSize)
             .onTapGesture {
                 if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
                     showingDeckCountPopover = true
@@ -77,7 +76,7 @@ struct TopBarView: View {
             }
             .popover(isPresented: $showingDeckCountPopover) {
                 if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    Text("\(deck.cards.count) cards left in deck")
+                    Text("\(game.deck.cards.count) cards left in deck")
                         .font(.headline)
                         .padding()
                         .presentationCompactAdaptation(.popover)
@@ -85,12 +84,26 @@ struct TopBarView: View {
             }
             .padding(.horizontal)
             
-            Spacer()
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(height: 50)
+                    .foregroundStyle(.regularMaterial)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    
+                VStack(spacing: 0) {
+                    Text("Score")
+                        .font(.custom("MorrisRoman-Black", size: 20))
+                    Text("\(game.score)")
+                        .font(.custom("MorrisRoman-Black", size: 20))
+                        .contentTransition(.numericText())
+                }
+            }
+            .padding(.trailing)
             
             ZStack {
                 Button(action: {
                     selectedCardIndex = nil
-                    room.flee(deck: deck)
+                    game.flee()
                 }, label: {
                     ZStack {
                         Image("stoneButton")
@@ -98,15 +111,15 @@ struct TopBarView: View {
                             .frame(width: 100, height: 50)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                         Text("Flee")
-                            .foregroundStyle(room.canFlee && !room.isDealingCards ? .white : .black)
+                            .foregroundStyle(game.room.canFlee && !game.room.isDealingCards ? .white : .black)
                             .font(.custom("ModernAntiqua-Regular", size: 30))
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
-                .disabled(!room.canFlee || room.isDealingCards)
-                .blur(radius: room.canFlee && !room.isDealingCards ? 0 : 0.5)
+                .disabled(!game.room.canFlee || game.room.isDealingCards)
+                .blur(radius: game.room.canFlee && !game.room.isDealingCards ? 0 : 0.5)
                 
-                if(!room.canFlee || room.isDealingCards) {
+                if(!game.room.canFlee || game.room.isDealingCards) {
                     RoundedRectangle(cornerRadius: 20)
                         .frame(width: 100, height: 50)
                         .foregroundStyle(.ultraThinMaterial)
@@ -128,16 +141,13 @@ struct TopBarView: View {
 
 #Preview {
     struct TopBarView_Preview: View {
-        
-        @StateObject var room: Room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
-        @StateObject var deck: Deck = Deck()
         @Namespace var animation
         @State var selectedCardIndex: Int?
+        @State var score: Int = 202
         
         var body: some View {
             TopBarView(
-                room: room,
-                deck: deck,
+                game: Game(),
                 pause: {},
                 animationNamespace: animation,
                 selectedCardIndex: $selectedCardIndex

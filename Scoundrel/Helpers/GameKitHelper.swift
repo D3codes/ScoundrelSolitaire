@@ -13,7 +13,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case ScoundrelAllTimeHighScore
     }
     
-    enum Achievement: String, CaseIterable {
+    enum BinaryAchievement: String, CaseIterable {
         case DavidAndGoliath
         case WhatAWaste
         case WereYouEvenTrying
@@ -23,6 +23,11 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case SeasonedAdventurer
         case DungeonMaster
         case Untouchable
+        case HangingByAThread
+    }
+    
+    enum ProgressAchievement: String, CaseIterable {
+        case MasterOfEvasion
     }
     
     @Published var localPlayerIsAuthenticated: Bool = false
@@ -73,46 +78,90 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         gameCenterViewController.dismiss(animated:true)
     }
     
-    func displayDashboard() {
-        let viewController = GKGameCenterViewController(state: .dashboard)
-        viewController.gameCenterDelegate = self
-        present(viewController, animated: true, completion: nil)
+//    func displayDashboard() {
+//        let viewController = GKGameCenterViewController(state: .dashboard)
+//        viewController.gameCenterDelegate = self
+//        present(viewController, animated: true, completion: nil)
+//    }
+//    
+//    func displayLeaderboards() {
+//        let viewController = GKGameCenterViewController(state: .achievements)
+//        viewController.gameCenterDelegate = self
+//        present(viewController, animated: true, completion: nil)
+//    }
+//
+//    func fetchAchievements() async throws -> [GKAchievement] {
+//        if !localPlayerIsAuthenticated { return [] }
+//
+//        return try await GKAchievement.loadAchievements()
+//    }
+    
+    func fetchPlayerScore(leaderboardId: Leaderboard) async -> GKLeaderboard.Entry? {
+        if !localPlayerIsAuthenticated { return nil }
+        
+        do {
+            let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [leaderboardId.rawValue]).first
+            let entries = try await leaderboard?.loadEntries(for: [GKLocalPlayer.local], timeScope: .allTime).1 ?? []
+            return entries.isEmpty ? nil : entries[0]
+        } catch {
+            return nil
+        }
     }
     
-    func displayLeaderboards() {
-        let viewController = GKGameCenterViewController(state: .achievements)
-        viewController.gameCenterDelegate = self
-        present(viewController, animated: true, completion: nil)
-    }
-    
-    func submitScore(_ score: Int) async throws {
+    func submitScore(_ score: Int) async {
         if !localPlayerIsAuthenticated { return }
         
-        try await GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [Leaderboard.ScoundrelAllTimeHighScore.rawValue])
+        do {
+            try await GKLeaderboard.submitScore(score, context: 0, player: GKLocalPlayer.local, leaderboardIDs: [Leaderboard.ScoundrelAllTimeHighScore.rawValue])
+        } catch {
+            
+        }
     }
     
-    func fetchLeaderboard(id: String, count: Int) async throws -> [GKLeaderboard.Entry] {
+    func fetchLeaderboard(_ id: Leaderboard, top count: Int) async throws -> [GKLeaderboard.Entry] {
         if !localPlayerIsAuthenticated { return [] }
         
-        let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id]).first
+        let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id.rawValue]).first
         return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
     }
     
-    func fetchAchievements() async throws -> [GKAchievement] {
-        if !localPlayerIsAuthenticated { return [] }
+    func incrementAchievementProgress(_ achievementId: ProgressAchievement, by incrementAmount: Double) {
+        if !localPlayerIsAuthenticated { return }
         
-        return try await GKAchievement.loadAchievements()
+        Task {
+            do {
+                // Load the player's active achievements.
+                let achievements = try await GKAchievement.loadAchievements()
+                
+                // Find an existing achievement.
+                var achievement = achievements.first(where: { $0.identifier == achievementId.rawValue })
+
+                // Otherwise, create a new achievement.
+                if achievement == nil {
+                    achievement = GKAchievement(identifier: achievementId.rawValue)
+                }
+                
+                achievement!.percentComplete = achievement!.percentComplete + incrementAmount
+                      
+                // Report the progress to Game Center.
+                try await GKAchievement.report([achievement!])
+            } catch {
+                
+            }
+        }
     }
     
-    func unlockAchievement(_ achievementId: Achievement) async {
+    func unlockAchievement(_ achievementId: BinaryAchievement) {
         if !localPlayerIsAuthenticated { return }
         
         let achievement = GKAchievement(identifier: achievementId.rawValue)
         achievement.percentComplete = 100
-        do {
-            try await GKAchievement.report([achievement])
-        } catch {
-            
+        Task {
+            do {
+                try await GKAchievement.report([achievement])
+            } catch {
+                
+            }
         }
     }
 }

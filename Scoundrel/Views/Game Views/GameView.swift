@@ -11,26 +11,27 @@ import AVFoundation
 
 struct GameView: View {
     @Namespace var animation
-    @ObservedObject var gameKitHelper: GameKitHelper
-    
-    @ObservedObject var deck: Deck
-    @ObservedObject var player: Player
-    @ObservedObject var room: Room
-    
-    @State var gameOver: Bool = false
-    @State var showAttackOptionAlert: Bool = false
-    @State var pauseMenuShown: Bool = false
-    
-    @State var selectedCardIndex: Int?
-    
-    var startGame: () -> Void
+    @ObservedObject var game: Game
     var mainMenu: () -> Void
     
+    @State var pauseMenuShown: Bool = false
+    @State var selectedCardIndex: Int?
+    
+    @State var background: String = "dungeon1"
+    let backgrounds: [String] = [
+        "dungeon1",
+        "dungeon2",
+        "dungeon3",
+        "dungeon4",
+        "dungeon5",
+        "dungeon6",
+        "dungeon7",
+        "dungeon8",
+        "dungeon9",
+        "dungeon10"
+    ]
+
     @State var pageSound: AVAudioPlayer?
-    
-    @State var strengthOfMonsterThatKilledPlayer: Int = 0
-    @State var bonusPoints: Int = 0
-    
     func initializeSounds() {
         do {
             pageSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "page.mp3", ofType:nil)!))
@@ -39,114 +40,33 @@ struct GameView: View {
             // couldn't load file :(
         }
     }
-
-    func cardTapped(_ index: Int, attackWithFist: Bool) {
-        room.canFlee = false
-        
-        switch room.cards[index]!.suit {
-        case .weapon:
-            player.equipWeapon(weaponStrength: room.cards[index]!.strength)
-            endAction(index)
-            break
-        case .healthPotion:
-            if player.health == 20 {
-                bonusPoints = room.cards[index]!.strength
-            }
-            if !room.usedHealthPotion {
-                player.useHealthPotion(potionStrength: room.cards[index]!.strength)
-                room.usedHealthPotion = true
-            }
-            endAction(index)
-            break
-        case .monster:
-            // Check for achievements pre-attack
-            if !attackWithFist && player.lastAttacked ?? 0 == 15 && room.cards[index]!.strength == 2 {
-                Task { await gameKitHelper.unlockAchievement(.WhatAWaste) }
-            }
-            
-            // Attack
-            if attackWithFist {
-                player.attack(monsterStrength: room.cards[index]!.strength)
-            } else {
-                player.attack(withWeapon: true, monsterStrength: room.cards[index]!.strength)
-            }
-            
-            // Check for achievements post-attack
-            if player.health > 0 {
-                if player.weapon ?? 0 == 2 && room.cards[index]!.strength == 14 {
-                    Task { await gameKitHelper.unlockAchievement(.DavidAndGoliath) }
-                }
-            } else {
-                if room.cards[index]!.strength == 2 {
-                    Task { await gameKitHelper.unlockAchievement(.DefinitelyMeantToDoThat) }
-                }
-            }
-            endAction(index)
-            break
-        }
-    }
-    
-    func endAction(_ index: Int) {
-        if player.health <= 0 {
-            strengthOfMonsterThatKilledPlayer = room.cards[index]!.strength
-            withAnimation { gameOver = true }
-            return
-        }
-        
-        withAnimation(.spring()) {
-            room.removeCard(at: index)
-        }
-        
-        if room.cards.filter({ $0 == nil }).count == 3 && !deck.cards.isEmpty {
-            room.isDealingCards = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                room.nextRoom(deck: deck, fleedLastRoom: false)
-            }
-        }
-        
-        if deck.cards.isEmpty && room.cards.filter({ $0 == nil }).count == 4 {
-            if !room.playerFleed {
-                Task { await gameKitHelper.unlockAchievement(.CowardsNeedNotApply) }
-            }
-            
-            withAnimation { gameOver = true }
-        } else {
-            bonusPoints = 0
-        }
-    }
-    
-    func getScore() -> Int {
-        if player.health > 0 {
-            return player.health + deck.combinedStrengthOfAllMonsterCards + bonusPoints
-        }
-        
-        return room.cards.reduce(deck.getScore()) { $0 - (($1 != nil && $1!.suit == .monster) ? $1!.strength : 0)}
-    }
     
     func newGame() {
         selectedCardIndex = nil
-        strengthOfMonsterThatKilledPlayer = 0
-        bonusPoints = 0
-        
-        withAnimation(.spring()) {
-            for i in 0...3 {
-                withAnimation(.spring()) {
-                    room.cards[i] = nil
-                }
-            }
-        }
-        
-        startGame()
-        withAnimation { gameOver = false }
         withAnimation { pauseMenuShown = false }
+        background = backgrounds.randomElement()!
+        game.newGame()
+    }
+    
+    func actionSelected(cardIndex: Int, firstAction: Bool) {
+        switch game.room.cards[cardIndex]!.suit {
+        case .healthPotion:
+            game.useHealthPotion(cardIndex: cardIndex)
+            break
+        case .weapon:
+            game.equipWeapon(cardIndex: cardIndex)
+            break
+        case .monster:
+            game.attackMonster(cardIndex: cardIndex, attackUnarmed: firstAction)
+            break
+        }
     }
     
     var body: some View {
         ZStack {
             VStack {
                 TopBarView(
-                    room: room,
-                    deck: deck,
+                    game: game,
                     pause: {
                         withAnimation { pauseMenuShown = true }
                         pageSound?.play()
@@ -159,35 +79,33 @@ struct GameView: View {
                 
                 RoomView(
                     animationNamespace: animation,
-                    room: room,
-                    player: player,
-                    cardTapped: cardTapped,
+                    room: game.room,
+                    player: game.player,
+                    actionSelected: actionSelected,
                     cardSelected: $selectedCardIndex
                 )
                 
                 Spacer()
                 
                 StatsBarView(
-                    player: player,
-                    room: room,
+                    player: game.player,
+                    room: game.room,
                     animationNamespace: animation
                 )
             }
             
-            if gameOver || pauseMenuShown {
+            if game.gameOver || pauseMenuShown {
                 Rectangle()
                     .ignoresSafeArea(.all)
                     .foregroundStyle(.ultraThinMaterial)
                     .opacity(0.7)
             }
             
-            if gameOver {
+            if game.gameOver {
                 GameOverModalView(
-                    gameKitHelper: gameKitHelper,
-                    score: getScore(),
+                    game: game,
                     newGame: newGame,
-                    mainMenu: mainMenu,
-                    strengthOfMonsterThatKilledPlayer: strengthOfMonsterThatKilledPlayer
+                    mainMenu: mainMenu
                 )
                 .transition(.opacityAndMoveFromBottom)
             }
@@ -197,13 +115,14 @@ struct GameView: View {
                     continueGame: { withAnimation { pauseMenuShown = false } },
                     newGame: newGame,
                     mainMenu: mainMenu,
-                    room: room
+                    room: game.room
                 )
                 .transition(.opacityAndMoveFromBottom)
             }
         }
+        .background(Image(background))
         .onAppear() {
-            gameKitHelper.hideAccessPoint()
+            game.gameKitHelper.hideAccessPoint()
             initializeSounds()
         }
     }
@@ -211,31 +130,10 @@ struct GameView: View {
 
 #Preview {
     struct GameView_Preview: View {
-        @StateObject var deck: Deck = Deck()
-        @StateObject var player: Player = Player()
-        @StateObject var room = Room(
-            cards: [
-                Card(suit: .monster, strength: 5),
-                Card(suit: .weapon, strength: 8),
-                Card(suit: .healthPotion, strength: 3),
-                nil
-            ],
-            fleedLastRoom: false
-        )
-        
-        func startGame() { }
-        func mainMenu() { }
-        
-        @StateObject var gameKitHelper = GameKitHelper()
-        
         var body: some View {
             GameView(
-                gameKitHelper: gameKitHelper,
-                deck: deck,
-                player: player,
-                room: room,
-                startGame: startGame,
-                mainMenu: mainMenu
+                game: Game(),
+                mainMenu: {}
             )
         }
     }

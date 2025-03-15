@@ -8,7 +8,7 @@
 import SwiftUI
 import GameKit
 
-struct ControlBarView: View {    
+struct ControlBarView: View {
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
     
@@ -51,7 +51,6 @@ struct ControlBarView: View {
                 .padding(.trailing, 50)
                 
                 Button(action: {
-                    //gameKitHelper.displayDashboard()
                     page2Sound?.play()
                     isPresentingLeaderboards = true
                 },label: {

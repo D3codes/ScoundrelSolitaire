@@ -12,10 +12,12 @@ struct LeaderboardView: View {
     @ObservedObject var gameKitHelper: GameKitHelper
     
     @State private var leaderboardEntries: [GKLeaderboard.Entry] = []
-
+    @State private var playerEntry: GKLeaderboard.Entry? = nil
+    
     func fetchLeaderboardEntries() async {
         do {
-            leaderboardEntries = try await gameKitHelper.fetchLeaderboard(id: "ScoundrelAllTimeHighScore", count: 100)
+            leaderboardEntries = try await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
+            playerEntry = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)
         } catch {
             // Failed to fetch leaderboard
         }
@@ -41,24 +43,54 @@ struct LeaderboardView: View {
                 if !leaderboardEntries.isEmpty {
                     List(leaderboardEntries.indices, id: \.self) { index in
                         HStack {
-                            Text("\(index+1).")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Text("\(leaderboardEntries[index].player.displayName)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            if index == 0 {
+                                Image("goldMedal")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                            } else if index == 1 {
+                                Image("silverMedal")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                            } else if index == 2 {
+                                Image("bronzeMedal")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                            } else {
+                                Text("\(index+1).")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                            }
+                            VStack {
+                                Text("\(leaderboardEntries[index].player.displayName)")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                if leaderboardEntries[index].player.displayName == playerEntry?.player.displayName {
+                                    Text("You")
+                                        .font(.custom("ModernAntiqua-Regular", size: 10))
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
+                            
                             Spacer()
-                            Text("\(leaderboardEntries[index].formattedScore)")
+                            Text("\(leaderboardEntries[index].score)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .listRowBackground(Rectangle().fill(leaderboardEntries[index].player.displayName == playerEntry?.player.displayName ? .regularMaterial : .thinMaterial))
                     }
                     .scrollContentBackground(.hidden)
                 } else {
                     Spacer()
-                    ProgressView()
-                    Text("Loading...")
-                        .font(.custom("ModernAntiqua-Regular", size: 20))
-                        .foregroundStyle(.white)
-                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                            .foregroundStyle(.ultraThinMaterial)
+                            .frame(width: 150, height: 100)
+                        
+                        VStack {
+                            ProgressView()
+                            Text("Loading...")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                        }
+                    }
                     Spacer()
                     Spacer()
                 }

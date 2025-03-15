@@ -16,18 +16,17 @@ class Room: ObservableObject {
     
     @Published var playerFleed: Bool = false
     
-    var dealCardSound: AVAudioPlayer?
     var shuffleSound: AVAudioPlayer?
+    var dealCardSounds: [AVAudioPlayer?] = [nil, nil, nil, nil]
     
     @Published var isDealingCards: Bool = false
     
+    @Published var destinations: [CardDestination] = [.deck, .deck, .deck, .deck]
     enum CardDestination: String, CaseIterable {
         case health
         case weapon
         case deck
     }
-    
-    @Published var destinations: [CardDestination] = [.deck, .deck, .deck, .deck]
     
     func setDestinations() {
         for i in 0...3 {
@@ -49,13 +48,12 @@ class Room: ObservableObject {
         }
     }
     
-    init(cards: [Card?], fleedLastRoom: Bool) {
-        guard cards.count == 4 else {
-            fatalError("")
-        }
-
+    init(_ cards: [Card?] = [nil, nil, nil, nil]) {
         do {
-            dealCardSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[2] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
+            dealCardSounds[3] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
         } catch {
             // couldn't load file :(
         }
@@ -68,7 +66,7 @@ class Room: ObservableObject {
         }
         
         self.cards = cards
-        self.canFlee = !fleedLastRoom
+        self.canFlee = true
         self.usedHealthPotion = false
         self.isDealingCards = false
         self.playerFleed = false
@@ -111,20 +109,19 @@ class Room: ObservableObject {
     
     func nextRoom(deck: Deck, fleedLastRoom: Bool) {
         setDestinations()
-        var dealingGap: Double = 0.55
+        var dealingGap: Double = animationDelay
         for i in 0...3 {
             if cards[i] == nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + dealingGap) {
                     withAnimation(.spring()) {
                         self.cards[i] = deck.getTopCard()
                         if self.cards[i] != nil {
-                            self.dealCardSound?.stop()
-                            self.dealCardSound?.play()
+                            self.dealCardSounds[i]?.play()
                         }
                         self.setDestinations()
                     }
                 }
-                dealingGap += 0.55
+                dealingGap += animationDelay
             }
             
             if i == 3 {

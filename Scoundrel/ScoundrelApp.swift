@@ -11,37 +11,19 @@ import GameKit
 
 @main
 struct ScoundrelApp: App {
-    @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
-    @StateObject var gameKitHelper: GameKitHelper = GameKitHelper()
+    @AppStorage(UserDefaultsKeys().backgroundMusicMuted) private var backgroundMusicMuted: Bool = false
     
+    @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
+    @StateObject var game: Game = Game()
+    
+    @State var gameState: GameState = .mainMenu
     enum GameState: String, CaseIterable {
         case mainMenu
         case game
     }
     
-    @State var gameState: GameState = .mainMenu
-    
-    @StateObject var deck: Deck = Deck()
-    @StateObject var player: Player = Player()
-    @StateObject var room = Room(cards: [nil, nil, nil, nil], fleedLastRoom: false)
-    @State var background: String = "dungeon1"
-    
-    let backgrounds: [String] = [
-        "dungeon1",
-        "dungeon2",
-        "dungeon3",
-        "dungeon4",
-        "dungeon5",
-        "dungeon6",
-        "dungeon7"
-    ]
-    
     func startGame() {
-        player.reset()
-        deck.reset()
-        room.reset(deck: deck)
-        background = backgrounds.randomElement()!
-        
+        game.newGame()
         gameState = .game
     }
     
@@ -52,31 +34,27 @@ struct ScoundrelApp: App {
                 case .mainMenu:
                     MainMenuView(
                         musicPlayer: musicPlayer,
-                        gameKitHelper: gameKitHelper,
+                        gameKitHelper: game.gameKitHelper,
                         startGame: startGame
                     )
-                    .onAppear { gameKitHelper.showAccessPoint() }
+                    .onAppear { game.gameKitHelper.showAccessPoint() }
                 case .game:
                     GameView(
-                        gameKitHelper: gameKitHelper,
-                        deck: deck,
-                        player: player,
-                        room: room,
-                        startGame: startGame,
+                        game: game,
                         mainMenu: { gameState = .mainMenu }
                     )
                     .onAppear {
-                        gameKitHelper.hideAccessPoint()
+                        game.gameKitHelper.hideAccessPoint()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            gameKitHelper.hideAccessPoint()
+                            game.gameKitHelper.hideAccessPoint()
                         }
                     }
                 }
             }
-            .background(Image(background))
+            .background(Image("dungeon1"))
             .onAppear {
-                musicPlayer.isPlaying = true
-                gameKitHelper.authenticateLocalPlayer()
+                musicPlayer.isPlaying = !backgroundMusicMuted
+                game.gameKitHelper.authenticateLocalPlayer()
             }
         }
     }
