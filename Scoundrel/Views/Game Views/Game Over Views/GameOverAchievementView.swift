@@ -44,7 +44,7 @@ struct GameOverAchievementView: View {
             break
         case .Untouchable:
             achievementName = "Untouchable"
-            achievementDescription = "Beat a dungeon with the highest possible score"
+            achievementDescription = "Save the maximum strength health potion for last"
             achievementImage = "Untouchable"
             break
         case .CowardsNeedNotApply:
