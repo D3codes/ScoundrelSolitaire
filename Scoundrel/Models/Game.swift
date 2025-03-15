@@ -164,6 +164,11 @@ class Game: ObservableObject {
             score += bonusPoints
         }
         
+        gameKitHelper.incrementAchievementProgress(.DarknessBeckons, by: 4)
+        gameKitHelper.incrementAchievementProgress(.SeasonedDelver, by: 2)
+        gameKitHelper.incrementAchievementProgress(.MasterOfTheMaze, by: 1.333)
+        gameKitHelper.incrementAchievementProgress(.UntoldTrials100Triumphs, by: 1)
+        
         checkForAchievements()
         
         withAnimation { dungeonBeat = true }
