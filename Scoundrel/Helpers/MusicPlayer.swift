@@ -28,7 +28,9 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             "Knights in Shadows",
             "The Hollow Crown",
             "Wanderer's Requiem",
-            "Oaths Upon the Wind"
+            "Oaths Upon the Wind",
+            "Ballad of the Wayfarer",
+            "Legends of the Silver Road"
         ]
 
     var currentTrackIndex = 0
