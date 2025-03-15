@@ -70,28 +70,30 @@ struct GameOverAchievementView: View {
                     .resizable()
                     .cornerRadius(20)
                 
-                HStack {
-                    Image(achievementImage)
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .mask(Circle())
-                    
-                    VStack {
-                        Text(achievementName)
-                            .font(.custom("ModernAntiqua-Regular", size: 20))
-                            .foregroundStyle(.white)
-                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
+                if !achievementImage.isEmpty {
+                    HStack {
+                        Image(achievementImage)
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .mask(Circle())
                         
-                        Text(achievementDescription)
-                            .font(.custom("ModernAntiqua-Regular", size: 15))
-                            .foregroundStyle(.black)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
+                        VStack {
+                            Text(achievementName)
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                                .foregroundStyle(.white)
+                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .multilineTextAlignment(.center)
+                            
+                            Text(achievementDescription)
+                                .font(.custom("ModernAntiqua-Regular", size: 15))
+                                .foregroundStyle(.black)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .multilineTextAlignment(.center)
+                        }
                     }
+                    .padding(.horizontal, 10)
                 }
-                .padding(.horizontal, 10)
             }
             .frame(width: 300, height: 100)
         }

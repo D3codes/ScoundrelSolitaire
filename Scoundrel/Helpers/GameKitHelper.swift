@@ -24,6 +24,7 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case DungeonMaster
         case Untouchable
         case HangingByAThread
+        case GoingDeeper
     }
     
     enum ProgressAchievement: String, CaseIterable {
