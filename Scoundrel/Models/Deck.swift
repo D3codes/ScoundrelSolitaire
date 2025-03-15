@@ -26,7 +26,7 @@ class Deck: ObservableObject {
 //            Card(suit: .monster, strength: 14),
 //            Card(suit: .monster, strength: 5),
 //            Card(suit: .healthPotion, strength: 2),
-//            Card(suit: .healthPotion, strength: 2),
+//            Card(suit: .healthPotion, strength: 10),
 //            Card(suit: .weapon, strength: 2),
 //            Card(suit: .weapon, strength: 2)
 //        ]

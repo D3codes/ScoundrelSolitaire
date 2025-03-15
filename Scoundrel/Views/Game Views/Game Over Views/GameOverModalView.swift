@@ -104,7 +104,7 @@ struct GameOverModalView: View {
                 .frame(width: 300, height: 400)
             }
             
-            if game.score >= game.lowestWinningScore {
+            if game.previousBestScore != nil && game.score > game.previousBestScore! {
                 VortexView(.fireworks) {
                     Circle()
                         .fill(.white)
