@@ -64,12 +64,12 @@ struct MainMenuView: View {
                 )
             }
         }
-        .popover(isPresented: $showHowToModal) {
+        .sheet(isPresented: $showHowToModal) {
             HowToView()
                 .onAppear { gameKitHelper.hideAccessPoint() }
                 .onDisappear { gameKitHelper.showAccessPoint() }
         }
-        .popover(isPresented: $showCreditsModal) {
+        .sheet(isPresented: $showCreditsModal) {
             CreditsView()
                 .onAppear { gameKitHelper.hideAccessPoint() }
                 .onDisappear { gameKitHelper.showAccessPoint() }

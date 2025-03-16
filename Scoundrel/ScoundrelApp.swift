@@ -23,6 +23,20 @@ struct ScoundrelApp: App {
         case game
     }
     
+    @State var background: String = "dungeon1"
+    let backgrounds: [String] = [
+        "dungeon1",
+        "dungeon2",
+        "dungeon3",
+        "dungeon4",
+        "dungeon5",
+        "dungeon6",
+        "dungeon7",
+        "dungeon8",
+        "dungeon9",
+        "dungeon10"
+    ]
+    
     func startGame() {
         game.newGame()
         gameState = .game
@@ -44,7 +58,8 @@ struct ScoundrelApp: App {
                 case .game:
                     GameView(
                         game: game,
-                        mainMenu: { gameState = .mainMenu }
+                        mainMenu: { gameState = .mainMenu },
+                        randomBackground: { background = backgrounds.randomElement()! }
                     )
                     .onAppear {
                         game.gameKitHelper.hideAccessPoint()
@@ -54,7 +69,7 @@ struct ScoundrelApp: App {
                     }
                 }
             }
-            .background(Image("dungeon1"))
+            .background(Image(background).resizable())
             .onAppear {
                 musicPlayer.isPlaying = !backgroundMusicMuted
                 game.gameKitHelper.authenticateLocalPlayer()
