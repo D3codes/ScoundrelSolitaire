@@ -130,8 +130,7 @@ struct GameView: View {
                 PauseModalView(
                     continueGame: { withAnimation { pauseMenuShown = false } },
                     newGame: newGame,
-                    mainMenu: mainMenu,
-                    room: game.room
+                    mainMenu: mainMenu
                 )
                 .transition(.opacityAndMoveFromBottom)
             }

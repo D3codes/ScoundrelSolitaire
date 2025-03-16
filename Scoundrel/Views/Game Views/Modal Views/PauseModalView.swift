@@ -12,8 +12,6 @@ struct PauseModalView: View {
     var newGame: () -> Void
     var mainMenu: () -> Void
     
-    @ObservedObject var room: Room
-    
     var body: some View {
         ZStack {
             Group{
@@ -31,9 +29,10 @@ struct PauseModalView: View {
                     
                     Spacer()
                     
+                    PlankButtonView(text: "Main Menu", action: { mainMenu() })
+                    PlankButtonView(text: "New Game", action: { newGame() })
                     PlankButtonView(text: "Continue", action: continueGame)
-                    PlankButtonView(text: "New Game", action: { if !room.isDealingCards { newGame() } })
-                    PlankButtonView(text: "Main Menu", action: { if !room.isDealingCards { mainMenu() } })
+                        .padding(.top)
                     
                     Spacer()
                 }
@@ -45,14 +44,12 @@ struct PauseModalView: View {
 
 #Preview {
     struct PauseModalView_Preview: View {
-        @StateObject var room: Room = Room()
         
         var body: some View {
             PauseModalView(
                 continueGame: {},
                 newGame: {},
-                mainMenu: {},
-                room: room
+                mainMenu: {}
             )
         }
     }

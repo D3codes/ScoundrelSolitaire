@@ -26,11 +26,13 @@ struct TopBarView: View {
                         .frame(width: 50, height: 50)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                     Text("||")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(!game.room.isDealingCards ? .white : .black)
                         .font(.custom("MorrisRoman-Black", size: 30))
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                 }
             })
+            .disabled(game.room.isDealingCards)
+            .blur(radius: !game.room.isDealingCards ? 0 : 0.5)
             
             ZStack {
                 ForEach(0..<4) { index in

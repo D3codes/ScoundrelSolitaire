@@ -1,5 +1,5 @@
 //
-//  GameOverAchievementView.swift
+//  AchievementBannerView.swift
 //  Scoundrel
 //
 //  Created by David Freeman on 3/4/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Vortex
 
-struct GameOverAchievementView: View {
+struct AchievementBannerView: View {
     var achievement: GameKitHelper.BinaryAchievement
     
     @State var achievementName: String = ""
@@ -102,14 +102,14 @@ struct GameOverAchievementView: View {
 }
 
 #Preview {
-    struct GameOverAchivementView_Preview: View {
+    struct AchievementBannerView_Preview: View {
 
         var body: some View {
-            GameOverAchievementView(
+            AchievementBannerView(
                 achievement: .HangingByAThread
             )
         }
     }
     
-    return GameOverAchivementView_Preview()
+    return AchievementBannerView_Preview()
 }
