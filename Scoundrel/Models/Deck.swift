@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class Deck: ObservableObject {
+class Deck: ObservableObject, Codable {
     var cards: [Card] = []
     
     let combinedStrengthOfAllMonsterCards: Int = 208
@@ -63,5 +63,20 @@ class Deck: ObservableObject {
         }
         
         return cards.removeFirst()
+    }
+    
+    // Required for Codable protocol conformance
+    enum CodingKeys: CodingKey {
+        case cards
+    }
+    
+    required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        cards = try container.decode([Card].self, forKey: .cards)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(cards, forKey: .cards)
     }
 }

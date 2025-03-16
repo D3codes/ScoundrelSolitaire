@@ -86,7 +86,6 @@ struct TopBarView: View {
                         .presentationCompactAdaptation(.popover)
                 }
             }
-            .padding(.horizontal)
             
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
@@ -96,13 +95,29 @@ struct TopBarView: View {
                     
                 VStack(spacing: 0) {
                     Text("Score")
+                        .frame(height: 30)
                         .font(.custom("MorrisRoman-Black", size: 20))
                     Text("\(game.score)")
                         .font(.custom("MorrisRoman-Black", size: 20))
                         .contentTransition(.numericText())
                 }
             }
-            .padding(.trailing)
+            
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: 50, height: 50)
+                    .foregroundStyle(.regularMaterial)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    
+                VStack(spacing: 0) {
+                    Image("dungeonGlyph")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                    Text("\(game.dungeonDepth)")
+                        .font(.custom("MorrisRoman-Black", size: 20))
+                        .contentTransition(.numericText())
+                }
+            }
             
             ZStack {
                 Button(action: {
@@ -112,11 +127,11 @@ struct TopBarView: View {
                     ZStack {
                         Image("stoneButton")
                             .resizable()
-                            .frame(width: 100, height: 50)
+                            .frame(width: 50, height: 50)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        Text("Flee")
+                        Image(systemName: "figure.run")
                             .foregroundStyle(game.room.canFlee && !game.room.isDealingCards ? .white : .black)
-                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .font(.title2)
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
@@ -125,7 +140,7 @@ struct TopBarView: View {
                 
                 if(!game.room.canFlee || game.room.isDealingCards) {
                     RoundedRectangle(cornerRadius: 20)
-                        .frame(width: 100, height: 50)
+                        .frame(width: 50, height: 50)
                         .foregroundStyle(.ultraThinMaterial)
                         .opacity(0.5)
                 }

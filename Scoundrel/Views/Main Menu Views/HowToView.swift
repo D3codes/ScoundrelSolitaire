@@ -207,13 +207,36 @@ struct HowToView: View {
                 .padding(.bottom)
                 HStack {
                     ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                        
+                        VStack(spacing: 0) {
+                            Image("dungeonGlyph")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("1")
+                                .font(.custom("MorrisRoman-Black", size: 20))
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    
+                    Text("The number of dungeons beaten.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
+                HStack {
+                    ZStack {
                         Image("stoneButton")
                             .resizable()
-                            .frame(width: 100, height: 50)
+                            .frame(width: 50, height: 50)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        Text("Flee")
+                        Image(systemName: "figure.run")
                             .foregroundStyle(.white)
-                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .font(.title2)
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
 
