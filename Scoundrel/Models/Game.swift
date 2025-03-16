@@ -101,9 +101,14 @@ class Game: ObservableObject, Codable {
         case 1: // Entering 2nd Dungeon
             gameKitHelper.unlockAchievement(.GoingDeeper)
             break
-        case 4: // Entering 5th Dungeon
+        case 2: // Entering 3rd Dungeon
+            gameKitHelper.unlockAchievement(.NoTurningBack)
             break
-        case 9: // Entering 10th Dungeon
+        case 3: // Entering 4th Dungeon
+            gameKitHelper.unlockAchievement(.DepthsUncharted)
+            break
+        case 4: // Entering 5th Dungeon
+            gameKitHelper.unlockAchievement(.EndlessDescent)
             break
         default:
             break
