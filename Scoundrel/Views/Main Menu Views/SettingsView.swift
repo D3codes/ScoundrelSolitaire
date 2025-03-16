@@ -112,7 +112,7 @@ struct SettingsView: View {
                                     .foregroundStyle(.foreground)
                             }
                         })
-                            .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .listRowBackground(Rectangle().fill(.thinMaterial))
                     }
                 }
                 .scrollContentBackground(.hidden)
