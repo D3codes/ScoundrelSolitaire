@@ -8,7 +8,7 @@
 import SwiftUI
 import AVFoundation
 
-class Room: ObservableObject {
+class Room: ObservableObject, Codable {
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     
     @Published var canFlee: Bool
@@ -24,7 +24,7 @@ class Room: ObservableObject {
     @Published var isDealingCards: Bool = false
     
     @Published var destinations: [CardDestination] = [.deck, .deck, .deck, .deck]
-    enum CardDestination: String, CaseIterable {
+    enum CardDestination: String, CaseIterable, Codable {
         case health
         case weapon
         case deck
@@ -50,7 +50,7 @@ class Room: ObservableObject {
         }
     }
     
-    init(_ cards: [Card?] = [nil, nil, nil, nil]) {
+    func initializeSounds() {
         do {
             dealCardSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
             dealCardSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "dealingCard.m4a", ofType:nil)!))
@@ -66,13 +66,16 @@ class Room: ObservableObject {
         } catch {
             // couldn't load file :(
         }
-        
+    }
+    
+    init(_ cards: [Card?] = [nil, nil, nil, nil]) {
         self.cards = cards
         self.canFlee = true
         self.usedHealthPotion = false
         self.isDealingCards = false
         self.playerFleed = false
         setDestinations()
+        initializeSounds()
     }
     
     func reset(deck: Deck) {
@@ -110,6 +113,8 @@ class Room: ObservableObject {
     }
     
     func nextRoom(deck: Deck, fleedLastRoom: Bool) {
+        canFlee = !fleedLastRoom
+        
         setDestinations()
         var dealingGap: Double = animationDelay
         for i in 0...3 {
@@ -133,7 +138,49 @@ class Room: ObservableObject {
             }
         }
         
-        canFlee = !fleedLastRoom
         usedHealthPotion = false
+    }
+    
+    func finishDealing(deck: Deck) {
+        setDestinations()
+        for i in 0...3 {
+            if cards[i] == nil {
+                self.cards[i] = deck.getTopCard()
+                self.setDestinations()
+            }
+        }
+        
+        self.isDealingCards = false
+        usedHealthPotion = false
+    }
+    
+    // Required for Codable protocol conformance
+    enum CodingKeys: CodingKey {
+        case canFlee
+        case cards
+        case usedHealthPotion
+        case playerFleed
+        case isDealingCards
+        case destinations
+    }
+    
+    required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        canFlee = try container.decode(Bool.self, forKey: .canFlee)
+        cards = try container.decode([Card?].self, forKey: .cards)
+        usedHealthPotion = try container.decode(Bool.self, forKey: .usedHealthPotion)
+        playerFleed = try container.decode(Bool.self, forKey: .playerFleed)
+        isDealingCards = try container.decode(Bool.self, forKey: .isDealingCards)
+        destinations = try container.decode([CardDestination].self, forKey: .destinations)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(canFlee, forKey: .canFlee)
+        try container.encode(cards, forKey: .cards)
+        try container.encode(usedHealthPotion, forKey: .usedHealthPotion)
+        try container.encode(playerFleed, forKey: .playerFleed)
+        try container.encode(isDealingCards, forKey: .isDealingCards)
+        try container.encode(destinations, forKey: .destinations)
     }
 }

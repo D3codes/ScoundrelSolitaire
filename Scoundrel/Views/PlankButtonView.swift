@@ -11,10 +11,15 @@ struct PlankButtonView: View {
     var text: String
     var action: () -> Void
     
+    var plankTextures: [String] = [
+        "plank1",
+        "plank2"
+    ]
+    
     var body: some View {
         Button(action: { action() }, label: {
             ZStack {
-                Image("plank1")
+                Image(plankTextures.randomElement()!)
                     .resizable()
                     .frame(width: 200, height: 50)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)

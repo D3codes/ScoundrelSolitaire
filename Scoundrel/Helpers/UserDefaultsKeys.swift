@@ -13,4 +13,6 @@ struct UserDefaultsKeys {
     let soundEffectsMuted: String = "soundEffectsMuted"
     
     let hapticsEnabled: String = "hapticsEnabled"
+    
+    let game: String = "game"
 }

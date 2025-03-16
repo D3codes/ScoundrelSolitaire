@@ -13,8 +13,10 @@ struct MainMenuView: View {
     
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
+    @ObservedObject var game: Game
     
     var startGame: () -> Void
+    var resumeGame: () -> Void
     
     @State var showHowToModal: Bool = false
     @State var showCreditsModal: Bool = false
@@ -36,6 +38,10 @@ struct MainMenuView: View {
                 
                 Spacer()
                 Spacer()
+                
+                if game.score > 0 && !game.gameOver {
+                    ResumeButtonView(game: game, resumeGame: resumeGame)
+                }
                 
                 PlankButtonView(text: "New Game", action: startGame)
                     .padding(.bottom, 40)
@@ -81,7 +87,9 @@ struct MainMenuView: View {
             MainMenuView(
                 musicPlayer: musicPlayer,
                 gameKitHelper: gameKitHelper,
-                startGame: {}
+                game: Game(),
+                startGame: {},
+                resumeGame: {}
             )
         }
     }

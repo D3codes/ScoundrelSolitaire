@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-class Game: ObservableObject {
+class Game: ObservableObject, Codable {
     @Published var gameKitHelper: GameKitHelper = GameKitHelper()
     
     @Published var deck: Deck
@@ -38,6 +38,28 @@ class Game: ObservableObject {
         self.deck = Deck()
         self.player = Player()
         self.room = Room()
+        
+        if let savedGame = UserDefaults.standard.object(forKey: UserDefaultsKeys().game) as? Data {
+            let decoder = JSONDecoder()
+            if let loadedGame = try? decoder.decode(Game.self, from: savedGame) {
+                self.deck = loadedGame.deck
+                self.player = loadedGame.player
+                self.room = loadedGame.room
+                room.initializeSounds()
+                if room.isDealingCards {
+                    room.finishDealing(deck: deck)
+                }
+                
+                self.gameOver = loadedGame.gameOver
+                self.score = loadedGame.score
+                self.bonusPoints = loadedGame.bonusPoints
+                self.strengthOfMonsterThatKilledPlayer = loadedGame.strengthOfMonsterThatKilledPlayer
+                self.gameOverModalAchievement = loadedGame.gameOverModalAchievement
+                self.previousBestScore = loadedGame.previousBestScore
+                self.dungeonBeat = loadedGame.dungeonBeat
+                self.dungeonDepth = loadedGame.dungeonDepth
+            }
+        }
         
         // Required to propagate changes from sub-objects
         deckCancellable = deck.objectWillChange.sink { [weak self] (_) in
@@ -236,5 +258,50 @@ class Game: ObservableObject {
             gameKitHelper.unlockAchievement(.Untouchable)
             gameOverModalAchievement = .Untouchable
         }
+    }
+    
+    // Required for Codable protocol conformance
+    enum CodingKeys: CodingKey {
+        case deck
+        case player
+        case room
+        case gameOver
+        case score
+        case bonusPoints
+        case strengthOfMonsterThatKilledPlayer
+        case gameOverModalAchievement
+        case previousBestScore
+        case dungeonBeat
+        case dungeonDepth
+    }
+    
+    required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        deck = try container.decode(Deck.self, forKey: .deck)
+        player = try container.decode(Player.self, forKey: .player)
+        room = try container.decode(Room.self, forKey: .room)
+        gameOver = try container.decode(Bool.self, forKey: .gameOver)
+        score = try container.decode(Int.self, forKey: .score)
+        bonusPoints = try container.decode(Int.self, forKey: .bonusPoints)
+        strengthOfMonsterThatKilledPlayer = try container.decode(Int.self, forKey: .strengthOfMonsterThatKilledPlayer)
+        gameOverModalAchievement = try container.decode(GameKitHelper.BinaryAchievement?.self, forKey: .gameOverModalAchievement)
+        previousBestScore = try container.decode(Int?.self, forKey: .previousBestScore)
+        dungeonBeat = try container.decode(Bool.self, forKey: .dungeonBeat)
+        dungeonDepth = try container.decode(Int.self, forKey: .dungeonDepth)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(deck, forKey: .deck)
+        try container.encode(player, forKey: .player)
+        try container.encode(room, forKey: .room)
+        try container.encode(gameOver, forKey: .gameOver)
+        try container.encode(score, forKey: .score)
+        try container.encode(bonusPoints, forKey: .bonusPoints)
+        try container.encode(strengthOfMonsterThatKilledPlayer, forKey: .strengthOfMonsterThatKilledPlayer)
+        try container.encode(gameOverModalAchievement, forKey: .gameOverModalAchievement)
+        try container.encode(previousBestScore, forKey: .previousBestScore)
+        try container.encode(dungeonBeat, forKey: .dungeonBeat)
+        try container.encode(dungeonDepth, forKey: .dungeonDepth)
     }
 }

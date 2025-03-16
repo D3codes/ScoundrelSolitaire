@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-class Card: ObservableObject {
-    enum Suit: String, CaseIterable {
+class Card: ObservableObject, Codable {
+    enum Suit: String, CaseIterable, Codable {
         case weapon
         case healthPotion
         case monster
