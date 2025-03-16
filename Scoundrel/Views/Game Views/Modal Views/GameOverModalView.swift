@@ -92,24 +92,24 @@ struct GameOverModalView: View {
                         
                         Spacer()
                         
-                        Button(action: { newGame() }, label: {
-                            ZStack {
-                                Image("plank1")
-                                    .resizable()
-                                    .frame(width: 200, height: 50)
-                                Text("New Game")
-                                    .font(.custom("ModernAntiqua-Regular", size: 30))
-                                    .foregroundStyle(.white)
-                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                            }
-                        })
-                        
                         Button(action: { mainMenu() }, label: {
                             ZStack {
                                 Image("plank1")
                                     .resizable()
                                     .frame(width: 200, height: 50)
                                 Text("Main Menu")
+                                    .font(.custom("ModernAntiqua-Regular", size: 30))
+                                    .foregroundStyle(.white)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            }
+                        })
+                        
+                        Button(action: { newGame() }, label: {
+                            ZStack {
+                                Image("plank1")
+                                    .resizable()
+                                    .frame(width: 200, height: 50)
+                                Text("New Game")
                                     .font(.custom("ModernAntiqua-Regular", size: 30))
                                     .foregroundStyle(.white)
                                     .shadow(color: .black, radius: 2, x: 0, y: 0)
