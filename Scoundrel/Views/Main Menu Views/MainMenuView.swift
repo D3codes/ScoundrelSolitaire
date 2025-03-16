@@ -9,10 +9,14 @@ import SwiftUI
 import AVFoundation
 
 struct MainMenuView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
+    @ObservedObject var game: Game
     
     var startGame: () -> Void
+    var resumeGame: () -> Void
     
     @State var showHowToModal: Bool = false
     @State var showCreditsModal: Bool = false
@@ -35,17 +39,21 @@ struct MainMenuView: View {
                 Spacer()
                 Spacer()
                 
+                if game.score > 0 && !game.gameOver {
+                    ResumeButtonView(game: game, resumeGame: resumeGame)
+                }
+                
                 PlankButtonView(text: "New Game", action: startGame)
                     .padding(.bottom, 40)
                 
                 PlankButtonView(text: "How to Play", action: {
                     showHowToModal = true
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                 })
                 
                 PlankButtonView(text: "Credits", action: {
                     showCreditsModal = true
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                 })
                 
                 Spacer()
@@ -79,7 +87,9 @@ struct MainMenuView: View {
             MainMenuView(
                 musicPlayer: musicPlayer,
                 gameKitHelper: gameKitHelper,
-                startGame: {}
+                game: Game(),
+                startGame: {},
+                resumeGame: {}
             )
         }
     }

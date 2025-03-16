@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HealthBarView: View {
+    @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
+    
     @ObservedObject var room: Room
     @ObservedObject var player: Player
     var animationNamespace: Namespace.ID
@@ -29,7 +31,7 @@ struct HealthBarView: View {
                     .foregroundStyle(.regularMaterial)
                     .shadow(color: .black, radius: 5, x: 2, y: 2)
                 
-                if #available(iOS 17.0, *) { // sensory feedback not available on older OS versions
+                if #available(iOS 17.0, *), hapticsEnabled { // sensory feedback not available on older OS versions
                     VStack(spacing: 0) {
                         Image("heart1")
                             .resizable()

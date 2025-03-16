@@ -10,6 +10,8 @@ import SwiftData
 import AVFoundation
 
 struct GameView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @Namespace var animation
     @ObservedObject var game: Game
     var mainMenu: () -> Void
@@ -48,6 +50,12 @@ struct GameView: View {
         game.newGame()
     }
     
+    func nextDungeon() {
+        selectedCardIndex = nil
+        background = backgrounds.randomElement()!
+        game.nextDungeon()
+    }
+    
     func actionSelected(cardIndex: Int, firstAction: Bool) {
         switch game.room.cards[cardIndex]!.suit {
         case .healthPotion:
@@ -69,7 +77,7 @@ struct GameView: View {
                     game: game,
                     pause: {
                         withAnimation { pauseMenuShown = true }
-                        pageSound?.play()
+                        if !soundEffectsMuted { pageSound?.play() }
                     },
                     animationNamespace: animation,
                     selectedCardIndex: $selectedCardIndex
@@ -94,31 +102,13 @@ struct GameView: View {
                 )
             }
             
-            if game.gameOver || pauseMenuShown {
-                Rectangle()
-                    .ignoresSafeArea(.all)
-                    .foregroundStyle(.ultraThinMaterial)
-                    .opacity(0.7)
-            }
-            
-            if game.gameOver {
-                GameOverModalView(
-                    game: game,
-                    newGame: newGame,
-                    mainMenu: mainMenu
-                )
-                .transition(.opacityAndMoveFromBottom)
-            }
-            
-            if pauseMenuShown {
-                PauseModalView(
-                    continueGame: { withAnimation { pauseMenuShown = false } },
-                    newGame: newGame,
-                    mainMenu: mainMenu,
-                    room: game.room
-                )
-                .transition(.opacityAndMoveFromBottom)
-            }
+            ModalOverlayView(
+                game: game,
+                pauseMenuShown: $pauseMenuShown,
+                nextDungeon: nextDungeon,
+                newGame: newGame,
+                mainMenu: mainMenu
+            )
         }
         .background(Image(background))
         .onAppear() {

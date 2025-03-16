@@ -9,11 +9,11 @@ import GameKit
 
 class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate, ObservableObject {
     
-    enum Leaderboard: String, CaseIterable {
+    enum Leaderboard: String, CaseIterable, Codable {
         case ScoundrelAllTimeHighScore
     }
     
-    enum BinaryAchievement: String, CaseIterable {
+    enum BinaryAchievement: String, CaseIterable, Codable {
         case DavidAndGoliath
         case WhatAWaste
         case WereYouEvenTrying
@@ -24,10 +24,18 @@ class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate,
         case DungeonMaster
         case Untouchable
         case HangingByAThread
+        case GoingDeeper
+        case NoTurningBack
+        case DepthsUncharted
+        case EndlessDescent
     }
     
-    enum ProgressAchievement: String, CaseIterable {
+    enum ProgressAchievement: String, CaseIterable, Codable {
         case MasterOfEvasion
+        case DarknessBeckons
+        case SeasonedDelver
+        case MasterOfTheMaze
+        case UntoldTrials100Triumphs
     }
     
     @Published var localPlayerIsAuthenticated: Bool = false

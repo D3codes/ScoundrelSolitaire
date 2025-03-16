@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class Player: ObservableObject {
+class Player: ObservableObject, Codable {
     @Published var health: Int
     @Published var weapon: Int?
     @Published var lastAttacked: Int?
@@ -113,5 +113,26 @@ class Player: ObservableObject {
     
     func strongestMonsterThatCanBeAttacked() -> Int {
         return max((lastAttacked ?? 0)-1, 0)
+    }
+    
+    // Required for Codable protocol conformance
+    enum CodingKeys: CodingKey {
+        case health
+        case weapon
+        case lastAttacked
+    }
+    
+    required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        health = try container.decode(Int.self, forKey: .health)
+        weapon = try container.decode(Int?.self, forKey: .weapon)
+        lastAttacked = try container.decode(Int?.self, forKey: .lastAttacked)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(health, forKey: .health)
+        try container.encode(weapon, forKey: .weapon)
+        try container.encode (lastAttacked, forKey: .lastAttacked)
     }
 }

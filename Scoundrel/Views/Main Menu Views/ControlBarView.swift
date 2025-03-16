@@ -9,6 +9,8 @@ import SwiftUI
 import GameKit
 
 struct ControlBarView: View {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
     
@@ -22,36 +24,33 @@ struct ControlBarView: View {
         }
     }
     
+    @State var isPresentingSettings: Bool = false
     @State var isPresentingLeaderboards: Bool = false
     @State var showSignInPopup: Bool = false
     
     var body: some View {
         ZStack {
             HStack {
-                Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
+                Button(action: {
+                    if !soundEffectsMuted { page2Sound?.play() }
+                    isPresentingSettings = true
+                },label: {
                     ZStack {
                         Image("stoneButton")
                             .resizable()
                             .frame(width: 50, height: 50)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                         
-                        if musicPlayer.isPlaying {
-                            Image(systemName: "music.note")
-                                .foregroundStyle(.white)
-                                .font(.title2)
-                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        } else {
-                            Image("music.note.slash")
-                                .foregroundStyle(.white)
-                                .font(.title2)
-                                .shadow(color: .black, radius: 2, x: 0, y:0 )
-                        }
+                        Image(systemName: "gearshape.fill")
+                            .foregroundStyle(.white)
+                            .font(.title2)
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
                 .padding(.trailing, 50)
                 
                 Button(action: {
-                    page2Sound?.play()
+                    if !soundEffectsMuted { page2Sound?.play() }
                     isPresentingLeaderboards = true
                 },label: {
                     ZStack {
@@ -84,20 +83,6 @@ struct ControlBarView: View {
                             .presentationCompactAdaptation(.popover)
                     }
                 }
-                
-//                Button(action: { },label: {
-//                    ZStack {
-//                        Image("stoneButton")
-//                            .resizable()
-//                            .frame(width: 50, height: 50)
-//                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-//                        
-//                        Image(systemName: "gearshape.fill")
-//                            .foregroundStyle(.white)
-//                            .font(.title2)
-//                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-//                    }
-//                })
             }
         }
         .frame(maxWidth: .infinity, maxHeight: 150)
@@ -109,6 +94,7 @@ struct ControlBarView: View {
                 .shadow(color: .black, radius: 5, x: 0, y: -5)
         )
         .popover(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
+        .popover(isPresented: $isPresentingSettings) { SettingsView(musicPlayer: musicPlayer) }
         .onAppear() { initializeSounds() }
     }
 }

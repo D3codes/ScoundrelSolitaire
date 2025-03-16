@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class Deck: ObservableObject {
+class Deck: ObservableObject, Codable {
     var cards: [Card] = []
     
     let combinedStrengthOfAllMonsterCards: Int = 208
@@ -22,14 +22,13 @@ class Deck: ObservableObject {
     func reset() {
         cards = []
         
-//        cards = [
-//            Card(suit: .monster, strength: 14),
-//            Card(suit: .monster, strength: 5),
-//            Card(suit: .healthPotion, strength: 2),
-//            Card(suit: .healthPotion, strength: 2),
-//            Card(suit: .weapon, strength: 2),
-//            Card(suit: .weapon, strength: 2)
-//        ]
+        // Test Data
+//        cards.append(Card(suit: .monster, strength: 14))
+//        cards.append(Card(suit: .monster, strength: 5))
+//        cards.append(Card(suit: .healthPotion, strength: 2))
+//        cards.append(Card(suit: .healthPotion, strength: 10))
+//        cards.append(Card(suit: .weapon, strength: 2))
+//        cards.append(Card(suit: .weapon, strength: 2))
         
         for i in 2...14 {
             cards.append(Card(suit: .monster, strength: i))
@@ -64,5 +63,20 @@ class Deck: ObservableObject {
         }
         
         return cards.removeFirst()
+    }
+    
+    // Required for Codable protocol conformance
+    enum CodingKeys: CodingKey {
+        case cards
+    }
+    
+    required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        cards = try container.decode([Card].self, forKey: .cards)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(cards, forKey: .cards)
     }
 }

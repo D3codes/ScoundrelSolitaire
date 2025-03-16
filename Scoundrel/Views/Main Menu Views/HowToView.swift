@@ -25,7 +25,7 @@ struct HowToView: View {
                 Text("Objective")
                     .font(.custom("ModernAntiqua-Regular", size: 25))
                     .foregroundStyle(.black)
-                Text("Scoundrel Solitaire is a rogue-like card game. The deck is your dungeon, and rooms are made up of four cards at a time. The goal is to make it through the dungeon without your life reaching 0.")
+                Text("Scoundrel Solitaire is a rogue-like card game. The deck is your dungeon, and rooms are made up of four cards at a time. The goal is to make it through as many dungeons as possible without your life reaching 0.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -45,6 +45,16 @@ struct HowToView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 1)
                 Text("If you choose to face a room, you must interact with three of the four cards in the room to advance. The fourth card will be carried over to the next room.")
+                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 1)
+                Text("If you make it through a dungeon, all the cards are shuffled back into the deck and you continue into the next dugeon with your current life and weapon.")
+                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 1)
+                Text("The game ends when your life reaches 0.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -158,11 +168,11 @@ struct HowToView: View {
                 Text("Scoring")
                     .font(.custom("ModernAntiqua-Regular", size: 25))
                     .foregroundStyle(.black)
-                Text("At the end of a game, your score is the sum of the strength of all the Monster cards you defeated plus your remaining life.")
+                Text("At the end of a dungeon, your score is the sum of the strength of all the Monster cards you defeated plus your remaining life.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.bottom)
+                    .padding(.bottom, 1)
                 Text("If your life is 20 and your last card was a Health Potion, a bonus is added to your score equal to the strength of that card.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
@@ -197,13 +207,36 @@ struct HowToView: View {
                 .padding(.bottom)
                 HStack {
                     ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                        
+                        VStack(spacing: 0) {
+                            Image("dungeonGlyph")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("1")
+                                .font(.custom("MorrisRoman-Black", size: 20))
+                                .contentTransition(.numericText())
+                        }
+                    }
+                    
+                    Text("The number of dungeons beaten.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
+                HStack {
+                    ZStack {
                         Image("stoneButton")
                             .resizable()
-                            .frame(width: 100, height: 50)
+                            .frame(width: 50, height: 50)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        Text("Flee")
+                        Image(systemName: "figure.run")
                             .foregroundStyle(.white)
-                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .font(.title2)
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
 
