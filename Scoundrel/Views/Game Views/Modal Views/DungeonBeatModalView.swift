@@ -21,7 +21,7 @@ struct DungeonBeatModalView: View {
         ZStack {
             VStack {
                 if game.gameOverModalAchievement != nil {
-                    GameOverAchievementView(achievement: game.gameOverModalAchievement!)
+                    AchievementBannerView(achievement: game.gameOverModalAchievement!)
                         .zIndex(10)
                 }
                 
@@ -42,9 +42,26 @@ struct DungeonBeatModalView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                             .padding(.bottom, 2)
                         
-                        Text("Score: \(game.score)")
-                            .font(.custom("ModernAntiqua-Regular", size: 30))
-                            .foregroundStyle(.black)
+                        HStack {
+                            Text("Score:")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Text("\(game.score)")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                        }
+                        .padding(.horizontal, 50)
+                        HStack {
+                            Text("Dungeons:")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Text("\(game.dungeonDepth + 1)")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                        }
+                        .padding(.horizontal, 50)
                         
                         Spacer()
                         Spacer()
@@ -66,15 +83,6 @@ struct DungeonBeatModalView: View {
                 }
                 .frame(width: 300, height: 400)
             }
-            
-            VortexView(.fireworks) {
-                Circle()
-                    .fill(.white)
-                    .blendMode(.plusLighter)
-                    .frame(width: 32)
-                    .tag("circle")
-            }
-            .allowsHitTesting(false)
         }
     }
 }

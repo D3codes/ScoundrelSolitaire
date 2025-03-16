@@ -23,14 +23,14 @@ struct GameOverModalView: View {
     }
     
     func getShareItem() -> String {
-        return "\(getSharePreviewTitle())\nCan you beat me?\nhttps://apps.apple.com/app/id6742526198"
+        return "Can you beat my score in Scoundrel Solitaire? 🃏\n⚔️ Score: \(game.score)\n🏰 Dungeons: \(game.dungeonDepth)\nhttps://apps.apple.com/app/id6742526198"
     }
     
     var body: some View {
         ZStack {
             VStack {
                 if game.gameOverModalAchievement != nil {
-                    GameOverAchievementView(achievement: game.gameOverModalAchievement!)
+                    AchievementBannerView(achievement: game.gameOverModalAchievement!)
                         .zIndex(10)
                 }
                 
@@ -62,9 +62,27 @@ struct GameOverModalView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                             .padding(.bottom, 2)
                         
-                        Text("Score: \(game.score)")
-                            .font(.custom("ModernAntiqua-Regular", size: 30))
-                            .foregroundStyle(.black)
+                        
+                        HStack {
+                            Text("Score:")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Text("\(game.score)")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                        }
+                        .padding(.horizontal, 50)
+                        HStack {
+                            Text("Dungeons:")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                            Spacer()
+                            Text("\(game.dungeonDepth)")
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
+                                .foregroundStyle(.black)
+                        }
+                        .padding(.horizontal, 50)
                         
                         if game.previousBestScore != nil && game.score > game.previousBestScore! {
                             Text("New Personal Best!")
