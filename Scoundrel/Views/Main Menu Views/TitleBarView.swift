@@ -19,7 +19,6 @@ struct TitleBarView: View {
         .background(
             Image("stoneSlab2")
                 .resizable()
-                .frame(width: 800)
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 15, x: 0, y: 5)
         )

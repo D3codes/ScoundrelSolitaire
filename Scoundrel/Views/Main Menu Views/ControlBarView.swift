@@ -87,14 +87,13 @@ struct ControlBarView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: 150)
         .background(
-            Image("woodButton")
+            Image("wood2")
                 .resizable()
-                .frame(width: 800)
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 5, x: 0, y: -5)
         )
-        .popover(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
-        .popover(isPresented: $isPresentingSettings) { SettingsView(musicPlayer: musicPlayer) }
+        .sheet(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
+        .sheet(isPresented: $isPresentingSettings) { SettingsView(musicPlayer: musicPlayer) }
         .onAppear() { initializeSounds() }
     }
 }
