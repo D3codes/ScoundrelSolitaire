@@ -84,11 +84,11 @@ struct GameOverModalView: View {
                         }
                         .padding(.horizontal, 50)
                         
-                       // if game.previousBestScore != nil && game.score > game.previousBestScore! {
+                        if game.previousBestScore != nil && game.score > game.previousBestScore! {
                             Text("New Personal Best!")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                                 .foregroundStyle(.black)
-                       // }
+                        }
                         
                         Spacer()
                         
