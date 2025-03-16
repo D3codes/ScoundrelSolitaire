@@ -85,33 +85,35 @@ struct SettingsView: View {
                     })
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Button(action: { self.hapticsEnabled.toggle() },label: {
-                        HStack {
-                            ZStack {
-                                Image("stoneButton")
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                
-                                if hapticsEnabled {
-                                    Image(systemName: "hand.tap.fill")
-                                        .foregroundStyle(.white)
-                                        .font(.title2)
+                    if UIDevice.current.model == "iPhone" {
+                        Button(action: { self.hapticsEnabled.toggle() },label: {
+                            HStack {
+                                ZStack {
+                                    Image("stoneButton")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
                                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                } else {
-                                    Image("hand.tap.slash.fill")
-                                        .foregroundStyle(.white)
-                                        .font(.title2)
-                                        .shadow(color: .black, radius: 2, x: 0, y:0 )
+                                    
+                                    if hapticsEnabled {
+                                        Image(systemName: "hand.tap.fill")
+                                            .foregroundStyle(.white)
+                                            .font(.title2)
+                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                    } else {
+                                        Image("hand.tap.slash.fill")
+                                            .foregroundStyle(.white)
+                                            .font(.title2)
+                                            .shadow(color: .black, radius: 2, x: 0, y:0 )
+                                    }
                                 }
+                                
+                                Text("Haptic Feedback: \(self.hapticsEnabled ? "On" : "Off")")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                    .foregroundStyle(.foreground)
                             }
-                            
-                            Text("Haptic Feedback: \(self.hapticsEnabled ? "On" : "Off")")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                                .foregroundStyle(.foreground)
-                        }
-                    })
-                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                        })
+                            .listRowBackground(Rectangle().fill(.thinMaterial))
+                    }
                 }
                 .scrollContentBackground(.hidden)
                 
