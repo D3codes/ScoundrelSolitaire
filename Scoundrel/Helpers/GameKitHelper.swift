@@ -7,7 +7,7 @@
 
 import GameKit
 
-class GameKitHelper: GKGameCenterViewController, GKGameCenterControllerDelegate, ObservableObject {
+class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, ObservableObject {
     
     enum Leaderboard: String, CaseIterable, Codable {
         case ScoundrelAllTimeHighScore
