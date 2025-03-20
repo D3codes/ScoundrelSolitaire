@@ -28,10 +28,10 @@ struct CardView: View {
                     Image("\(card.getIcon())")
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: 35, maxHeight: 35)
+                        .frame(maxWidth: 30, maxHeight: 30)
                     
                     Text("\(card.strength)")
-                        .font(.custom("ModernAntiqua-Regular", size: 35))
+                        .font(.custom("ModernAntiqua-Regular", size: 30))
                         .foregroundStyle(.black)
                 }
                 .padding(.bottom)
