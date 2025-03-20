@@ -102,6 +102,7 @@ struct TopBarView: View {
                         .contentTransition(.numericText())
                 }
             }
+            .frame(minWidth: 50, maxWidth: 200)
             
             ZStack {
                 RoundedRectangle(cornerRadius: 10)

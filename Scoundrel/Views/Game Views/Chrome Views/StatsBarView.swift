@@ -22,6 +22,7 @@ struct StatsBarView: View {
             )
             .padding(.horizontal)
             .padding(.top)
+            .frame(maxWidth: 500)
             
             WeaponBarView(
                 player: player,
@@ -30,6 +31,7 @@ struct StatsBarView: View {
             )
             .padding(.horizontal)
             .padding(.bottom)
+            .frame(maxWidth: 500)
         }
         .frame(maxWidth: .infinity, maxHeight: 150)
         .background(

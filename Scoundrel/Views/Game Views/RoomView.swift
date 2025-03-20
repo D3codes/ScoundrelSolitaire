@@ -33,30 +33,13 @@ struct RoomView: View {
     }
     
     var body: some View {
-        ZStack {
+        ZStack {            
             VStack {
+                Spacer()
+                
                 HStack {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 150, height: 200)
+                    Spacer()
                     
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 150, height: 200)
-                }
-                HStack {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 150, height: 200)
-                    
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 150, height: 200)
-                }
-            }
-            
-            VStack {
-                HStack {
                     CardOrSpacerView(
                         room: room,
                         cardIndex: 0,
@@ -70,9 +53,13 @@ struct RoomView: View {
                         cardSelected: $cardSelected,
                         animationNamespace: animationNamespace
                     )
+                    
+                    Spacer()
                 }
                 
                 HStack {
+                    Spacer()
+                    
                     CardOrSpacerView(
                         room: room,
                         cardIndex: 2,
@@ -86,7 +73,11 @@ struct RoomView: View {
                         cardSelected: $cardSelected,
                         animationNamespace: animationNamespace
                     )
+                    
+                    Spacer()
                 }
+                
+                Spacer()
             }
             
             if cardSelected != nil {
