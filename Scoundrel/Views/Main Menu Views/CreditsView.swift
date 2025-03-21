@@ -22,7 +22,7 @@ struct CreditsView: View {
                     .padding()
                 
                 
-                Text("Created by David Freeman")
+                Text("Created by [David Freeman](https://d3.codes/about)")
                     .font(.custom("ModernAntiqua-Regular", size: 20))
                     .foregroundStyle(.black)
                     .padding(.bottom)
