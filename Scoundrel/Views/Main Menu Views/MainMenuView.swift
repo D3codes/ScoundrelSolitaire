@@ -19,7 +19,7 @@ struct MainMenuView: View {
     var resumeGame: () -> Void
     
     @State var showHowToModal: Bool = false
-    @State var showCreditsModal: Bool = false
+    @State var showStatsModal: Bool = false
     
     @State var page2Sound: AVAudioPlayer?
     
@@ -51,8 +51,8 @@ struct MainMenuView: View {
                     if !soundEffectsMuted { page2Sound?.play() }
                 })
                 
-                PlankButtonView(text: "Credits", action: {
-                    showCreditsModal = true
+                PlankButtonView(text: "Stats", action: {
+                    showStatsModal = true
                     if !soundEffectsMuted { page2Sound?.play() }
                 })
                 
@@ -69,10 +69,8 @@ struct MainMenuView: View {
                 .onAppear { gameKitHelper.hideAccessPoint() }
                 .onDisappear { gameKitHelper.showAccessPoint() }
         }
-        .sheet(isPresented: $showCreditsModal) {
-            CreditsView()
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
+        .sheet(isPresented: $showStatsModal) {
+            StatsView()
         }
         .onAppear { initializeSounds() }
     }
