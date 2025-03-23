@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
+    @AppStorage(UserDefaultsKeys().latestVersionNotesRead) private var latestVersionNotesRead: String = "1.0"
     
     @ObservedObject var musicPlayer: MusicPlayer
     
@@ -121,12 +122,22 @@ struct SettingsView: View {
                     }
                     
                     Section {
-                        Button(action: { withAnimation { showWhatsNew.toggle() } }, label: {
+                        Button(action: {
+                            withAnimation {
+                                showWhatsNew.toggle()
+                                latestVersionNotesRead = appVersion!
+                            }
+                        }, label: {
                             HStack {
                                 Text("What's New?")
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
                                 
                                 Spacer()
+                                
+                                if latestVersionNotesRead != appVersion! {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundStyle(.teal)
+                                }
                                 
                                 Image(systemName: "chevron.right")
                                     .rotationEffect(.degrees(showWhatsNew ? 90 : 0))
@@ -162,14 +173,6 @@ struct SettingsView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
-                
-                Spacer()
-                
-                Text("v\(appVersion!)")
-                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                    .frame(maxWidth: .infinity, alignment: .center)
             }
         }
     }
