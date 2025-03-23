@@ -9,6 +9,8 @@ import GameKit
 
 class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, ObservableObject {
     
+    private let maxLeaderboardFetchCount: Int = 100
+    
     enum Leaderboard: String, CaseIterable, Codable {
         case ScoundrelAllTimeHighScore
     }
@@ -130,7 +132,7 @@ class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, Observabl
         if !localPlayerIsAuthenticated { return [] }
         
         let leaderboard = try await GKLeaderboard.loadLeaderboards(IDs: [id.rawValue]).first
-        return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...count)).1 ?? []
+        return try await leaderboard?.loadEntries(for: .global, timeScope: .allTime, range: NSRange(1...min(count, maxLeaderboardFetchCount))).1 ?? []
     }
     
     func incrementAchievementProgress(_ achievementId: ProgressAchievement, by incrementAmount: Double) {

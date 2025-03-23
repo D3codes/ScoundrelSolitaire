@@ -16,6 +16,7 @@ struct TopBarView: View {
     @Binding var selectedCardIndex: Int?
     
     @State var showingDeckCountPopover: Bool = false
+    @State var showingDungeonCountPopover: Bool = false
     
     var body: some View {
         HStack {
@@ -117,6 +118,19 @@ struct TopBarView: View {
                     Text("\(game.dungeonDepth)")
                         .font(.custom("MorrisRoman-Black", size: 20))
                         .contentTransition(.numericText())
+                }
+            }
+            .onTapGesture {
+                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
+                    showingDungeonCountPopover = true
+                }
+            }
+            .popover(isPresented: $showingDungeonCountPopover) {
+                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
+                    Text("\(game.dungeonDepth) dungeons beat")
+                        .font(.headline)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
                 }
             }
             
