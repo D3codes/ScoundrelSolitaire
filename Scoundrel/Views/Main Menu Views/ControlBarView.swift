@@ -93,7 +93,11 @@ struct ControlBarView: View {
                 .shadow(color: .black, radius: 5, x: 0, y: -5)
         )
         .sheet(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
-        .sheet(isPresented: $isPresentingSettings) { SettingsView(musicPlayer: musicPlayer) }
+        .sheet(isPresented: $isPresentingSettings) {
+            SettingsView(musicPlayer: musicPlayer)
+                .onAppear { gameKitHelper.hideAccessPoint() }
+                .onDisappear { gameKitHelper.showAccessPoint() }
+        }
         .onAppear() { initializeSounds() }
     }
 }

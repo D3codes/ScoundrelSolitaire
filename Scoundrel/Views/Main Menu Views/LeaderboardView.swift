@@ -77,6 +77,7 @@ struct LeaderboardView: View {
                         }
                         .listRowBackground(Rectangle().fill(leaderboardEntries[index].player.displayName == playerEntry?.player.displayName ? .regularMaterial : .thinMaterial))
                     }
+                    .scrollIndicators(.hidden)
                     .scrollContentBackground(.hidden)
                 } else {
                     Spacer()
