@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.openURL) var openURL
+    
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
     @AppStorage(UserDefaultsKeys().latestVersionNotesRead) private var latestVersionNotesRead: String = "1.0"
@@ -168,6 +170,34 @@ struct SettingsView: View {
                         if showCredits {
                             CreditsView()
                                 .listRowBackground(Rectangle().fill(.regularMaterial))
+                        }
+                    }
+                    
+                    Section {
+                        HStack {
+                            Text("Privacy Policy")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            
+                            Spacer()
+                            
+                            Image(systemName: "link")
+                        }
+                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .onTapGesture {
+                            openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
+                        }
+                        
+                        HStack {
+                            Text("Support")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            
+                            Spacer()
+                            
+                            Image(systemName: "link")
+                        }
+                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .onTapGesture {
+                            openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
                         }
                     }
                 }
