@@ -16,6 +16,7 @@ struct TopBarView: View {
     @Binding var selectedCardIndex: Int?
     
     @State var showingDeckCountPopover: Bool = false
+    @State var showingDungeonCountPopover: Bool = false
     
     var body: some View {
         HStack {
@@ -102,6 +103,7 @@ struct TopBarView: View {
                         .contentTransition(.numericText())
                 }
             }
+            .frame(minWidth: 50, maxWidth: 200)
             
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
@@ -116,6 +118,19 @@ struct TopBarView: View {
                     Text("\(game.dungeonDepth)")
                         .font(.custom("MorrisRoman-Black", size: 20))
                         .contentTransition(.numericText())
+                }
+            }
+            .onTapGesture {
+                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
+                    showingDungeonCountPopover = true
+                }
+            }
+            .popover(isPresented: $showingDungeonCountPopover) {
+                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
+                    Text("\(game.dungeonDepth) dungeons beat")
+                        .font(.headline)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
                 }
             }
             
@@ -151,7 +166,6 @@ struct TopBarView: View {
         .background(
             Image("stoneSlab2")
                 .resizable()
-                .frame(width: 800)
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 15, x: 0, y: 5)
         )

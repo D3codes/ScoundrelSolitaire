@@ -10,28 +10,16 @@ import SwiftData
 import AVFoundation
 
 struct GameView: View {
+    let ubiquitousHelper: UbiquitousHelper = UbiquitousHelper()
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     
     @Namespace var animation
     @ObservedObject var game: Game
     var mainMenu: () -> Void
+    var randomBackground: () -> Void
     
     @State var pauseMenuShown: Bool = false
     @State var selectedCardIndex: Int?
-    
-    @State var background: String = "dungeon1"
-    let backgrounds: [String] = [
-        "dungeon1",
-        "dungeon2",
-        "dungeon3",
-        "dungeon4",
-        "dungeon5",
-        "dungeon6",
-        "dungeon7",
-        "dungeon8",
-        "dungeon9",
-        "dungeon10"
-    ]
 
     @State var pageSound: AVAudioPlayer?
     func initializeSounds() {
@@ -44,15 +32,16 @@ struct GameView: View {
     }
     
     func newGame() {
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: !game.gameOver)
         selectedCardIndex = nil
         withAnimation { pauseMenuShown = false }
-        background = backgrounds.randomElement()!
+        randomBackground()
         game.newGame()
     }
     
     func nextDungeon() {
         selectedCardIndex = nil
-        background = backgrounds.randomElement()!
+        randomBackground()
         game.nextDungeon()
     }
     
@@ -110,7 +99,6 @@ struct GameView: View {
                 mainMenu: mainMenu
             )
         }
-        .background(Image(background))
         .onAppear() {
             game.gameKitHelper.hideAccessPoint()
             initializeSounds()
@@ -123,7 +111,8 @@ struct GameView: View {
         var body: some View {
             GameView(
                 game: Game(),
-                mainMenu: {}
+                mainMenu: {},
+                randomBackground: {}
             )
         }
     }

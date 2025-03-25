@@ -15,4 +15,6 @@ struct UserDefaultsKeys {
     let hapticsEnabled: String = "hapticsEnabled"
     
     let game: String = "game"
+    
+    let latestVersionNotesRead: String = "latestVersionNotesRead"
 }

@@ -17,25 +17,27 @@ struct CardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: .black, radius: 5, x: 5, y: 5)
                 
-            
-            VStack {
+            VStack(spacing: 0) {
                 Image("\(card.getImageName())")
                     .resizable()
-                    .frame(width: 125, height: 125)
+                    .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .padding()
                 
                 HStack {
                     Image("\(card.getIcon())")
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .scaledToFit()
+                        .frame(maxWidth: 30, maxHeight: 30)
                     
                     Text("\(card.strength)")
                         .font(.custom("ModernAntiqua-Regular", size: 30))
                         .foregroundStyle(.black)
                 }
+                .padding(.bottom)
             }
         }
-        .frame(width: 150, height: 200)
+        .aspectRatio(0.75, contentMode: .fit)
     }
 }
 

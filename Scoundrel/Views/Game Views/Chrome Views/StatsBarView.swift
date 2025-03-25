@@ -22,6 +22,7 @@ struct StatsBarView: View {
             )
             .padding(.horizontal)
             .padding(.top)
+            .frame(maxWidth: 500)
             
             WeaponBarView(
                 player: player,
@@ -30,12 +31,12 @@ struct StatsBarView: View {
             )
             .padding(.horizontal)
             .padding(.bottom)
+            .frame(maxWidth: 500)
         }
         .frame(maxWidth: .infinity, maxHeight: 150)
         .background(
-            Image("woodButton")
+            Image("wood2")
                 .resizable()
-                .frame(width: 800)
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 5, x: 0, y: -5)
         )

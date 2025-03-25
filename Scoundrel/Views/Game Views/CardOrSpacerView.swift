@@ -14,22 +14,30 @@ struct CardOrSpacerView: View {
     var animationNamespace: Namespace.ID
     
     var body: some View {
-        Group {
-            if room.cards[cardIndex] == nil || cardSelected == cardIndex {
-                Rectangle()
-                    .opacity(0)
-                    .frame(width: 150, height: 200)
-            } else {
-                CardView(card: room.cards[cardIndex]!)
-                    .onTapGesture {
-                        if !room.isDealingCards {
-                            withAnimation { cardSelected = cardIndex }
+        ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+                .aspectRatio(0.75, contentMode: .fit)
+            
+            Group {
+                if room.cards[cardIndex] == nil || cardSelected == cardIndex {
+                    Rectangle()
+                        .opacity(0)
+                        .aspectRatio(0.75, contentMode: .fit)
+                } else {
+                    CardView(card: room.cards[cardIndex]!)
+                        .onTapGesture {
+                            if !room.isDealingCards {
+                                withAnimation { cardSelected = cardIndex }
+                            }
                         }
-                    }
-                    .matchedGeometryEffect(id: "Card\(cardIndex)", in: animationNamespace)
-                    .transition(.opacityAndScale)
+                        .matchedGeometryEffect(id: "Card\(cardIndex)", in: animationNamespace)
+                        .transition(.opacityAndScale)
+                }
             }
         }
+        .padding(1)
+        .frame(maxWidth: 200)
     }
 }
 

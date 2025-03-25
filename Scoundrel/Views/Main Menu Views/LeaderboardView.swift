@@ -15,12 +15,8 @@ struct LeaderboardView: View {
     @State private var playerEntry: GKLeaderboard.Entry? = nil
     
     func fetchLeaderboardEntries() async {
-        do {
-            leaderboardEntries = try await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
-            playerEntry = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)
-        } catch {
-            // Failed to fetch leaderboard
-        }
+        leaderboardEntries = await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
+        playerEntry = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)
     }
     
     var body: some View {
@@ -77,6 +73,7 @@ struct LeaderboardView: View {
                         }
                         .listRowBackground(Rectangle().fill(leaderboardEntries[index].player.displayName == playerEntry?.player.displayName ? .regularMaterial : .thinMaterial))
                     }
+                    .scrollIndicators(.hidden)
                     .scrollContentBackground(.hidden)
                 } else {
                     Spacer()
