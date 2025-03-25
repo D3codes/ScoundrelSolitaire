@@ -13,6 +13,7 @@ import GameKit
 struct ScoundrelApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage(UserDefaultsKeys().backgroundMusicMuted) private var backgroundMusicMuted: Bool = false
+    let ubiquitousHelper: UbiquitousHelper = UbiquitousHelper()
     
     @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
     @StateObject var game: Game = Game()
@@ -38,6 +39,10 @@ struct ScoundrelApp: App {
     ]
     
     func startGame() {
+        if game.score > 0 && !game.gameOver {
+            ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score)
+        }
+        
         game.newGame()
         gameState = .game
     }

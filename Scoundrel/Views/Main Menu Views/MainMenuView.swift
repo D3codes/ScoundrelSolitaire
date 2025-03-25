@@ -70,7 +70,9 @@ struct MainMenuView: View {
                 .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .sheet(isPresented: $showStatsModal) {
-            StatsView()
+            StatsView(
+                gameKitHelper: game.gameKitHelper
+            )
         }
         .onAppear { initializeSounds() }
     }

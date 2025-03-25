@@ -9,6 +9,9 @@ import SwiftUI
 import Combine
 
 class Game: ObservableObject, Codable {
+    let store = NSUbiquitousKeyValueStore.default
+    let ubiquitousHelper = UbiquitousHelper()
+    
     @Published var gameKitHelper: GameKitHelper = GameKitHelper()
     
     @Published var deck: Deck
@@ -25,10 +28,6 @@ class Game: ObservableObject, Codable {
     @Published var dungeonDepth: Int = 0
     
     let lowestPossibleScore: Int = 6 // killed strength 6 monster unarmed, tried to kill strength 14 monster unarmed
-//    let lowestWinningScore: Int = 209 // killed all monsters with 1 health remaining
-//    let tenLifeRemainingScore: Int = 218
-//    let twentyLifeRemainingScore: Int = 228
-//    let highestPossibleScore: Int = 238
     
     var deckCancellable: AnyCancellable? = nil
     var playerCancellable: AnyCancellable? = nil
@@ -125,6 +124,7 @@ class Game: ObservableObject, Codable {
     }
     
     func flee() {
+        ubiquitousHelper.incrementUbiquitousValue(for: .NumberOfRoomsFled, by: 1)
         gameKitHelper.incrementAchievementProgress(.MasterOfEvasion, by: 1)
         room.flee(deck: deck)
     }
@@ -212,6 +212,8 @@ class Game: ObservableObject, Codable {
         
         checkForAchievements()
         
+        ubiquitousHelper.incrementUbiquitousValue(for: .NumberOfDungeonsBeaten, by: 1)
+        
         withAnimation { dungeonBeat = true }
     }
     
@@ -220,7 +222,8 @@ class Game: ObservableObject, Codable {
         
         withAnimation { gameOver = true }
         
-        Task { await gameKitHelper.submitScore(score) }
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: score)
+        gameKitHelper.submitScore(score)
     }
     
     func checkForAchievements() {
