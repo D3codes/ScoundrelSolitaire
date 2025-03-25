@@ -41,9 +41,9 @@ class UbiquitousHelper {
         let newAverageScore = (averageScore * gameCount + Int64(newScore)) / (gameCount + 1)
         
         if gameAbandoned {
-            incrementUbiquitousValue(for: .NumberOfGamesAbandoned, by: 1)
+            setUbiquitousValue(gamesAbandonedCount + 1, for: .NumberOfGamesAbandoned)
         } else {
-            incrementUbiquitousValue(for: .NumberOfGamesCompleted, by: 1)
+            setUbiquitousValue(gamesCompletedCount + 1, for: .NumberOfGamesCompleted)
         }
         
         setUbiquitousValue(newAverageScore, for: .AverageScore)
