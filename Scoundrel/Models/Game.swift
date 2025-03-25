@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 
 class Game: ObservableObject, Codable {
-    let store = NSUbiquitousKeyValueStore.default
     let ubiquitousHelper = UbiquitousHelper()
     
     @Published var gameKitHelper: GameKitHelper = GameKitHelper()
@@ -205,14 +204,14 @@ class Game: ObservableObject, Codable {
             score += bonusPoints
         }
         
+        ubiquitousHelper.incrementUbiquitousValue(for: .NumberOfDungeonsBeaten, by: 1)
+        
         gameKitHelper.incrementAchievementProgress(.DarknessBeckons, by: 4)
         gameKitHelper.incrementAchievementProgress(.SeasonedDelver, by: 2)
         gameKitHelper.incrementAchievementProgress(.MasterOfTheMaze, by: 1.333)
         gameKitHelper.incrementAchievementProgress(.UntoldTrials100Triumphs, by: 1)
         
         checkForAchievements()
-        
-        ubiquitousHelper.incrementUbiquitousValue(for: .NumberOfDungeonsBeaten, by: 1)
         
         withAnimation { dungeonBeat = true }
     }
