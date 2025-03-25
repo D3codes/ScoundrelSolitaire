@@ -31,16 +31,8 @@ struct GameView: View {
         }
     }
     
-    func goToMainMenu() {
-        if game.score == 0 {
-            ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score)
-        }
-        
-        mainMenu()
-    }
-    
     func newGame() {
-        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score)
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: !game.gameOver)
         selectedCardIndex = nil
         withAnimation { pauseMenuShown = false }
         randomBackground()
@@ -104,7 +96,7 @@ struct GameView: View {
                 pauseMenuShown: $pauseMenuShown,
                 nextDungeon: nextDungeon,
                 newGame: newGame,
-                mainMenu: goToMainMenu
+                mainMenu: mainMenu
             )
         }
         .onAppear() {
