@@ -10,6 +10,7 @@ import SwiftData
 import AVFoundation
 
 struct GameView: View {
+    let ubiquitousHelper: UbiquitousHelper = UbiquitousHelper()
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     
     @Namespace var animation
@@ -30,7 +31,16 @@ struct GameView: View {
         }
     }
     
+    func goToMainMenu() {
+        if game.score == 0 {
+            ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score)
+        }
+        
+        mainMenu()
+    }
+    
     func newGame() {
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score)
         selectedCardIndex = nil
         withAnimation { pauseMenuShown = false }
         randomBackground()
@@ -94,7 +104,7 @@ struct GameView: View {
                 pauseMenuShown: $pauseMenuShown,
                 nextDungeon: nextDungeon,
                 newGame: newGame,
-                mainMenu: mainMenu
+                mainMenu: goToMainMenu
             )
         }
         .onAppear() {
