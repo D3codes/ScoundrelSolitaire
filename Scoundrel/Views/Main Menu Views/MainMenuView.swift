@@ -39,7 +39,7 @@ struct MainMenuView: View {
                 Spacer()
                 Spacer()
                 
-                if game.score > 0 && !game.gameOver {
+                if !game.gameOver {
                     ResumeButtonView(game: game, resumeGame: resumeGame)
                 }
                 

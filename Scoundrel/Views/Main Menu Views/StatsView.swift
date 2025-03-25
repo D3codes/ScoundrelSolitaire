@@ -13,6 +13,8 @@ struct StatsView: View {
     let ubiquitousHelper = UbiquitousHelper()
     
     @State var gamesPlayed: Int64 = 0 // Ubiquitous
+    @State var gamesAbandoned: Int64 = 0 // Ubiquitous
+    @State var gamesCompleted: Int64 = 0 // Ubiquitous
     @State var dungeonsBeaten: Int64 = 0 // Ubiquitous
     @State var roomsFled: Int64 = 0 // Ubiquitous
     @State var highScore: Int? = nil // Game Center
@@ -26,6 +28,8 @@ struct StatsView: View {
     
     func fetchStats() {
         gamesPlayed = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesPlayed)
+        gamesAbandoned = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesAbandoned)
+        gamesCompleted = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesCompleted)
         dungeonsBeaten = ubiquitousHelper.getUbiquitousValue(for: .NumberOfDungeonsBeaten)
         roomsFled = ubiquitousHelper.getUbiquitousValue(for: .NumberOfRoomsFled)
         averageScore = ubiquitousHelper.getUbiquitousValue(for: .AverageScore)
@@ -76,19 +80,39 @@ struct StatsView: View {
                         .listRowBackground(Rectangle().fill(.thinMaterial))
                         
                         HStack {
-                            Text("Dungeons Beat")
+                            Text("Games Abandoned")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                             Spacer()
-                            Text("\(dungeonsBeaten)")
+                            Text("\(gamesAbandoned)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
                         
                         HStack {
+                            Text("Games Completed")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            Spacer()
+                            Text("\(gamesCompleted)")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                        }
+                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                    }
+                    
+                    Section {
+                        HStack {
                             Text("Rooms Fled")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                             Spacer()
                             Text("\(roomsFled)")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                        }
+                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                        
+                        HStack {
+                            Text("Dungeons Beat")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            Spacer()
+                            Text("\(dungeonsBeaten)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
