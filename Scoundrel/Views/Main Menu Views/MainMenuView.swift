@@ -39,7 +39,7 @@ struct MainMenuView: View {
                 Spacer()
                 Spacer()
                 
-                if !game.gameOver {
+                if game.gameState != .GameOver && game.gameState != .Created {
                     ResumeButtonView(game: game, resumeGame: resumeGame)
                 }
                 
