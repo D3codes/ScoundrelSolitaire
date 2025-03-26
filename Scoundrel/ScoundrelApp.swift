@@ -40,7 +40,7 @@ struct ScoundrelApp: App {
     
     func startGame() {
         if game.gameState != .GameOver && game.gameState != .Created {
-            ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: true)
+            ubiquitousHelper.incrementGameCountAndRecalculateAverageAndHighScores(newScore: game.score, gameAbandoned: true)
         }
         
         game.newGame()

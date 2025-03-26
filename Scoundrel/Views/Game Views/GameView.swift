@@ -31,7 +31,7 @@ struct GameView: View {
     }
     
     func newGame() {
-        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: game.player.health > 0)
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageAndHighScores(newScore: game.score, gameAbandoned: game.player.health > 0)
         selectedCardIndex = nil
         randomBackground()
         game.newGame()
