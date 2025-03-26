@@ -18,7 +18,7 @@ struct GameView: View {
     var mainMenu: () -> Void
     var randomBackground: () -> Void
     
-    @State var pauseMenuShown: Bool = false
+    //@State var pauseMenuShown: Bool = false
     @State var selectedCardIndex: Int?
 
     @State var pageSound: AVAudioPlayer?
@@ -32,9 +32,9 @@ struct GameView: View {
     }
     
     func newGame() {
-        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: !game.gameOver)
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: game.gameState != .GameOver)
         selectedCardIndex = nil
-        withAnimation { pauseMenuShown = false }
+        //withAnimation { pauseMenuShown = false }
         randomBackground()
         game.newGame()
     }
@@ -65,7 +65,7 @@ struct GameView: View {
                 TopBarView(
                     game: game,
                     pause: {
-                        withAnimation { pauseMenuShown = true }
+                        withAnimation { game.gameState = .Paused }
                         if !soundEffectsMuted { pageSound?.play() }
                     },
                     animationNamespace: animation,
@@ -93,7 +93,8 @@ struct GameView: View {
             
             ModalOverlayView(
                 game: game,
-                pauseMenuShown: $pauseMenuShown,
+//                pauseMenuShown: $pauseMenuShown,
+                resumeGame: { withAnimation { game.gameState = .Playing } },
                 nextDungeon: nextDungeon,
                 newGame: newGame,
                 mainMenu: mainMenu
