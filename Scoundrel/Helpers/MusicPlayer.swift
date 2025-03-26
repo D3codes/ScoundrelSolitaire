@@ -33,7 +33,7 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             "Legends of the Silver Road"
         ]
 
-    var currentTrackIndex = 0
+    @Published var currentTrackIndex = 0
 
     var music = AVAudioPlayer()
 
