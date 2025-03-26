@@ -226,7 +226,7 @@ class Game: ObservableObject, Codable {
         
         withAnimation { gameState = .GameOver }
         
-        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: score, gameAbandoned: false)
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageAndHighScores(newScore: score, gameAbandoned: false)
         gameKitHelper.submitScore(score)
     }
     
