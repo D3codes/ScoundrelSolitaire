@@ -17,13 +17,11 @@ class Game: ObservableObject, Codable {
     @Published var player: Player
     @Published var room: Room
     
-    //@Published var gameOver: Bool = false
     @Published var score: Int = 0
     @Published var bonusPoints: Int = 0
     @Published var strengthOfMonsterThatKilledPlayer: Int = 0
     @Published var gameOverModalAchievement: GameKitHelper.BinaryAchievement? = nil
     @Published var previousBestScore: Int? = nil
-    //@Published var dungeonBeat: Bool = false
     @Published var dungeonDepth: Int = 0
     
     @Published var gameState: GameState = .Created
@@ -57,13 +55,11 @@ class Game: ObservableObject, Codable {
                     room.finishDealing(deck: deck)
                 }
                 
-                //self.gameOver = loadedGame.gameOver
                 self.score = loadedGame.score
                 self.bonusPoints = loadedGame.bonusPoints
                 self.strengthOfMonsterThatKilledPlayer = loadedGame.strengthOfMonsterThatKilledPlayer
                 self.gameOverModalAchievement = loadedGame.gameOverModalAchievement
                 self.previousBestScore = loadedGame.previousBestScore
-                //self.dungeonBeat = loadedGame.dungeonBeat
                 self.dungeonDepth = loadedGame.dungeonDepth
                 self.gameState = loadedGame.gameState
             }
@@ -92,7 +88,6 @@ class Game: ObservableObject, Codable {
         Task { @MainActor in
             previousBestScore = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.score ?? nil
         }
-        //dungeonBeat = false
         dungeonDepth = 0
         
         player.reset()
@@ -282,13 +277,11 @@ class Game: ObservableObject, Codable {
         case deck
         case player
         case room
-        //case gameOver
         case score
         case bonusPoints
         case strengthOfMonsterThatKilledPlayer
         case gameOverModalAchievement
         case previousBestScore
-        //case dungeonBeat
         case dungeonDepth
         case gameState
     }
@@ -298,13 +291,11 @@ class Game: ObservableObject, Codable {
         deck = try container.decode(Deck.self, forKey: .deck)
         player = try container.decode(Player.self, forKey: .player)
         room = try container.decode(Room.self, forKey: .room)
-        //gameOver = try container.decode(Bool.self, forKey: .gameOver)
         score = try container.decode(Int.self, forKey: .score)
         bonusPoints = try container.decode(Int.self, forKey: .bonusPoints)
         strengthOfMonsterThatKilledPlayer = try container.decode(Int.self, forKey: .strengthOfMonsterThatKilledPlayer)
         gameOverModalAchievement = try container.decode(GameKitHelper.BinaryAchievement?.self, forKey: .gameOverModalAchievement)
         previousBestScore = try container.decode(Int?.self, forKey: .previousBestScore)
-        //dungeonBeat = try container.decode(Bool.self, forKey: .dungeonBeat)
         dungeonDepth = try container.decode(Int.self, forKey: .dungeonDepth)
         gameState = try container.decode(GameState.self, forKey: .gameState)
     }
@@ -314,13 +305,11 @@ class Game: ObservableObject, Codable {
         try container.encode(deck, forKey: .deck)
         try container.encode(player, forKey: .player)
         try container.encode(room, forKey: .room)
-        //try container.encode(gameOver, forKey: .gameOver)
         try container.encode(score, forKey: .score)
         try container.encode(bonusPoints, forKey: .bonusPoints)
         try container.encode(strengthOfMonsterThatKilledPlayer, forKey: .strengthOfMonsterThatKilledPlayer)
         try container.encode(gameOverModalAchievement, forKey: .gameOverModalAchievement)
         try container.encode(previousBestScore, forKey: .previousBestScore)
-        //try container.encode(dungeonBeat, forKey: .dungeonBeat)
         try container.encode(dungeonDepth, forKey: .dungeonDepth)
         try container.encode(gameState, forKey: .gameState)
     }

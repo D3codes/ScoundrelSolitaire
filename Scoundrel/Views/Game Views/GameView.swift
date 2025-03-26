@@ -18,7 +18,6 @@ struct GameView: View {
     var mainMenu: () -> Void
     var randomBackground: () -> Void
     
-    //@State var pauseMenuShown: Bool = false
     @State var selectedCardIndex: Int?
 
     @State var pageSound: AVAudioPlayer?
@@ -34,7 +33,6 @@ struct GameView: View {
     func newGame() {
         ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: game.gameState != .GameOver)
         selectedCardIndex = nil
-        //withAnimation { pauseMenuShown = false }
         randomBackground()
         game.newGame()
     }
@@ -93,7 +91,6 @@ struct GameView: View {
             
             ModalOverlayView(
                 game: game,
-//                pauseMenuShown: $pauseMenuShown,
                 resumeGame: { withAnimation { game.gameState = .Playing } },
                 nextDungeon: nextDungeon,
                 newGame: newGame,
