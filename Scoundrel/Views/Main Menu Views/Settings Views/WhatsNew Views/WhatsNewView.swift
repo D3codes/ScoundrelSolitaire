@@ -10,6 +10,8 @@ import SwiftUI
 struct WhatsNewView: View {
     
     var body: some View {
+        View1_1_1()
+        
         View1_1_0()
         
         View1_0_3()

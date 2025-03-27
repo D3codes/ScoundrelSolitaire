@@ -58,6 +58,34 @@ struct StatsView: View {
         }
     }
     
+    func getSharePreviewTitle() -> String {
+        return "Check out my Stats in Scoundrel Solitaire!"
+    }
+    
+    func getGamesStats() -> String {
+        return "🃏 Games\nPlayed: \(gamesAbandoned + gamesCompleted)\nAbandoned: \(gamesAbandoned)\nCompleted: \(gamesCompleted)"
+    }
+    
+    func getOtherStats() -> String {
+        return "🏰 Stats\nRooms Fled: \(roomsFled)\nDungeons Beat: \(dungeonsBeaten)"
+    }
+    
+    func getScoreStats() -> String {
+        return "⚔️ Scores\nAverage Score: \(averageScore)\nHigh Score: \(highScore)"
+    }
+    
+    func getGameCenterStats() -> String {
+        if leaderboardRank == nil || achievementsUnlocked == nil {
+            return ""
+        }
+        
+        return "🏆 Game Center\nLeaderboard Rank: \(leaderboardRank!)\nAchievements Unlocked: \(achievementsUnlocked!)\n\n"
+    }
+    
+    func getShareItem() -> String {
+        return "\(getSharePreviewTitle())\n\n\(getGamesStats())\n\n\(getOtherStats())\n\n\(getScoreStats())\n\n\(getGameCenterStats())https://apps.apple.com/app/id6742526198"
+    }
+    
     var body: some View {
         ZStack {
             Image("paper")
@@ -65,11 +93,27 @@ struct StatsView: View {
                 .ignoresSafeArea(edges: .all)
             
             VStack {
-                Text("Stats")
-                    .font(.custom("ModernAntiqua-Regular", size: 40))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                    .padding(.top)
+                ZStack {
+                    HStack {
+                        ShareLink(item: getShareItem(), preview: SharePreview(
+                            getSharePreviewTitle(),
+                            image: Image("logo")
+                        )) {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 25))
+                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        }
+                        Spacer()
+                    }
+                    .padding(.leading, 20)
+                    
+                    Text("Stats")
+                        .font(.custom("ModernAntiqua-Regular", size: 40))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        .padding(.top)
+                }
                 
                 Spacer()
                 
