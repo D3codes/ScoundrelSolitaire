@@ -30,7 +30,9 @@ class MusicPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             "Wanderer's Requiem",
             "Oaths Upon the Wind",
             "Ballad of the Wayfarer",
-            "Legends of the Silver Road"
+            "Legends of the Silver Road",
+            "Call of the Noble Heart",
+            "Adventure Awaits"
         ]
 
     @Published var currentTrackIndex = 0

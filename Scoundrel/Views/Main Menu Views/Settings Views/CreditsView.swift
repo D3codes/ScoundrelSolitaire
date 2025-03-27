@@ -54,7 +54,7 @@ struct CreditsView: View {
             Text("Sound Effects")
                 .font(.custom("ModernAntiqua-Regular", size: 20))
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Sound effects were created with Infinity SFX.")
+            Text("Sound effects were created with Infinity SFX and ElevenLabs.")
                 .font(.custom("ModernAntiqua-Regular", size: 15))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
