@@ -7,8 +7,10 @@
 
 import SwiftUI
 import Combine
+import AVFoundation
 
 class Game: ObservableObject, Codable {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     let ubiquitousHelper = UbiquitousHelper()
     
     @Published var gameKitHelper: GameKitHelper = GameKitHelper()
@@ -39,10 +41,61 @@ class Game: ObservableObject, Codable {
     var playerCancellable: AnyCancellable? = nil
     var roomCancellable: AnyCancellable? = nil
     
+    var healthPotionSounds: [AVAudioPlayer?] = [nil, nil]
+    var equipWeaponSounds: [AVAudioPlayer?] = [nil, nil]
+    var attackWithWeaponSounds: [AVAudioPlayer?] = [nil, nil, nil, nil]
+    var attackUnarmedSounds: [AVAudioPlayer?] = [nil, nil, nil, nil, nil]
+    var dungeonBeatSound: AVAudioPlayer?
+    var gameOverSound: AVAudioPlayer?
+    
+    func initializeSounds() {
+        do {
+            healthPotionSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sparkle.mp3", ofType:nil)!))
+            healthPotionSounds[0]?.setVolume(3, fadeDuration: .zero)
+            healthPotionSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sparkle2.mp3", ofType:nil)!))
+            healthPotionSounds[1]?.setVolume(2, fadeDuration: .zero)
+            
+            equipWeaponSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "equip.mp3", ofType:nil)!))
+            equipWeaponSounds[0]?.setVolume(3, fadeDuration: .zero)
+            equipWeaponSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "equip2.mp3", ofType:nil)!))
+            equipWeaponSounds[1]?.setVolume(3, fadeDuration: .zero)
+            
+            attackWithWeaponSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword1.mp3", ofType:nil)!))
+            attackWithWeaponSounds[0]?.setVolume(3, fadeDuration: .zero)
+            attackWithWeaponSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword2.mp3", ofType:nil)!))
+            attackWithWeaponSounds[1]?.setVolume(3, fadeDuration: .zero)
+            attackWithWeaponSounds[2] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword3.mp3", ofType:nil)!))
+            attackWithWeaponSounds[2]?.setVolume(3, fadeDuration: .zero)
+            attackWithWeaponSounds[3] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword4.mp3", ofType:nil)!))
+            attackWithWeaponSounds[3]?.setVolume(3, fadeDuration: .zero)
+            
+            attackUnarmedSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch1.mp3", ofType:nil)!))
+            attackUnarmedSounds[0]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch2.mp3", ofType:nil)!))
+            attackUnarmedSounds[1]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[2] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch3.mp3", ofType:nil)!))
+            attackUnarmedSounds[2]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[3] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch4.mp3", ofType:nil)!))
+            attackUnarmedSounds[3]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[4] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch5.mp3", ofType:nil)!))
+            attackUnarmedSounds[4]?.setVolume(3, fadeDuration: .zero)
+            
+            dungeonBeatSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "brassfanfare.mp3", ofType:nil)!))
+            dungeonBeatSound?.setVolume(5, fadeDuration: .zero)
+            
+            gameOverSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "gameover.mp3", ofType:nil)!))
+            gameOverSound?.setVolume(5, fadeDuration: .zero)
+        } catch {
+            // couldn't load file :(
+        }
+    }
+    
     init() {
         self.deck = Deck()
         self.player = Player()
         self.room = Room()
+        
+        initializeSounds()
         
         if let savedGame = UserDefaults.standard.object(forKey: UserDefaultsKeys().game) as? Data {
             let decoder = JSONDecoder()
@@ -134,6 +187,8 @@ class Game: ObservableObject, Codable {
     }
     
     func equipWeapon(cardIndex: Int) {
+        if !soundEffectsMuted { equipWeaponSounds.randomElement()??.play() }
+        
         player.equipWeapon(weaponStrength: room.cards[cardIndex]!.strength)
         
         endAction(cardIndex: cardIndex)
@@ -145,6 +200,7 @@ class Game: ObservableObject, Codable {
         }
         
         if !room.usedHealthPotion {
+            if !soundEffectsMuted { healthPotionSounds.randomElement()??.play() }
             player.useHealthPotion(potionStrength: room.cards[cardIndex]!.strength)
             room.usedHealthPotion = true
         }
@@ -160,8 +216,10 @@ class Game: ObservableObject, Codable {
         
         // Attack
         if attackUnarmed {
+            if !soundEffectsMuted { attackUnarmedSounds.randomElement()??.play() }
             player.attack(monsterStrength: room.cards[cardIndex]!.strength)
         } else {
+            if !soundEffectsMuted { attackWithWeaponSounds.randomElement()??.play() }
             player.attack(withWeapon: true, monsterStrength: room.cards[cardIndex]!.strength)
         }
         
@@ -209,6 +267,8 @@ class Game: ObservableObject, Codable {
             score += bonusPoints
         }
         
+        if !soundEffectsMuted { dungeonBeatSound?.play() }
+        
         ubiquitousHelper.incrementUbiquitousValue(for: .NumberOfDungeonsBeaten, by: 1)
         
         gameKitHelper.incrementAchievementProgress(.DarknessBeckons, by: 4)
@@ -225,6 +285,8 @@ class Game: ObservableObject, Codable {
         checkForAchievements()
         
         withAnimation { gameState = .GameOver }
+        
+        if !soundEffectsMuted { gameOverSound?.play() }
         
         ubiquitousHelper.incrementGameCountAndRecalculateAverageAndHighScores(newScore: score, gameAbandoned: false)
         gameKitHelper.submitScore(score)
