@@ -46,10 +46,6 @@ struct GameOverModalView: View {
                                 getSharePreviewTitle(),
                                 image: Image("logo")
                             )) {
-//                                Image(systemName: "square.and.arrow.up")
-//                                    .foregroundStyle(.white)
-//                                    .font(.system(size: 25))
-//                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
                                 ZStack {
                                     Circle()
                                         .fill(.thinMaterial)

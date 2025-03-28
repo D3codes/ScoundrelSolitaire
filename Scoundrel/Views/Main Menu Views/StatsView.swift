@@ -92,7 +92,7 @@ struct StatsView: View {
                 .resizable()
                 .ignoresSafeArea(edges: .all)
             
-            VStack() {
+            VStack {
                 ZStack {
                     HStack {
                         Spacer()
