@@ -95,18 +95,26 @@ struct StatsView: View {
             VStack {
                 ZStack {
                     HStack {
+                        Spacer()
+                        
                         ShareLink(item: getShareItem(), preview: SharePreview(
                             getSharePreviewTitle(),
                             image: Image("logo")
                         )) {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundStyle(.white)
-                                .font(.system(size: 25))
-                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            ZStack {
+                                Circle()
+                                    .fill(.thinMaterial)
+                                    .frame(width: 40, height: 40)
+                                
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.teal)
+                                    .font(.system(size: 18))
+                                    .bold()
+                            }
                         }
-                        Spacer()
                     }
-                    .padding(.leading, 20)
+                    .padding(.trailing, 50)
+                    .padding(.top, 10)
                     
                     Text("Stats")
                         .font(.custom("ModernAntiqua-Regular", size: 40))
