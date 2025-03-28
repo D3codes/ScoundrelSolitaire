@@ -35,6 +35,9 @@ struct View1_1_1: View {
             Text("• Fixed bug that could cause the resume button to show when there is no game to resume")
                 .font(.custom("ModernAntiqua-Regular", size: 15))
                 .frame(maxWidth: .infinity, alignment: .leading)
+            Text("• Fixed bug that could cause the game to crash if an action button is tapped mid-animation")
+                .font(.custom("ModernAntiqua-Regular", size: 15))
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
