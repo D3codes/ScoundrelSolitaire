@@ -88,7 +88,13 @@ struct HowToView: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 1)
-                Text("• Only works once per room. Drinking a second potion will expend it without increasing your life.")
+                Group {
+                    Text("• ").font(.custom("ModernAntiqua-Regular", size: 15)) + Text("Only works once per room!").font(.custom("ModernAntiqua-Regular", size: 18))
+                }
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 1)
+                Text("• Drinking a second potion will expend it without increasing your life.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
