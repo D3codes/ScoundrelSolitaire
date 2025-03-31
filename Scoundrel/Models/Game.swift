@@ -7,8 +7,10 @@
 
 import SwiftUI
 import Combine
+import AVFoundation
 
 class Game: ObservableObject, Codable {
+    @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     let ubiquitousHelper = UbiquitousHelper()
     
     @Published var gameKitHelper: GameKitHelper = GameKitHelper()
@@ -17,14 +19,21 @@ class Game: ObservableObject, Codable {
     @Published var player: Player
     @Published var room: Room
     
-    @Published var gameOver: Bool = false
     @Published var score: Int = 0
     @Published var bonusPoints: Int = 0
     @Published var strengthOfMonsterThatKilledPlayer: Int = 0
     @Published var gameOverModalAchievement: GameKitHelper.BinaryAchievement? = nil
     @Published var previousBestScore: Int? = nil
-    @Published var dungeonBeat: Bool = false
     @Published var dungeonDepth: Int = 0
+    
+    @Published var gameState: GameState = .Created
+    enum GameState: String, CaseIterable, Codable {
+        case Created
+        case Playing
+        case Paused
+        case DungeonBeat
+        case GameOver
+    }
     
     let lowestPossibleScore: Int = 6 // killed strength 6 monster unarmed, tried to kill strength 14 monster unarmed
     
@@ -32,10 +41,61 @@ class Game: ObservableObject, Codable {
     var playerCancellable: AnyCancellable? = nil
     var roomCancellable: AnyCancellable? = nil
     
+    var healthPotionSounds: [AVAudioPlayer?] = [nil, nil]
+    var equipWeaponSounds: [AVAudioPlayer?] = [nil, nil]
+    var attackWithWeaponSounds: [AVAudioPlayer?] = [nil, nil, nil, nil]
+    var attackUnarmedSounds: [AVAudioPlayer?] = [nil, nil, nil, nil, nil]
+    var dungeonBeatSound: AVAudioPlayer?
+    var gameOverSound: AVAudioPlayer?
+    
+    func initializeSounds() {
+        do {
+            healthPotionSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sparkle.mp3", ofType:nil)!))
+            healthPotionSounds[0]?.setVolume(3, fadeDuration: .zero)
+            healthPotionSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sparkle2.mp3", ofType:nil)!))
+            healthPotionSounds[1]?.setVolume(2, fadeDuration: .zero)
+            
+            equipWeaponSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "equip.mp3", ofType:nil)!))
+            equipWeaponSounds[0]?.setVolume(3, fadeDuration: .zero)
+            equipWeaponSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "equip2.mp3", ofType:nil)!))
+            equipWeaponSounds[1]?.setVolume(3, fadeDuration: .zero)
+            
+            attackWithWeaponSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword1.mp3", ofType:nil)!))
+            attackWithWeaponSounds[0]?.setVolume(3, fadeDuration: .zero)
+            attackWithWeaponSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword2.mp3", ofType:nil)!))
+            attackWithWeaponSounds[1]?.setVolume(3, fadeDuration: .zero)
+            attackWithWeaponSounds[2] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword3.mp3", ofType:nil)!))
+            attackWithWeaponSounds[2]?.setVolume(3, fadeDuration: .zero)
+            attackWithWeaponSounds[3] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sword4.mp3", ofType:nil)!))
+            attackWithWeaponSounds[3]?.setVolume(3, fadeDuration: .zero)
+            
+            attackUnarmedSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch1.mp3", ofType:nil)!))
+            attackUnarmedSounds[0]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch2.mp3", ofType:nil)!))
+            attackUnarmedSounds[1]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[2] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch3.mp3", ofType:nil)!))
+            attackUnarmedSounds[2]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[3] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch4.mp3", ofType:nil)!))
+            attackUnarmedSounds[3]?.setVolume(3, fadeDuration: .zero)
+            attackUnarmedSounds[4] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "punch5.mp3", ofType:nil)!))
+            attackUnarmedSounds[4]?.setVolume(3, fadeDuration: .zero)
+            
+            dungeonBeatSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "brassfanfare.mp3", ofType:nil)!))
+            dungeonBeatSound?.setVolume(5, fadeDuration: .zero)
+            
+            gameOverSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "gameover.mp3", ofType:nil)!))
+            gameOverSound?.setVolume(5, fadeDuration: .zero)
+        } catch {
+            // couldn't load file :(
+        }
+    }
+    
     init() {
         self.deck = Deck()
         self.player = Player()
         self.room = Room()
+        
+        initializeSounds()
         
         if let savedGame = UserDefaults.standard.object(forKey: UserDefaultsKeys().game) as? Data {
             let decoder = JSONDecoder()
@@ -48,14 +108,13 @@ class Game: ObservableObject, Codable {
                     room.finishDealing(deck: deck)
                 }
                 
-                self.gameOver = loadedGame.gameOver
                 self.score = loadedGame.score
                 self.bonusPoints = loadedGame.bonusPoints
                 self.strengthOfMonsterThatKilledPlayer = loadedGame.strengthOfMonsterThatKilledPlayer
                 self.gameOverModalAchievement = loadedGame.gameOverModalAchievement
                 self.previousBestScore = loadedGame.previousBestScore
-                self.dungeonBeat = loadedGame.dungeonBeat
                 self.dungeonDepth = loadedGame.dungeonDepth
+                self.gameState = loadedGame.gameState
             }
         }
         
@@ -82,14 +141,13 @@ class Game: ObservableObject, Codable {
         Task { @MainActor in
             previousBestScore = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.score ?? nil
         }
-        dungeonBeat = false
         dungeonDepth = 0
         
         player.reset()
         deck.reset()
         room.reset(deck: deck)
         
-        withAnimation { gameOver = false }
+        withAnimation { gameState = .Playing }
     }
     
     func nextDungeon() {
@@ -119,7 +177,7 @@ class Game: ObservableObject, Codable {
         deck.reset()
         room.reset(deck: deck)
         
-        withAnimation { dungeonBeat = false }
+        withAnimation { gameState = .Playing }
     }
     
     func flee() {
@@ -129,6 +187,8 @@ class Game: ObservableObject, Codable {
     }
     
     func equipWeapon(cardIndex: Int) {
+        if !soundEffectsMuted { equipWeaponSounds.randomElement()??.play() }
+        
         player.equipWeapon(weaponStrength: room.cards[cardIndex]!.strength)
         
         endAction(cardIndex: cardIndex)
@@ -140,6 +200,7 @@ class Game: ObservableObject, Codable {
         }
         
         if !room.usedHealthPotion {
+            if !soundEffectsMuted { healthPotionSounds.randomElement()??.play() }
             player.useHealthPotion(potionStrength: room.cards[cardIndex]!.strength)
             room.usedHealthPotion = true
         }
@@ -155,8 +216,10 @@ class Game: ObservableObject, Codable {
         
         // Attack
         if attackUnarmed {
+            if !soundEffectsMuted { attackUnarmedSounds.randomElement()??.play() }
             player.attack(monsterStrength: room.cards[cardIndex]!.strength)
         } else {
+            if !soundEffectsMuted { attackWithWeaponSounds.randomElement()??.play() }
             player.attack(withWeapon: true, monsterStrength: room.cards[cardIndex]!.strength)
         }
         
@@ -204,6 +267,8 @@ class Game: ObservableObject, Codable {
             score += bonusPoints
         }
         
+        if !soundEffectsMuted { dungeonBeatSound?.play() }
+        
         ubiquitousHelper.incrementUbiquitousValue(for: .NumberOfDungeonsBeaten, by: 1)
         
         gameKitHelper.incrementAchievementProgress(.DarknessBeckons, by: 4)
@@ -213,15 +278,17 @@ class Game: ObservableObject, Codable {
         
         checkForAchievements()
         
-        withAnimation { dungeonBeat = true }
+        withAnimation { gameState = .DungeonBeat }
     }
     
     func endGame() {
         checkForAchievements()
         
-        withAnimation { gameOver = true }
+        withAnimation { gameState = .GameOver }
         
-        ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: score, gameAbandoned: false)
+        if !soundEffectsMuted { gameOverSound?.play() }
+        
+        ubiquitousHelper.incrementGameCountAndRecalculateAverageAndHighScores(newScore: score, gameAbandoned: false)
         gameKitHelper.submitScore(score)
     }
     
@@ -272,14 +339,13 @@ class Game: ObservableObject, Codable {
         case deck
         case player
         case room
-        case gameOver
         case score
         case bonusPoints
         case strengthOfMonsterThatKilledPlayer
         case gameOverModalAchievement
         case previousBestScore
-        case dungeonBeat
         case dungeonDepth
+        case gameState
     }
     
     required init(from decoder: any Decoder) throws {
@@ -287,14 +353,13 @@ class Game: ObservableObject, Codable {
         deck = try container.decode(Deck.self, forKey: .deck)
         player = try container.decode(Player.self, forKey: .player)
         room = try container.decode(Room.self, forKey: .room)
-        gameOver = try container.decode(Bool.self, forKey: .gameOver)
         score = try container.decode(Int.self, forKey: .score)
         bonusPoints = try container.decode(Int.self, forKey: .bonusPoints)
         strengthOfMonsterThatKilledPlayer = try container.decode(Int.self, forKey: .strengthOfMonsterThatKilledPlayer)
         gameOverModalAchievement = try container.decode(GameKitHelper.BinaryAchievement?.self, forKey: .gameOverModalAchievement)
         previousBestScore = try container.decode(Int?.self, forKey: .previousBestScore)
-        dungeonBeat = try container.decode(Bool.self, forKey: .dungeonBeat)
         dungeonDepth = try container.decode(Int.self, forKey: .dungeonDepth)
+        gameState = try container.decode(GameState.self, forKey: .gameState)
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -302,13 +367,12 @@ class Game: ObservableObject, Codable {
         try container.encode(deck, forKey: .deck)
         try container.encode(player, forKey: .player)
         try container.encode(room, forKey: .room)
-        try container.encode(gameOver, forKey: .gameOver)
         try container.encode(score, forKey: .score)
         try container.encode(bonusPoints, forKey: .bonusPoints)
         try container.encode(strengthOfMonsterThatKilledPlayer, forKey: .strengthOfMonsterThatKilledPlayer)
         try container.encode(gameOverModalAchievement, forKey: .gameOverModalAchievement)
         try container.encode(previousBestScore, forKey: .previousBestScore)
-        try container.encode(dungeonBeat, forKey: .dungeonBeat)
         try container.encode(dungeonDepth, forKey: .dungeonDepth)
+        try container.encode(gameState, forKey: .gameState)
     }
 }

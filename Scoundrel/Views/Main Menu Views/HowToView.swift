@@ -88,7 +88,13 @@ struct HowToView: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 1)
-                Text("• Only works once per room. Drinking a second potion will expend it without increasing your life.")
+                Group {
+                    Text("• ").font(.custom("ModernAntiqua-Regular", size: 15)) + Text("Only works once per room!").font(.custom("ModernAntiqua-Regular", size: 18))
+                }
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 1)
+                Text("• Drinking a second potion will expend it without increasing your life.")
                     .font(.custom("ModernAntiqua-Regular", size: 15))
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -182,6 +188,25 @@ struct HowToView: View {
                 Text("UI")
                     .font(.custom("ModernAntiqua-Regular", size: 25))
                     .foregroundStyle(.black)
+                HStack {
+                    ZStack {
+                        Image("stoneButton")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        Text("||")
+                            .foregroundStyle(.white)
+                            .font(.custom("MorrisRoman-Black", size: 30))
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                    }
+
+                    
+                    Text("Use this button to pause the game.")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.bottom)
                 HStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)

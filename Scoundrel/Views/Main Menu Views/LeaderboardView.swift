@@ -26,13 +26,13 @@ struct LeaderboardView: View {
                 .ignoresSafeArea(edges: .all)
             
             VStack {
-                Text("Leaderboard")
+                Text("Top 100")
                     .font(.custom("ModernAntiqua-Regular", size: 40))
                     .foregroundStyle(.white)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                     .padding(.top)
                 Text("(All Time)")
-                    .font(.custom("ModernAntiqua-Regular", size: 30))
+                    .font(.custom("ModernAntiqua-Regular", size: 25))
                     .foregroundStyle(.white)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                 

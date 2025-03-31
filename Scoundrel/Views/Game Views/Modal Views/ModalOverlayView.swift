@@ -9,44 +9,43 @@ import SwiftUI
 
 struct ModalOverlayView: View {
     @ObservedObject var game: Game
-    @Binding var pauseMenuShown: Bool
+    var resumeGame: () -> Void
     var nextDungeon: () -> Void
     var newGame: () -> Void
     var mainMenu: () -> Void
     
     var body: some View {
         ZStack {
-            if game.gameOver || pauseMenuShown || game.dungeonBeat {
+            if game.gameState == .GameOver || game.gameState == .Paused || game.gameState == .DungeonBeat {
                 Rectangle()
                     .ignoresSafeArea(.all)
                     .foregroundStyle(.ultraThinMaterial)
                     .opacity(0.7)
             }
             
-            if game.dungeonBeat {
+            switch game.gameState {
+            case .DungeonBeat:
                 DungeonBeatModalView(
                     game: game,
                     nextDungeon: nextDungeon
                 )
                 .transition(.opacityAndMoveFromBottom)
-            }
-            
-            if game.gameOver {
+            case .GameOver:
                 GameOverModalView(
                     game: game,
                     newGame: newGame,
                     mainMenu: mainMenu
                 )
                 .transition(.opacityAndMoveFromBottom)
-            }
-            
-            if pauseMenuShown {
+            case .Paused:
                 PauseModalView(
-                    continueGame: { withAnimation { pauseMenuShown = false } },
+                    continueGame: resumeGame,
                     newGame: newGame,
                     mainMenu: mainMenu
                 )
                 .transition(.opacityAndMoveFromBottom)
+            default:
+                EmptyView()
             }
         }
     }
@@ -54,12 +53,11 @@ struct ModalOverlayView: View {
 
 #Preview {
     struct ModalOverlayView_Preview: View {
-        @State var pauseMenuShown: Bool = true
         
         var body: some View {
             ModalOverlayView(
                 game: Game(),
-                pauseMenuShown: $pauseMenuShown,
+                resumeGame: { },
                 nextDungeon: { },
                 newGame: { },
                 mainMenu: { }

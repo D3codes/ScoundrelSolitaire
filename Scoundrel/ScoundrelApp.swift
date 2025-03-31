@@ -18,10 +18,10 @@ struct ScoundrelApp: App {
     @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
     @StateObject var game: Game = Game()
     
-    @State var gameState: GameState = .mainMenu
-    enum GameState: String, CaseIterable, Codable {
-        case mainMenu
-        case game
+    @State var appState: AppState = .MainMenu
+    enum AppState: String, CaseIterable, Codable {
+        case MainMenu
+        case Game
     }
     
     @State var background: String = "dungeon1"
@@ -39,31 +39,34 @@ struct ScoundrelApp: App {
     ]
     
     func startGame() {
-        if !game.gameOver {
-            ubiquitousHelper.incrementGameCountAndRecalculateAverageScore(newScore: game.score, gameAbandoned: true)
+        if game.gameState != .GameOver && game.gameState != .Created {
+            ubiquitousHelper.incrementGameCountAndRecalculateAverageAndHighScores(newScore: game.score, gameAbandoned: true)
         }
         
         game.newGame()
-        gameState = .game
+        appState = .Game
     }
     
     var body: some Scene {
         WindowGroup {
             Group {
-                switch gameState {
-                case .mainMenu:
+                switch appState {
+                case .MainMenu:
                     MainMenuView(
                         musicPlayer: musicPlayer,
                         gameKitHelper: game.gameKitHelper,
                         game: game,
                         startGame: startGame,
-                        resumeGame: { gameState = .game }
+                        resumeGame: {
+                            game.gameState = .Playing
+                            appState = .Game
+                        }
                     )
                     .onAppear { game.gameKitHelper.showAccessPoint() }
-                case .game:
+                case .Game:
                     GameView(
                         game: game,
-                        mainMenu: { gameState = .mainMenu },
+                        mainMenu: { appState = .MainMenu },
                         randomBackground: { background = backgrounds.randomElement()! }
                     )
                     .onAppear {

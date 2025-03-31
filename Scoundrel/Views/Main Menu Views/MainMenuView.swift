@@ -39,7 +39,7 @@ struct MainMenuView: View {
                 Spacer()
                 Spacer()
                 
-                if !game.gameOver {
+                if game.gameState != .GameOver && game.gameState != .Created {
                     ResumeButtonView(game: game, resumeGame: resumeGame)
                 }
                 
@@ -70,9 +70,9 @@ struct MainMenuView: View {
                 .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .sheet(isPresented: $showStatsModal) {
-            StatsView(
-                gameKitHelper: game.gameKitHelper
-            )
+            StatsView(gameKitHelper: game.gameKitHelper)
+                .onAppear { gameKitHelper.hideAccessPoint() }
+                .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .onAppear { initializeSounds() }
     }

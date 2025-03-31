@@ -12,27 +12,25 @@ struct StatsView: View {
     
     let ubiquitousHelper = UbiquitousHelper()
     
-    @State var gamesPlayed: Int64 = 0 // Ubiquitous
     @State var gamesAbandoned: Int64 = 0 // Ubiquitous
     @State var gamesCompleted: Int64 = 0 // Ubiquitous
     @State var dungeonsBeaten: Int64 = 0 // Ubiquitous
     @State var roomsFled: Int64 = 0 // Ubiquitous
-    @State var highScore: Int? = nil // Game Center
+    @State var highScore: Int = 0 // Game Center
     @State var averageScore: Int64 = 0 // Ubiquitous
     @State var leaderboardRank: Int? = nil // Game Center
     @State var achievementsUnlocked: Int? = nil // Game Center
     
-    @State var showingHighScorePopover: Bool = false
     @State var showingRankPopover: Bool = false
     @State var showingAchievementsPopover: Bool = false
     
     func fetchStats() {
-        gamesPlayed = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesPlayed)
         gamesAbandoned = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesAbandoned)
         gamesCompleted = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesCompleted)
         dungeonsBeaten = ubiquitousHelper.getUbiquitousValue(for: .NumberOfDungeonsBeaten)
         roomsFled = ubiquitousHelper.getUbiquitousValue(for: .NumberOfRoomsFled)
         averageScore = ubiquitousHelper.getUbiquitousValue(for: .AverageScore)
+        highScore = Int(ubiquitousHelper.getUbiquitousValue(for: .HighScore))
         
         Task { @MainActor in
             let roomsFledProgess = Int64(await gameKitHelper.fetchAchievementProgress(for: .MasterOfEvasion))
@@ -47,10 +45,45 @@ struct StatsView: View {
                 ubiquitousHelper.setUbiquitousValue(dungeonsBeaten, for: .NumberOfDungeonsBeaten)
             }
             
-            highScore = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.score
+            let gameCenterHighScore = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.score ?? 0
+            if gameCenterHighScore > highScore {
+                highScore = gameCenterHighScore
+                ubiquitousHelper.setUbiquitousValue(Int64(highScore), for: .HighScore)
+            } else if highScore > gameCenterHighScore {
+                gameKitHelper.submitScore(highScore)
+            }
+            
             leaderboardRank = await gameKitHelper.fetchPlayerScore(leaderboardId: .ScoundrelAllTimeHighScore)?.rank
             achievementsUnlocked = await gameKitHelper.fetchCompletedAchievementsCount()
         }
+    }
+    
+    func getSharePreviewTitle() -> String {
+        return "Check out my Stats in Scoundrel Solitaire!"
+    }
+    
+    func getGamesStats() -> String {
+        return "🃏 Games\nPlayed: \(gamesAbandoned + gamesCompleted)\nAbandoned: \(gamesAbandoned)\nCompleted: \(gamesCompleted)"
+    }
+    
+    func getOtherStats() -> String {
+        return "🏰 Stats\nRooms Fled: \(roomsFled)\nDungeons Beat: \(dungeonsBeaten)"
+    }
+    
+    func getScoreStats() -> String {
+        return "⚔️ Scores\nAverage Score: \(averageScore)\nHigh Score: \(highScore)"
+    }
+    
+    func getGameCenterStats() -> String {
+        if leaderboardRank == nil || achievementsUnlocked == nil {
+            return ""
+        }
+        
+        return "🏆 Game Center\nLeaderboard Rank: \(leaderboardRank!)\nAchievements Unlocked: \(achievementsUnlocked!)\n\n"
+    }
+    
+    func getShareItem() -> String {
+        return "\(getSharePreviewTitle())\n\n\(getGamesStats())\n\n\(getOtherStats())\n\n\(getScoreStats())\n\n\(getGameCenterStats())https://apps.apple.com/app/id6742526198"
     }
     
     var body: some View {
@@ -60,11 +93,35 @@ struct StatsView: View {
                 .ignoresSafeArea(edges: .all)
             
             VStack {
-                Text("Stats")
-                    .font(.custom("ModernAntiqua-Regular", size: 40))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                    .padding(.top)
+                ZStack {
+                    HStack {
+                        Spacer()
+                        
+                        ShareLink(item: getShareItem(), preview: SharePreview(
+                            getSharePreviewTitle(),
+                            image: Image("logo")
+                        )) {
+                            ZStack {
+                                Circle()
+                                    .fill(.thinMaterial)
+                                    .frame(width: 40, height: 40)
+                                
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.teal)
+                                    .font(.system(size: 18))
+                                    .bold()
+                            }
+                        }
+                    }
+                    .padding(.trailing, 50)
+                    .padding(.top, 10)
+                    
+                    Text("Stats")
+                        .font(.custom("ModernAntiqua-Regular", size: 40))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        .padding(.top)
+                }
                 
                 Spacer()
                 
@@ -74,7 +131,7 @@ struct StatsView: View {
                             Text("Games Played")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                             Spacer()
-                            Text("\(gamesPlayed)")
+                            Text("\(gamesAbandoned + gamesCompleted)")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
@@ -131,31 +188,11 @@ struct StatsView: View {
                         HStack {
                             Text("High Score")
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
-                                .foregroundStyle(highScore == nil ? .secondary : .primary)
                             Spacer()
-                            if highScore != nil {
-                                Text("\(highScore!)")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                            } else {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(.teal)
-                            }
+                            Text("\(highScore)")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
-                        .listRowBackground(Rectangle().fill(highScore == nil ? .ultraThinMaterial : .thinMaterial))
-                        .onTapGesture {
-                            if #available(iOS 16.4, *), highScore == nil { // presentationCompactAdaptation not available on older OS versions
-                                showingHighScorePopover = true
-                            }
-                        }
-                        .popover(isPresented: $showingHighScorePopover) {
-                            if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                                Text("Sign in to Game Center to view High Scores")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(.headline)
-                                    .padding()
-                                    .presentationCompactAdaptation(.popover)
-                            }
-                        }
+                        .listRowBackground(Rectangle().fill(.thinMaterial))
                     }
                     
                     Section {

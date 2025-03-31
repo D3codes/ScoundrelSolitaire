@@ -21,12 +21,14 @@ struct RoomView: View {
     }
     
     func firstActionTapped() {
+        if cardSelected == nil { return }
         let selectedCard: Int = cardSelected!
         closeSelectedView()
         actionSelected(selectedCard, true)
     }
     
     func secondActionTapped() {
+        if cardSelected == nil { return }
         let selectedCard: Int = cardSelected!
         closeSelectedView()
         actionSelected(selectedCard, false)
