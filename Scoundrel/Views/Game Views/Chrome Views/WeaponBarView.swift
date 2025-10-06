@@ -19,10 +19,16 @@ struct WeaponBarView: View {
     var body: some View {
         HStack {
             ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .frame(width: 50, height: 50)
-                    .foregroundStyle(.regularMaterial)
-                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 50, height: 50)
+                        .glassEffect(in: .rect(cornerRadius: 10))
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 50, height: 50)
+                        .foregroundStyle(.regularMaterial)
+                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                }
                 
                 VStack(spacing: 0) {
                     Image("shield1")
@@ -46,10 +52,16 @@ struct WeaponBarView: View {
                     }
                 }
                 
-                RoundedRectangle(cornerRadius: 10)
-                    .frame(width: 50, height: 50)
-                    .foregroundStyle(.regularMaterial)
-                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 50, height: 50)
+                        .glassEffect(in: .rect(cornerRadius: 10))
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 50, height: 50)
+                        .foregroundStyle(.regularMaterial)
+                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                }
                 
                 if #available(iOS 17.0, *), hapticsEnabled { // sensory feedback not available on older OS versions
                     VStack(spacing: 0) {
@@ -90,26 +102,45 @@ struct WeaponBarView: View {
             }
             
             ZStack {
-                Capsule()
-                    .foregroundStyle(.ultraThinMaterial)
-                    .shadow(color: .black, radius: 5)
-
-                Capsule()
-                    .foregroundStyle(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: .green, location: 0),
-                                Gradient.Stop(color: .green, location: CGFloat(player.strongestMonsterThatCanBeAttacked()).map(from: 0...14, to: 0...1)),
-                                Gradient.Stop(color: .white.opacity(0), location: CGFloat(player.strongestMonsterThatCanBeAttacked()).map(from: 0...14, to: 0...1))
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                    Capsule()
+                        .glassEffect()
+                    
+                    Capsule()
+                        .foregroundStyle(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .green, location: 0),
+                                    Gradient.Stop(color: .green, location: CGFloat(player.strongestMonsterThatCanBeAttacked()).map(from: 0...14, to: 0...1)),
+                                    Gradient.Stop(color: .white.opacity(0), location: CGFloat(player.strongestMonsterThatCanBeAttacked()).map(from: 0...14, to: 0...1))
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-                    )
-                
-                Capsule()
-                    .stroke(lineWidth: 2)
-                    .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.white, .gray, .black]), startPoint: .top, endPoint: .bottom))
+                        .glassEffect(.clear)
+                } else {
+                    Capsule()
+                        .foregroundStyle(.ultraThinMaterial)
+                        .shadow(color: .black, radius: 5)
+                    
+                    Capsule()
+                        .foregroundStyle(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .green, location: 0),
+                                    Gradient.Stop(color: .green, location: CGFloat(player.strongestMonsterThatCanBeAttacked()).map(from: 0...14, to: 0...1)),
+                                    Gradient.Stop(color: .white.opacity(0), location: CGFloat(player.strongestMonsterThatCanBeAttacked()).map(from: 0...14, to: 0...1))
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                    
+                    Capsule()
+                        .stroke(lineWidth: 2)
+                        .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.white, .gray, .black]), startPoint: .top, endPoint: .bottom))
+                }
             }
             .frame(height: 10)
             

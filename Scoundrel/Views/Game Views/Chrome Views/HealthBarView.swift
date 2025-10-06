@@ -26,10 +26,16 @@ struct HealthBarView: View {
                     }
                 }
                 
-                RoundedRectangle(cornerRadius: 10)
-                    .frame(width: 50, height: 50)
-                    .foregroundStyle(.regularMaterial)
-                    .shadow(color: .black, radius: 5, x: 2, y: 2)
+                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 50, height: 50)
+                        .glassEffect(in: .rect(cornerRadius: 10))
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(width: 50, height: 50)
+                        .foregroundStyle(.regularMaterial)
+                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                }
                 
                 if #available(iOS 17.0, *), hapticsEnabled { // sensory feedback not available on older OS versions
                     VStack(spacing: 0) {
@@ -61,26 +67,45 @@ struct HealthBarView: View {
             .animation(.spring(duration: 0.5, bounce: 0.6), value: player.healthIconSize)
             
             ZStack {
-                Capsule()
-                    .foregroundStyle(.ultraThinMaterial)
-                    .shadow(color: .black, radius: 5)
-
-                Capsule()
-                    .foregroundStyle(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: .red, location: 0),
-                                Gradient.Stop(color: .red, location: CGFloat(player.health).map(from: 0...20, to: 0...1)),
-                                Gradient.Stop(color: .white.opacity(0), location: CGFloat(player.health).map(from: 0...20, to: 0...1))
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
+                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                    Capsule()
+                        .glassEffect()
+                    
+                    Capsule()
+                        .foregroundStyle(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .red, location: 0),
+                                    Gradient.Stop(color: .red, location: CGFloat(player.health).map(from: 0...20, to: 0...1)),
+                                    Gradient.Stop(color: .white.opacity(0), location: CGFloat(player.health).map(from: 0...20, to: 0...1))
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-                    )
-                
-                Capsule()
-                    .stroke(lineWidth: 2)
-                    .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.white, .gray, .black]), startPoint: .top, endPoint: .bottom))
+                        .glassEffect(.clear)
+                } else {
+                    Capsule()
+                        .foregroundStyle(.ultraThinMaterial)
+                        .shadow(color: .black, radius: 5)
+
+                    Capsule()
+                        .foregroundStyle(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .red, location: 0),
+                                    Gradient.Stop(color: .red, location: CGFloat(player.health).map(from: 0...20, to: 0...1)),
+                                    Gradient.Stop(color: .white.opacity(0), location: CGFloat(player.health).map(from: 0...20, to: 0...1))
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                    
+                    Capsule()
+                        .stroke(lineWidth: 2)
+                        .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.white, .gray, .black]), startPoint: .top, endPoint: .bottom))
+                }
             }
             .frame(height: 10)
             
