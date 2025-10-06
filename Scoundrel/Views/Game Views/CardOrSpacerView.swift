@@ -15,9 +15,15 @@ struct CardOrSpacerView: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThinMaterial)
-                .aspectRatio(0.75, contentMode: .fit)
+            if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                RoundedRectangle(cornerRadius: 20)
+                    .aspectRatio(0.75, contentMode: .fit)
+                    .glassEffect(in: .rect(cornerRadius: 20))
+            } else {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.ultraThinMaterial)
+                    .aspectRatio(0.75, contentMode: .fit)
+            }
             
             Group {
                 if room.cards[cardIndex] == nil || cardSelected == cardIndex {

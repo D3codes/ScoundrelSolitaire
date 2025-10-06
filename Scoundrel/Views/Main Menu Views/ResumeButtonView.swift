@@ -15,10 +15,16 @@ struct ResumeButtonView: View {
         VStack {
             HStack {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .glassEffect(in: .rect(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    }
                     
                     VStack(spacing: 0) {
                         Image("deck")
@@ -31,10 +37,16 @@ struct ResumeButtonView: View {
                 }
                 
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .glassEffect(in: .rect(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    }
                         
                     VStack(spacing: 0) {
                         Text("Score")
@@ -48,10 +60,16 @@ struct ResumeButtonView: View {
                 .frame(width: 50)
                 
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .glassEffect(in: .rect(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    }
                     
                     VStack(spacing: 0) {
                         Image("dungeonGlyph")
@@ -66,10 +84,16 @@ struct ResumeButtonView: View {
             
             HStack {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .glassEffect(in: .rect(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    }
                     
                     VStack(spacing: 0) {
                         Image("heart1")
@@ -82,10 +106,16 @@ struct ResumeButtonView: View {
                 }
                 
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .glassEffect(in: .rect(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    }
                     
                     VStack(spacing: 0) {
                         Image("shield1")
@@ -98,10 +128,16 @@ struct ResumeButtonView: View {
                 }
                 
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    if #available(iOS 26.0, *) { // glass effect not available on older OS versions
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .glassEffect(in: .rect(cornerRadius: 10))
+                    } else {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.regularMaterial)
+                            .shadow(color: .black, radius: 5, x: 2, y: 2)
+                    }
                     
                     VStack(spacing: 0) {
                         Image("sword1")
