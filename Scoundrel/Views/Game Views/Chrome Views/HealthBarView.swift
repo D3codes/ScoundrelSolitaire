@@ -37,7 +37,7 @@ struct HealthBarView: View {
                         .shadow(color: .black, radius: 5, x: 2, y: 2)
                 }
                 
-                if #available(iOS 17.0, *), hapticsEnabled { // sensory feedback not available on older OS versions
+                if hapticsEnabled {
                     VStack(spacing: 0) {
                         Image("heart1")
                             .resizable()
