@@ -80,18 +80,12 @@ struct TopBarView: View {
             }
             .scaleEffect(game.deck.iconSize)
             .animation(.spring(duration: 0.5, bounce: 0.6), value: game.deck.iconSize)
-            .onTapGesture {
-                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    showingDeckCountPopover = true
-                }
-            }
+            .onTapGesture { showingDeckCountPopover = true }
             .popover(isPresented: $showingDeckCountPopover) {
-                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    Text("\(game.deck.cards.count) cards left in deck")
-                        .font(.headline)
-                        .padding()
-                        .presentationCompactAdaptation(.popover)
-                }
+                Text("\(game.deck.cards.count) cards left in deck")
+                    .font(.headline)
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
             }
             
             ZStack {
@@ -138,18 +132,12 @@ struct TopBarView: View {
                         .contentTransition(.numericText())
                 }
             }
-            .onTapGesture {
-                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    showingDungeonCountPopover = true
-                }
-            }
+            .onTapGesture { showingDungeonCountPopover = true }
             .popover(isPresented: $showingDungeonCountPopover) {
-                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    Text("\(game.dungeonDepth) dungeons beat")
-                        .font(.headline)
-                        .padding()
-                        .presentationCompactAdaptation(.popover)
-                }
+                Text("\(game.dungeonDepth) dungeons beat")
+                    .font(.headline)
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
             }
             
             ZStack {

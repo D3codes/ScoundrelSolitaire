@@ -68,20 +68,16 @@ struct ControlBarView: View {
                 .disabled(!gameKitHelper.localPlayerIsAuthenticated)
                 .blur(radius: gameKitHelper.localPlayerIsAuthenticated ? 0 : 0.5)
                 .onTapGesture {
-                    if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                        if !gameKitHelper.localPlayerIsAuthenticated {
-                            showSignInPopup = true
-                        }
+                    if !gameKitHelper.localPlayerIsAuthenticated {
+                        showSignInPopup = true
                     }
                 }
                 .popover(isPresented: $showSignInPopup) {
-                    if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                        Text("Sign in to Game Center to view Leaderboard")
-                            .fixedSize(horizontal: false, vertical: true)
-                            .font(.headline)
-                            .padding()
-                            .presentationCompactAdaptation(.popover)
-                    }
+                    Text("Sign in to Game Center to view Leaderboard")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.headline)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
                 }
             }
         }

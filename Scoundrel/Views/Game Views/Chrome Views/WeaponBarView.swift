@@ -86,19 +86,13 @@ struct WeaponBarView: View {
             }
             .scaleEffect(player.weaponIconSize)
             .animation(.spring(duration: 0.5, bounce: 0.6), value: player.weaponIconSize)
-            .onTapGesture {
-                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    isShowingWeaponPopover = true
-                }
-            }
+            .onTapGesture { isShowingWeaponPopover = true }
             .popover(isPresented: $isShowingWeaponPopover) {
-                if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                    Text("Can attack monsters with strength \(player.strongestMonsterThatCanBeAttacked()) or less")
-                        .fixedSize(horizontal: false, vertical: true)
-                        .font(.headline)
-                        .padding()
-                        .presentationCompactAdaptation(.popover)
-                }
+                Text("Can attack monsters with strength \(player.strongestMonsterThatCanBeAttacked()) or less")
+                    .fixedSize(horizontal: false, vertical: true)
+                    .font(.headline)
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
             }
             
             ZStack {
