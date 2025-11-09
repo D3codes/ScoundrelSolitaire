@@ -65,6 +65,7 @@ struct SettingsView: View {
                                     .foregroundStyle(.foreground)
                             }
                         })
+                        .buttonStyle(.plain)
                         .listRowBackground(Rectangle().fill(.thinMaterial))
                         
                         HStack {
@@ -122,6 +123,7 @@ struct SettingsView: View {
                                     .foregroundStyle(.foreground)
                             }
                         })
+                        .buttonStyle(.plain)
                         .listRowBackground(Rectangle().fill(.thinMaterial))
                         
                         if UIDevice.current.model == "iPhone" {
@@ -151,6 +153,7 @@ struct SettingsView: View {
                                         .foregroundStyle(.foreground)
                                 }
                             })
+                            .buttonStyle(.plain)
                             .listRowBackground(Rectangle().fill(.thinMaterial))
                         }
                     }

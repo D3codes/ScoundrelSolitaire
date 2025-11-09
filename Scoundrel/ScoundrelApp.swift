@@ -77,19 +77,21 @@ struct ScoundrelApp: App {
                     }
                 }
             }
+            .frame(minHeight: 600)
             .background(Image(background).resizable())
             .onAppear {
                 musicPlayer.isPlaying = !backgroundMusicMuted
                 game.gameKitHelper.authenticateLocalPlayer()
             }
         }
-        .onChange(of: scenePhase) { phase in
-            if phase == .background || phase == .inactive {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if newValue == .background || newValue == .inactive {
                 let encoder = JSONEncoder()
                 if let encoded = try? encoder.encode(game) {
                     UserDefaults.standard.set(encoded, forKey: UserDefaultsKeys().game)
                 }
             }
         }
+        .windowResizability(.contentSize)
     }
 }
