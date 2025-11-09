@@ -288,9 +288,12 @@ struct SettingsView: View {
         @StateObject var musicPlayer = MusicPlayer()
         
         var body: some View {
-            SettingsView(
-                musicPlayer: musicPlayer
-            )
+            Text("HI")
+                .sheet(isPresented: .constant(true)) {
+                    SettingsView(
+                        musicPlayer: musicPlayer
+                    )
+                }
         }
     }
     
