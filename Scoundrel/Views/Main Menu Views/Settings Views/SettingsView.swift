@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct SettingsView: View {
+    @Environment(\.requestReview) var requestReview
     @Environment(\.openURL) var openURL
     
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
@@ -20,6 +22,7 @@ struct SettingsView: View {
     
     @State var showWhatsNew: Bool = false
     @State var showCredits: Bool = false
+    @State var showMail = false
     
     var body: some View {
         ZStack {
@@ -201,6 +204,36 @@ struct SettingsView: View {
                                 .listRowBackground(Rectangle().fill(.regularMaterial))
                         }
                     }
+                    
+                    Section {
+                        Button(action: { showMail = true }, label: {
+                            HStack {
+                                Text("Send Feedback")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                
+                                Spacer()
+                                
+                                Image(systemName: "envelope")
+                            }
+                            .contentShape(Capsule())
+                        })
+                        .buttonStyle(.plain)
+                        .sheet(isPresented: $showMail) { MailView() }
+                        
+                        Button(action: { requestReview() }, label: {
+                            HStack {
+                                Text("Rate Scoundrel Solitaire")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                
+                                Spacer()
+                                
+                                Image(systemName: "star")
+                            }
+                            .contentShape(Capsule())
+                        })
+                        .buttonStyle(.plain)
+                    }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                     
                     Section {
                         HStack {
