@@ -42,6 +42,7 @@ class Game: ObservableObject, Codable {
     var roomCancellable: AnyCancellable? = nil
     
     var healthPotionSounds: [AVAudioPlayer?] = [nil, nil]
+    var glassBreakingSound: AVAudioPlayer?
     var equipWeaponSounds: [AVAudioPlayer?] = [nil, nil]
     var attackWithWeaponSounds: [AVAudioPlayer?] = [nil, nil, nil, nil]
     var attackUnarmedSounds: [AVAudioPlayer?] = [nil, nil, nil, nil, nil]
@@ -54,6 +55,9 @@ class Game: ObservableObject, Codable {
             healthPotionSounds[0]?.setVolume(3, fadeDuration: .zero)
             healthPotionSounds[1] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "sparkle2.mp3", ofType:nil)!))
             healthPotionSounds[1]?.setVolume(2, fadeDuration: .zero)
+            
+            glassBreakingSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "glassbreaking.m4a", ofType:nil)!))
+            glassBreakingSound?.setVolume(3, fadeDuration: .zero)
             
             equipWeaponSounds[0] = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "equip.mp3", ofType:nil)!))
             equipWeaponSounds[0]?.setVolume(3, fadeDuration: .zero)
@@ -203,6 +207,8 @@ class Game: ObservableObject, Codable {
             if !soundEffectsMuted { healthPotionSounds.randomElement()??.play() }
             player.useHealthPotion(potionStrength: room.cards[cardIndex]!.strength)
             room.usedHealthPotion = true
+        } else {
+            if !soundEffectsMuted { glassBreakingSound?.play() }
         }
         
         endAction(cardIndex: cardIndex)
