@@ -234,18 +234,16 @@ struct StatsView: View {
                         }
                         .listRowBackground(Rectangle().fill(leaderboardRank == nil ? .ultraThinMaterial : .thinMaterial))
                         .onTapGesture {
-                            if #available(iOS 16.4, *), leaderboardRank == nil { // presentationCompactAdaptation not available on older OS versions
+                            if leaderboardRank == nil {
                                 showingRankPopover = true
                             }
                         }
                         .popover(isPresented: $showingRankPopover) {
-                            if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                                Text("Sign in to Game Center to view Rank")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(.headline)
-                                    .padding()
-                                    .presentationCompactAdaptation(.popover)
-                            }
+                            Text("Sign in to Game Center to view Rank")
+                                .fixedSize(horizontal: false, vertical: true)
+                                .font(.headline)
+                                .padding()
+                                .presentationCompactAdaptation(.popover)
                         }
                         
                         HStack {
@@ -264,18 +262,16 @@ struct StatsView: View {
                         }
                         .listRowBackground(Rectangle().fill(achievementsUnlocked == nil ? .ultraThinMaterial : .thinMaterial))
                         .onTapGesture {
-                            if #available(iOS 16.4, *), achievementsUnlocked == nil { // presentationCompactAdaptation not available on older OS versions
+                            if achievementsUnlocked == nil {
                                 showingAchievementsPopover = true
                             }
                         }
                         .popover(isPresented: $showingAchievementsPopover) {
-                            if #available(iOS 16.4, *) { // presentationCompactAdaptation not available on older OS versions
-                                Text("Sign in to Game Center to view Achievements")
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(.headline)
-                                    .padding()
-                                    .presentationCompactAdaptation(.popover)
-                            }
+                            Text("Sign in to Game Center to view Achievements")
+                                .fixedSize(horizontal: false, vertical: true)
+                                .font(.headline)
+                                .padding()
+                                .presentationCompactAdaptation(.popover)
                         }
                     }
                 }
