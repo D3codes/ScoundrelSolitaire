@@ -64,37 +64,43 @@ struct SettingsView: View {
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
                                     .foregroundStyle(.foreground)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
                         
-                        HStack {
-                            Button(action: { self.musicPlayer.nextTrack() }, label: {
+                        Button(action: { self.musicPlayer.nextTrack() }, label: {
+                            HStack {
                                 ZStack {
                                     Image("stoneButton")
                                         .resizable()
                                         .frame(width: 50, height: 50)
-                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
                                     Image(systemName: "forward.end.fill")
                                         .foregroundStyle(self.musicPlayer.isPlaying ? .white : .black)
                                         .font(.title2)
                                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                                 }
-                            })
-                            .disabled(!self.musicPlayer.isPlaying)
-                            .blur(radius: self.musicPlayer.isPlaying ? 0 : 0.5)
-                            
-                            if self.musicPlayer.isPlaying {
-                                Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
-                                    .font(.custom("ModernAntiqua-Regular", size: 18))
-                            } else {
-                                Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
-                                    .font(.custom("ModernAntiqua-Regular", size: 18))
-                                    .foregroundStyle(.secondary)
+                                
+                                if self.musicPlayer.isPlaying {
+                                    Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
+                                        .font(.custom("ModernAntiqua-Regular", size: 18))
+                                } else {
+                                    Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
+                                        .font(.custom("ModernAntiqua-Regular", size: 18))
+                                        .foregroundStyle(.secondary)
+                                }
                             }
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Capsule())
+                        })
+                        .buttonStyle(.plain)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Capsule())
+                        .disabled(!self.musicPlayer.isPlaying)
+                        .blur(radius: self.musicPlayer.isPlaying ? 0 : 0.5)
                     }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                      
                     Section {
                         Button(action: { self.soundEffectsMuted.toggle() },label: {
@@ -122,9 +128,10 @@ struct SettingsView: View {
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
                                     .foregroundStyle(.foreground)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
                         
                         if UIDevice.current.model == "iPhone" {
                             Button(action: { self.hapticsEnabled.toggle() },label: {
@@ -152,11 +159,13 @@ struct SettingsView: View {
                                         .font(.custom("ModernAntiqua-Regular", size: 20))
                                         .foregroundStyle(.foreground)
                                 }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Capsule())
                             })
                             .buttonStyle(.plain)
-                            .listRowBackground(Rectangle().fill(.thinMaterial))
                         }
                     }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                     
                     Section {
                         Button(action: {
@@ -247,7 +256,6 @@ struct SettingsView: View {
                             
                             Image(systemName: "link")
                         }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
                         .contentShape(Rectangle())
                         .onTapGesture {
                             openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
@@ -261,12 +269,12 @@ struct SettingsView: View {
                             
                             Image(systemName: "link")
                         }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
                         .contentShape(Rectangle())
                         .onTapGesture {
                             openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
                         }
                     }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                 }
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
