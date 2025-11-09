@@ -212,6 +212,7 @@ struct SettingsView: View {
                             Image(systemName: "link")
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
                         }
@@ -225,6 +226,7 @@ struct SettingsView: View {
                             Image(systemName: "link")
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
                         }
