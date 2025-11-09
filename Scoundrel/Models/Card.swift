@@ -69,14 +69,14 @@ class Card: ObservableObject, Codable {
         case .weapon:
             "Equip"
         case .monster:
-            "Attack Unarmed"
+            "Unarmed"
         }
     }
     
     func getSecondButtonText() -> String {
         switch suit {
         case .monster:
-            "Attack with Weapon"
+            "Weapon"
         default:
             ""
         }
