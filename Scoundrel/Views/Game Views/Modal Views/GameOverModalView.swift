@@ -46,25 +46,12 @@ struct GameOverModalView: View {
                                 getSharePreviewTitle(),
                                 image: Image("logo")
                             )) {
-                                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
-                                    Image(systemName: "square.and.arrow.up")
-                                        .foregroundStyle(.teal)
-                                        .frame(width: 40, height: 40)
-                                        .font(.system(size: 18))
-                                        .bold()
-                                        .glassEffect(.regular.interactive(), in: .circle)
-                                } else {
-                                    ZStack {
-                                        Circle()
-                                            .fill(.thinMaterial)
-                                            .frame(width: 40, height: 40)
-                                        
-                                        Image(systemName: "square.and.arrow.up")
-                                            .foregroundStyle(.teal)
-                                            .font(.system(size: 18))
-                                            .bold()
-                                    }
-                                }
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.teal)
+                                    .frame(width: 40, height: 40)
+                                    .font(.system(size: 18))
+                                    .bold()
+                                    .glassEffect(.regular.interactive(), in: .circle)
                             }
                         }
                         .padding(.top, 20)

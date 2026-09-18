@@ -68,13 +68,9 @@ class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, Observabl
     
     func showAccessPoint() {
         if localPlayerIsAuthenticated {
-            GKAccessPoint.shared.location = .topTrailing
+            GKAccessPoint.shared.location = .bottomLeading
         } else {
-            if #available(iOS 18, *) { // Access point is too large on older OS versions
-                GKAccessPoint.shared.location = .topTrailing
-            } else {
-                GKAccessPoint.shared.location = .bottomTrailing
-            }
+            GKAccessPoint.shared.location = .bottomLeading
         }
         
         GKAccessPoint.shared.isActive = true

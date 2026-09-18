@@ -13,33 +13,62 @@ struct StatsBarView: View {
     var animationNamespace: Namespace.ID
     
     var body: some View {
-        VStack {
-            Spacer()
-            HealthBarView(
-                room: room,
-                player: player,
-                animationNamespace: animationNamespace
-            )
-            .padding(.horizontal)
-            .padding(.top)
-            .frame(maxWidth: 500)
+        ViewThatFits(in: .horizontal) {
+            HStack {
+                HealthBarView(
+                    room: room,
+                    player: player,
+                    animationNamespace: animationNamespace
+                )
+                .padding(.horizontal)
+                .frame(minWidth: 200, maxWidth: 500)
+                
+                WeaponBarView(
+                    player: player,
+                    room: room,
+                    animationNamespace: animationNamespace
+                )
+                .padding(.horizontal)
+                .frame(minWidth: 300,maxWidth: 500)
+            }
             
-            WeaponBarView(
-                player: player,
-                room: room,
-                animationNamespace: animationNamespace
-            )
-            .padding(.horizontal)
-            .padding(.bottom)
-            .frame(maxWidth: 500)
+            ViewThatFits(in: .vertical) {
+                VStack {
+                    HealthBarView(
+                        room: room,
+                        player: player,
+                        animationNamespace: animationNamespace
+                    )
+                    .padding(.horizontal)
+                    .padding(.top)
+                    .frame(maxWidth: 500)
+                    
+                    WeaponBarView(
+                        player: player,
+                        room: room,
+                        animationNamespace: animationNamespace
+                    )
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    .frame(maxWidth: 500)
+                }
+                .frame(maxHeight: 150)
+                
+                HStack {
+                    HealthView(
+                        room: room,
+                        player: player,
+                        animationNamespace: animationNamespace
+                    )
+                    
+                    WeaponView(
+                        player: player,
+                        room: room,
+                        animationNamespace: animationNamespace
+                    )
+                }
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: 150)
-        .background(
-            Image("wood2")
-                .resizable()
-                .ignoresSafeArea()
-                .shadow(color: .black, radius: 5, x: 0, y: -5)
-        )
     }
 }
 

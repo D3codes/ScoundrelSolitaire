@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GameKit
+import AVFAudio
 
 struct ControlBarView: View {
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
@@ -31,6 +32,8 @@ struct ControlBarView: View {
     var body: some View {
         ZStack {
             HStack {
+                Spacer()
+                
                 Button(action: {
                     if !soundEffectsMuted { page2Sound?.play() }
                     isPresentingSettings = true
@@ -47,7 +50,15 @@ struct ControlBarView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
-                .padding(.trailing, 50)
+                
+                Spacer()
+                
+                Text("SCOUNDREL")
+                    .font(.custom("MorrisRoman-Black", size: 30))
+                    .foregroundStyle(.white)
+                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                
+                Spacer()
                 
                 Button(action: {
                     if !soundEffectsMuted { page2Sound?.play() }
@@ -79,14 +90,16 @@ struct ControlBarView: View {
                         .padding()
                         .presentationCompactAdaptation(.popover)
                 }
+                
+                Spacer()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 150)
+        .frame(maxWidth: .infinity, maxHeight: 80)
         .background(
-            Image("wood2")
+            Image("stoneSlab2")
                 .resizable()
                 .ignoresSafeArea()
-                .shadow(color: .black, radius: 5, x: 0, y: -5)
+                .shadow(color: .black, radius: 15, x: 0, y: 5)
         )
         .sheet(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
         .sheet(isPresented: $isPresentingSettings) {

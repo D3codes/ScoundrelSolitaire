@@ -57,6 +57,24 @@ struct GameView: View {
         }
     }
     
+    func closeSelectedView() {
+        withAnimation { selectedCardIndex = nil }
+    }
+    
+    func firstActionTapped() {
+        if selectedCardIndex == nil { return }
+        let selectedCard: Int = selectedCardIndex!
+        closeSelectedView()
+        actionSelected(cardIndex: selectedCard, firstAction: true)
+    }
+    
+    func secondActionTapped() {
+        if selectedCardIndex == nil { return }
+        let selectedCard: Int = selectedCardIndex!
+        closeSelectedView()
+        actionSelected(cardIndex: selectedCard, firstAction: false)
+    }
+    
     var body: some View {
         ZStack {
             VStack {
@@ -75,8 +93,6 @@ struct GameView: View {
                 RoomView(
                     animationNamespace: animation,
                     room: game.room,
-                    player: game.player,
-                    actionSelected: actionSelected,
                     cardSelected: $selectedCardIndex
                 )
                 
@@ -86,6 +102,18 @@ struct GameView: View {
                     player: game.player,
                     room: game.room,
                     animationNamespace: animation
+                )
+            }
+            
+            if selectedCardIndex != nil {
+                SelectedCardView(
+                    cardSelected: $selectedCardIndex,
+                    room: game.room,
+                    player: game.player,
+                    animationNamespace: animation,
+                    cancel: closeSelectedView,
+                    firstAction: firstActionTapped,
+                    secondAction: secondActionTapped
                 )
             }
             

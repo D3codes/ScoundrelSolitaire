@@ -17,14 +17,29 @@ struct CardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: .black, radius: 5, x: 5, y: 5)
                 
-            VStack(spacing: 0) {
-                Image("\(card.getImageName())")
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .padding()
+            ViewThatFits(in: .vertical) {
+                VStack(spacing: 0) {
+                    Image("\(card.getImageName())")
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .padding()
+                        .frame(minWidth: 10, minHeight: 10)
+                    
+                    HStack {
+                        Image("\(card.getIcon())")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 30, maxHeight: 30)
+                        
+                        Text("\(card.strength)")
+                            .font(.custom("ModernAntiqua-Regular", size: 30))
+                            .foregroundStyle(.black)
+                    }
+                    .padding(.bottom)
+                }
                 
-                HStack {
+                VStack {
                     Image("\(card.getIcon())")
                         .resizable()
                         .scaledToFit()
@@ -34,7 +49,6 @@ struct CardView: View {
                         .font(.custom("ModernAntiqua-Regular", size: 30))
                         .foregroundStyle(.black)
                 }
-                .padding(.bottom)
             }
         }
         .aspectRatio(0.75, contentMode: .fit)

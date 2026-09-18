@@ -11,87 +11,101 @@ struct RoomView: View {
     var animationNamespace: Namespace.ID
     
     @ObservedObject var room: Room
-    @ObservedObject var player: Player
-    let actionSelected: (Int, Bool) -> Void
     
     @Binding var cardSelected: Int?
     
-    func closeSelectedView() {
-        withAnimation { cardSelected = nil }
-    }
-    
-    func firstActionTapped() {
-        if cardSelected == nil { return }
-        let selectedCard: Int = cardSelected!
-        closeSelectedView()
-        actionSelected(selectedCard, true)
-    }
-    
-    func secondActionTapped() {
-        if cardSelected == nil { return }
-        let selectedCard: Int = cardSelected!
-        closeSelectedView()
-        actionSelected(selectedCard, false)
-    }
-    
     var body: some View {
-        ZStack {            
-            VStack {
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    CardOrSpacerView(
-                        room: room,
-                        cardIndex: 0,
-                        cardSelected: $cardSelected,
-                        animationNamespace: animationNamespace
-                    )
-                    
-                    CardOrSpacerView(
-                        room: room,
-                        cardIndex: 1,
-                        cardSelected: $cardSelected,
-                        animationNamespace: animationNamespace
-                    )
-                    
-                    Spacer()
-                }
-                
-                HStack {
-                    Spacer()
-                    
-                    CardOrSpacerView(
-                        room: room,
-                        cardIndex: 2,
-                        cardSelected: $cardSelected,
-                        animationNamespace: animationNamespace
-                    )
-                    
-                    CardOrSpacerView(
-                        room: room,
-                        cardIndex: 3,
-                        cardSelected: $cardSelected,
-                        animationNamespace: animationNamespace
-                    )
-                    
-                    Spacer()
-                }
-                
-                Spacer()
-            }
+        GeometryReader { geometry in
+            let isLandscape = geometry.size.width > geometry.size.height
             
-            if cardSelected != nil {
-                SelectedCardView(
-                    cardSelected: $cardSelected,
-                    room: room,
-                    player: player,
-                    animationNamespace: animationNamespace,
-                    cancel: closeSelectedView,
-                    firstAction: firstActionTapped,
-                    secondAction: secondActionTapped
-                )
+            ZStack {
+                if isLandscape {
+                    VStack {
+                        Spacer()
+                        
+                        HStack {
+                            Spacer()
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 0,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 1,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 2,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 3,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                    }
+                } else {
+                    VStack {
+                        Spacer()
+                        
+                        HStack {
+                            Spacer()
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 0,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 1,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Spacer()
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 2,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            CardOrSpacerView(
+                                room: room,
+                                cardIndex: 3,
+                                cardSelected: $cardSelected,
+                                animationNamespace: animationNamespace
+                            )
+                            
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                    }
+                }
             }
         }
     }
@@ -117,8 +131,6 @@ struct RoomView: View {
                 RoomView(
                     animationNamespace: animation,
                     room: room,
-                    player: player,
-                    actionSelected: actionSelected,
                     cardSelected: $cardSelected
                 )
                 

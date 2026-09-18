@@ -77,8 +77,7 @@ struct ScoundrelApp: App {
                     }
                 }
             }
-            .frame(minHeight: 600)
-            .background(Image(background).resizable())
+            .background(Image(background).resizable().ignoresSafeArea())
             .onAppear {
                 musicPlayer.isPlaying = !backgroundMusicMuted
                 game.gameKitHelper.authenticateLocalPlayer()
