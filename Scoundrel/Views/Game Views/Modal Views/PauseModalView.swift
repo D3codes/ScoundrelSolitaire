@@ -37,7 +37,7 @@ struct PauseModalView: View {
                     Spacer()
                 }
             }
-            .frame(width: 300, height: 400)
+            .frame(minWidth: 300, maxWidth: 300, maxHeight: 400)
         }
     }
 }

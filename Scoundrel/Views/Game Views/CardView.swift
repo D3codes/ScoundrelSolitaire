@@ -36,7 +36,6 @@ struct CardView: View {
                             .font(.custom("ModernAntiqua-Regular", size: 30))
                             .foregroundStyle(.black)
                     }
-                    .padding(.bottom)
                 }
                 
                 VStack {

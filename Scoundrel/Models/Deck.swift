@@ -24,7 +24,7 @@ class Deck: ObservableObject, Codable {
         
         // Test Data
 //        cards.append(Card(suit: .monster, strength: 14))
-//        cards.append(Card(suit: .monster, strength: 5))
+//        cards.append(Card(suit: .monster, strength: 6))
 //        cards.append(Card(suit: .healthPotion, strength: 2))
 //        cards.append(Card(suit: .healthPotion, strength: 10))
 //        cards.append(Card(suit: .weapon, strength: 2))

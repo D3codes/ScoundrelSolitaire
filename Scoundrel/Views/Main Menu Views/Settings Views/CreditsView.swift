@@ -24,42 +24,6 @@ struct CreditsView: View {
         }
         
         VStack {
-            Text("Assets")
-                .font(.custom("ModernAntiqua-Regular", size: 20))
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Assets and textures were created using ChatGPT / DALL•E.")
-                .font(.custom("ModernAntiqua-Regular", size: 15))
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        
-        VStack {
-            Text("Icons")
-                .font(.custom("ModernAntiqua-Regular", size: 20))
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Icons were created with Genmoji.")
-                .font(.custom("ModernAntiqua-Regular", size: 15))
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        
-        VStack {
-            Text("Music")
-                .font(.custom("ModernAntiqua-Regular", size: 20))
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Music was created with Suno.")
-                .font(.custom("ModernAntiqua-Regular", size: 15))
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        
-        VStack {
-            Text("Sound Effects")
-                .font(.custom("ModernAntiqua-Regular", size: 20))
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Sound effects were created with Infinity SFX and ElevenLabs.")
-                .font(.custom("ModernAntiqua-Regular", size: 15))
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        
-        VStack {
             Text("Fonts")
                 .font(.custom("ModernAntiqua-Regular", size: 20))
                 .frame(maxWidth: .infinity, alignment: .leading)

@@ -89,7 +89,8 @@ struct HowToView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.bottom, 1)
                 Group {
-                    Text("• ").font(.custom("ModernAntiqua-Regular", size: 15)) + Text("Only works once per room!").font(.custom("ModernAntiqua-Regular", size: 18))
+                    Text("• \(Text("Only works once per room!").font(.custom("ModernAntiqua-Regular", size: 18)))")
+                        .font(.custom("ModernAntiqua-Regular", size: 15))
                 }
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)

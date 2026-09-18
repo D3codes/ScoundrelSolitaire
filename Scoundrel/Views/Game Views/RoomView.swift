@@ -108,6 +108,7 @@ struct RoomView: View {
                 }
             }
         }
+        .frame(minHeight: 100)
     }
 }
 

@@ -28,100 +28,88 @@ struct GameOverModalView: View {
     
     var body: some View {
         ZStack {
+            Image("paper")
+                .resizable()
+                .cornerRadius(20)
+            
             VStack {
-                if game.gameOverModalAchievement != nil {
-                    AchievementBannerView(achievement: game.gameOverModalAchievement!)
-                        .zIndex(10)
-                }
+//                HStack {
+//                    Spacer()
+//                    ShareLink(item: getShareItem(), preview: SharePreview(
+//                        getSharePreviewTitle(),
+//                        image: Image("logo")
+//                    )) {
+//                        Image(systemName: "square.and.arrow.up")
+//                            .foregroundStyle(.teal)
+//                            .frame(width: 40, height: 40)
+//                            .font(.system(size: 18))
+//                            .bold()
+//                            .glassEffect(.regular.interactive(), in: .circle)
+//                    }
+//                }
+//                .padding(.top, 20)
+//                .padding(.trailing, 20)
+//                .padding(.bottom, 1)
                 
-                ZStack {
-                    Image("paper")
-                        .resizable()
-                        .cornerRadius(20)
+                HStack {
+                    Text("Game Over")
+                        .font(.custom("MorrisRoman-Black", size: 45))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
                     
-                    VStack {
-                        HStack {
-                            Spacer()
-                            ShareLink(item: getShareItem(), preview: SharePreview(
-                                getSharePreviewTitle(),
-                                image: Image("logo")
-                            )) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .foregroundStyle(.teal)
-                                    .frame(width: 40, height: 40)
-                                    .font(.system(size: 18))
-                                    .bold()
-                                    .glassEffect(.regular.interactive(), in: .circle)
-                            }
-                        }
-                        .padding(.top, 20)
-                        .padding(.trailing, 20)
-                        .padding(.bottom, 1)
-                        
-                        Text("Game Over")
-                            .font(.custom("MorrisRoman-Black", size: 50))
-                            .foregroundStyle(.white)
-                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                            .padding(.bottom, 2)
-                        
-                        
-                        HStack {
-                            Text("Score:")
-                                .font(.custom("ModernAntiqua-Regular", size: 30))
-                                .foregroundStyle(.black)
-                            Spacer()
-                            Text("\(game.score)")
-                                .font(.custom("ModernAntiqua-Regular", size: 30))
-                                .foregroundStyle(.black)
-                        }
-                        .padding(.horizontal, 50)
-                        HStack {
-                            Text("Dungeons:")
-                                .font(.custom("ModernAntiqua-Regular", size: 30))
-                                .foregroundStyle(.black)
-                            Spacer()
-                            Text("\(game.dungeonDepth)")
-                                .font(.custom("ModernAntiqua-Regular", size: 30))
-                                .foregroundStyle(.black)
-                        }
-                        .padding(.horizontal, 50)
-                        
-                        if game.previousBestScore != nil && game.score > game.previousBestScore! {
-                            Text("New Personal Best!")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                                .foregroundStyle(.black)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: { mainMenu() }, label: {
-                            ZStack {
-                                Image("plank1")
-                                    .resizable()
-                                    .frame(width: 200, height: 50)
-                                Text("Main Menu")
-                                    .font(.custom("ModernAntiqua-Regular", size: 30))
-                                    .foregroundStyle(.white)
-                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                            }
-                        })
-                        
-                        Button(action: { newGame() }, label: {
-                            ZStack {
-                                Image("plank1")
-                                    .resizable()
-                                    .frame(width: 200, height: 50)
-                                Text("New Game")
-                                    .font(.custom("ModernAntiqua-Regular", size: 30))
-                                    .foregroundStyle(.white)
-                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                            }
-                        })
-                        
-                        Spacer()
+                    Spacer()
+                    
+                    ShareLink(item: getShareItem(), preview: SharePreview(
+                        getSharePreviewTitle(),
+                        image: Image("logo")
+                    )) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.teal)
+                            .frame(width: 40, height: 40)
+                            .font(.system(size: 18))
+                            .bold()
+                            .glassEffect(.regular.interactive(), in: .circle)
                     }
                 }
-                .frame(width: 300, height: 400)
+                .padding(.top, 20)
+                .padding(.bottom, 15)
+                .padding(.horizontal, 20)
+                
+                
+                HStack {
+                    Text("Score:")
+                        .font(.custom("ModernAntiqua-Regular", size: 30))
+                        .foregroundStyle(.black)
+                    Spacer()
+                    Text("\(game.score)")
+                        .font(.custom("ModernAntiqua-Regular", size: 30))
+                        .foregroundStyle(.black)
+                }
+                .padding(.horizontal, 50)
+                HStack {
+                    Text("Dungeons:")
+                        .font(.custom("ModernAntiqua-Regular", size: 30))
+                        .foregroundStyle(.black)
+                    Spacer()
+                    Text("\(game.dungeonDepth)")
+                        .font(.custom("ModernAntiqua-Regular", size: 30))
+                        .foregroundStyle(.black)
+                }
+                .padding(.horizontal, 50)
+                
+                if game.previousBestScore != nil && game.score > game.previousBestScore! {
+                    Text("New Personal Best!")
+                        .font(.custom("ModernAntiqua-Regular", size: 20))
+                        .foregroundStyle(.black)
+                }
+                
+                Spacer()
+                
+                PlankButtonView(text: "Main Menu", action: { mainMenu() })
+                
+                PlankButtonView(text: "New Game", action: { newGame() })
+                
+                Spacer()
             }
             
             if game.previousBestScore != nil && game.score > game.previousBestScore! {
@@ -135,6 +123,7 @@ struct GameOverModalView: View {
                 .allowsHitTesting(false)
             }
         }
+        .frame(minWidth: 300, maxWidth: 300, maxHeight: 400)
     }
 }
 
@@ -143,12 +132,18 @@ struct GameOverModalView: View {
         func newGame() { }
         func mainMenu() { }
         
+        var game: Game = Game()
+        
         var body: some View {
             GameOverModalView(
-                game: Game(),
+                game: game,
                 newGame: newGame,
                 mainMenu: mainMenu
             )
+            .onAppear {
+                game.previousBestScore = 1
+                game.score = 2
+            }
         }
     }
     

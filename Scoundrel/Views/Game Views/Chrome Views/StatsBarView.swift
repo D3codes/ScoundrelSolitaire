@@ -69,6 +69,7 @@ struct StatsBarView: View {
                 }
             }
         }
+        .frame(minHeight: 50)
     }
 }
 

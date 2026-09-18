@@ -15,37 +15,94 @@ struct ModalOverlayView: View {
     var mainMenu: () -> Void
     
     var body: some View {
-        ZStack {
-            if game.gameState == .GameOver || game.gameState == .Paused || game.gameState == .DungeonBeat {
-                Rectangle()
-                    .ignoresSafeArea(.all)
-                    .foregroundStyle(.ultraThinMaterial)
-                    .opacity(0.7)
-            }
+        GeometryReader { geometry in
+            let isLandscape = geometry.size.width > geometry.size.height
             
-            switch game.gameState {
-            case .DungeonBeat:
-                DungeonBeatModalView(
-                    game: game,
-                    nextDungeon: nextDungeon
-                )
-                .transition(.opacityAndMoveFromBottom)
-            case .GameOver:
-                GameOverModalView(
-                    game: game,
-                    newGame: newGame,
-                    mainMenu: mainMenu
-                )
-                .transition(.opacityAndMoveFromBottom)
-            case .Paused:
-                PauseModalView(
-                    continueGame: resumeGame,
-                    newGame: newGame,
-                    mainMenu: mainMenu
-                )
-                .transition(.opacityAndMoveFromBottom)
-            default:
-                EmptyView()
+            ZStack {
+                if game.gameState == .GameOver || game.gameState == .Paused || game.gameState == .DungeonBeat {
+                    Rectangle()
+                        .ignoresSafeArea(.all)
+                        .foregroundStyle(.ultraThinMaterial)
+                        .opacity(0.7)
+                }
+                
+                switch game.gameState {
+                case .DungeonBeat:
+                    if isLandscape {
+                        HStack {
+                            if game.gameOverModalAchievement != nil {
+                                AchievementBannerView(
+                                    achievement: game.gameOverModalAchievement!,
+                                    tall: true
+                                )
+                            }
+                            
+                            DungeonBeatModalView(
+                                game: game,
+                                nextDungeon: nextDungeon
+                            )
+                        }
+                        .transition(.opacityAndMoveFromBottom)
+                    } else {
+                        VStack {
+                            if game.gameOverModalAchievement != nil {
+                                AchievementBannerView(
+                                    achievement: game.gameOverModalAchievement!,
+                                    tall: false
+                                )
+                            }
+                            
+                            DungeonBeatModalView(
+                                game: game,
+                                nextDungeon: nextDungeon
+                            )
+                        }
+                        .transition(.opacityAndMoveFromBottom)
+                    }
+                case .GameOver:
+                    if isLandscape {
+                        HStack {
+                            if game.gameOverModalAchievement != nil {
+                                AchievementBannerView(
+                                    achievement: game.gameOverModalAchievement!,
+                                    tall: true
+                                )
+                            }
+                            
+                            GameOverModalView(
+                                game: game,
+                                newGame: newGame,
+                                mainMenu: mainMenu
+                            )
+                        }
+                        .transition(.opacityAndMoveFromBottom)
+                    } else {
+                        VStack {
+                            if game.gameOverModalAchievement != nil {
+                                AchievementBannerView(
+                                    achievement: game.gameOverModalAchievement!,
+                                    tall: false
+                                )
+                            }
+                            
+                            GameOverModalView(
+                                game: game,
+                                newGame: newGame,
+                                mainMenu: mainMenu
+                            )
+                        }
+                        .transition(.opacityAndMoveFromBottom)
+                    }
+                case .Paused:
+                    PauseModalView(
+                        continueGame: resumeGame,
+                        newGame: newGame,
+                        mainMenu: mainMenu
+                    )
+                    .transition(.opacityAndMoveFromBottom)
+                default:
+                    EmptyView()
+                }
             }
         }
     }
@@ -53,15 +110,20 @@ struct ModalOverlayView: View {
 
 #Preview {
     struct ModalOverlayView_Preview: View {
+        var game: Game = Game()
         
         var body: some View {
             ModalOverlayView(
-                game: Game(),
+                game: game,
                 resumeGame: { },
                 nextDungeon: { },
                 newGame: { },
                 mainMenu: { }
             )
+            .onAppear {
+                game.gameState = .GameOver
+                game.gameOverModalAchievement = .CowardsNeedNotApply
+            }
         }
     }
     
