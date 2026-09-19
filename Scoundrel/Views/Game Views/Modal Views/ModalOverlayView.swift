@@ -13,6 +13,7 @@ struct ModalOverlayView: View {
     var nextDungeon: () -> Void
     var newGame: () -> Void
     var mainMenu: () -> Void
+    var controllerSelection: Int? = nil
     
     var body: some View {
         GeometryReader { geometry in
@@ -39,7 +40,8 @@ struct ModalOverlayView: View {
                             
                             DungeonBeatModalView(
                                 game: game,
-                                nextDungeon: nextDungeon
+                                nextDungeon: nextDungeon,
+                                isControllerFocused: controllerSelection == 0
                             )
                         }
                         .transition(.opacityAndMoveFromBottom)
@@ -54,7 +56,8 @@ struct ModalOverlayView: View {
                             
                             DungeonBeatModalView(
                                 game: game,
-                                nextDungeon: nextDungeon
+                                nextDungeon: nextDungeon,
+                                isControllerFocused: controllerSelection == 0
                             )
                         }
                         .transition(.opacityAndMoveFromBottom)
@@ -72,7 +75,8 @@ struct ModalOverlayView: View {
                             GameOverModalView(
                                 game: game,
                                 newGame: newGame,
-                                mainMenu: mainMenu
+                                mainMenu: mainMenu,
+                                controllerSelection: controllerSelection
                             )
                         }
                         .transition(.opacityAndMoveFromBottom)
@@ -88,7 +92,8 @@ struct ModalOverlayView: View {
                             GameOverModalView(
                                 game: game,
                                 newGame: newGame,
-                                mainMenu: mainMenu
+                                mainMenu: mainMenu,
+                                controllerSelection: controllerSelection
                             )
                         }
                         .transition(.opacityAndMoveFromBottom)
@@ -97,7 +102,8 @@ struct ModalOverlayView: View {
                     PauseModalView(
                         continueGame: resumeGame,
                         newGame: newGame,
-                        mainMenu: mainMenu
+                        mainMenu: mainMenu,
+                        controllerSelection: controllerSelection
                     )
                     .transition(.opacityAndMoveFromBottom)
                 default:

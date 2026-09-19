@@ -14,6 +14,8 @@ struct TopBarView: View {
     var pause: () -> Void
     var animationNamespace: Namespace.ID
     @Binding var selectedCardIndex: Int?
+    var pauseIsControllerFocused: Bool = false
+    var fleeIsControllerFocused: Bool = false
     
     @State var showingDeckCountPopover: Bool = false
     @State var showingDungeonCountPopover: Bool = false
@@ -32,6 +34,7 @@ struct TopBarView: View {
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                 }
             })
+            .controllerFocused(pauseIsControllerFocused)
             .disabled(game.room.isDealingCards)
             .blur(radius: !game.room.isDealingCards ? 0 : 0.5)
             
@@ -139,6 +142,7 @@ struct TopBarView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
+                .controllerFocused(fleeIsControllerFocused)
                 .disabled(!game.room.canFlee || game.room.isDealingCards)
                 .blur(radius: game.room.canFlee && !game.room.isDealingCards ? 0 : 0.5)
                 

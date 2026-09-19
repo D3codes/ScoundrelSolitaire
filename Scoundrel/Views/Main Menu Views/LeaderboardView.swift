@@ -10,9 +10,11 @@ import GameKit
 
 struct LeaderboardView: View {
     @ObservedObject var gameKitHelper: GameKitHelper
+    @EnvironmentObject private var controllerInput: ControllerInputMonitor
     
     @State private var leaderboardEntries: [GKLeaderboard.Entry] = []
     @State private var playerEntry: GKLeaderboard.Entry? = nil
+    @State private var controllerScrollTarget = 0
     
     func fetchLeaderboardEntries() async {
         leaderboardEntries = await gameKitHelper.fetchLeaderboard(.ScoundrelAllTimeHighScore, top: 100)
@@ -37,6 +39,7 @@ struct LeaderboardView: View {
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                 
                 if !leaderboardEntries.isEmpty {
+                    ScrollViewReader { proxy in
                     List(leaderboardEntries.indices, id: \.self) { index in
                         HStack {
                             if index == 0 {
@@ -75,6 +78,18 @@ struct LeaderboardView: View {
                     }
                     .scrollIndicators(.hidden)
                     .scrollContentBackground(.hidden)
+                    .onChange(of: controllerInput.occurrence) { _, occurrence in
+                        guard controllerInput.isControllerConnected, let occurrence else { return }
+                        if occurrence.input == .down {
+                            controllerScrollTarget = min(controllerScrollTarget + 5, leaderboardEntries.count - 1)
+                        } else if occurrence.input == .up {
+                            controllerScrollTarget = max(controllerScrollTarget - 5, 0)
+                        } else {
+                            return
+                        }
+                        withAnimation { proxy.scrollTo(controllerScrollTarget, anchor: .center) }
+                    }
+                    }
                 } else {
                     Spacer()
                     ZStack {

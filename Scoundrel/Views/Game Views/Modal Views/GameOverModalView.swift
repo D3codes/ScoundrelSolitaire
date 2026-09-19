@@ -13,6 +13,7 @@ struct GameOverModalView: View {
 
     var newGame: () -> Void
     var mainMenu: () -> Void
+    var controllerSelection: Int? = nil
     
     @State var achievementName: String?
     @State var achievementDescription: String?
@@ -105,9 +106,9 @@ struct GameOverModalView: View {
                 
                 Spacer()
                 
-                PlankButtonView(text: "Main Menu", action: { mainMenu() })
+                PlankButtonView(text: "Main Menu", isControllerFocused: controllerSelection == 0, action: { mainMenu() })
                 
-                PlankButtonView(text: "New Game", action: { newGame() })
+                PlankButtonView(text: "New Game", isControllerFocused: controllerSelection == 1, action: { newGame() })
                 
                 Spacer()
             }

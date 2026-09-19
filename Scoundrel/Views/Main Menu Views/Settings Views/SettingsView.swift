@@ -9,6 +9,18 @@ import SwiftUI
 import StoreKit
 
 struct SettingsView: View {
+    private enum ControllerSelection: Hashable {
+        case music
+        case nextTrack
+        case soundEffects
+        case haptics
+        case credits
+        case feedback
+        case rate
+        case privacy
+        case support
+    }
+
     @Environment(\.requestReview) var requestReview
     @Environment(\.openURL) var openURL
     
@@ -17,12 +29,59 @@ struct SettingsView: View {
     @AppStorage(UserDefaultsKeys().latestVersionNotesRead) private var latestVersionNotesRead: String = "1.0"
     
     @ObservedObject var musicPlayer: MusicPlayer
+    @EnvironmentObject private var controllerInput: ControllerInputMonitor
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
     @State var showWhatsNew: Bool = false
     @State var showCredits: Bool = false
     @State var showMail = false
+    @State private var controllerSelection: ControllerSelection = .music
+
+    private var availableControllerSelections: [ControllerSelection] {
+        var selections: [ControllerSelection] = [.music]
+        if musicPlayer.isPlaying { selections.append(.nextTrack) }
+        selections.append(.soundEffects)
+        if UIDevice.current.model == "iPhone" { selections.append(.haptics) }
+        selections.append(contentsOf: [.credits, .feedback, .rate, .privacy, .support])
+        return selections
+    }
+
+    private func isControllerFocused(_ selection: ControllerSelection) -> Bool {
+        controllerInput.isControllerConnected && controllerSelection == selection
+    }
+
+    private func handleControllerInput(_ input: ControllerInput, proxy: ScrollViewProxy) {
+        let selections = availableControllerSelections
+        guard !selections.isEmpty else { return }
+        if !selections.contains(controllerSelection) { controllerSelection = selections[0] }
+
+        switch input {
+        case .up, .left, .down, .right:
+            let currentIndex = selections.firstIndex(of: controllerSelection) ?? 0
+            let offset = input == .up || input == .left ? -1 : 1
+            controllerSelection = selections[(currentIndex + offset + selections.count) % selections.count]
+            withAnimation { proxy.scrollTo(controllerSelection, anchor: .center) }
+        case .primary:
+            activateControllerSelection()
+        case .secondary, .menu:
+            break
+        }
+    }
+
+    private func activateControllerSelection() {
+        switch controllerSelection {
+        case .music: musicPlayer.isPlaying.toggle()
+        case .nextTrack: if musicPlayer.isPlaying { musicPlayer.nextTrack() }
+        case .soundEffects: soundEffectsMuted.toggle()
+        case .haptics: hapticsEnabled.toggle()
+        case .credits: withAnimation { showCredits.toggle() }
+        case .feedback: showMail = true
+        case .rate: requestReview()
+        case .privacy: openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
+        case .support: openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -37,6 +96,7 @@ struct SettingsView: View {
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                     .padding(.top)
                 
+                ScrollViewReader { proxy in
                 List {
                     Section {
                         Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
@@ -68,6 +128,8 @@ struct SettingsView: View {
                             .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
+                        .controllerFocused(isControllerFocused(.music))
+                        .id(ControllerSelection.music)
                         
                         Button(action: { self.musicPlayer.nextTrack() }, label: {
                             HStack {
@@ -99,6 +161,8 @@ struct SettingsView: View {
                         .contentShape(Capsule())
                         .disabled(!self.musicPlayer.isPlaying)
                         .blur(radius: self.musicPlayer.isPlaying ? 0 : 0.5)
+                        .controllerFocused(isControllerFocused(.nextTrack))
+                        .id(ControllerSelection.nextTrack)
                     }
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                      
@@ -132,6 +196,8 @@ struct SettingsView: View {
                             .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
+                        .controllerFocused(isControllerFocused(.soundEffects))
+                        .id(ControllerSelection.soundEffects)
                         
                         if UIDevice.current.model == "iPhone" {
                             Button(action: { self.hapticsEnabled.toggle() },label: {
@@ -163,6 +229,8 @@ struct SettingsView: View {
                                 .contentShape(Capsule())
                             })
                             .buttonStyle(.plain)
+                            .controllerFocused(isControllerFocused(.haptics))
+                            .id(ControllerSelection.haptics)
                         }
                     }
                     .listRowBackground(Rectangle().fill(.thinMaterial))
@@ -210,6 +278,8 @@ struct SettingsView: View {
                             .foregroundStyle(.foreground)
                         })
                         .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .controllerFocused(isControllerFocused(.credits))
+                        .id(ControllerSelection.credits)
                         
                         if showCredits {
                             CreditsView()
@@ -230,6 +300,8 @@ struct SettingsView: View {
                             .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
+                        .controllerFocused(isControllerFocused(.feedback))
+                        .id(ControllerSelection.feedback)
                         .sheet(isPresented: $showMail) { MailView() }
                         
                         Button(action: { requestReview() }, label: {
@@ -244,6 +316,8 @@ struct SettingsView: View {
                             .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
+                        .controllerFocused(isControllerFocused(.rate))
+                        .id(ControllerSelection.rate)
                     }
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
@@ -260,6 +334,8 @@ struct SettingsView: View {
                         .onTapGesture {
                             openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
                         }
+                        .controllerFocused(isControllerFocused(.privacy))
+                        .id(ControllerSelection.privacy)
                         
                         HStack {
                             Text("Support")
@@ -273,11 +349,18 @@ struct SettingsView: View {
                         .onTapGesture {
                             openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
                         }
+                        .controllerFocused(isControllerFocused(.support))
+                        .id(ControllerSelection.support)
                     }
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                 }
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
+                .onChange(of: controllerInput.occurrence) { _, occurrence in
+                    guard let occurrence else { return }
+                    handleControllerInput(occurrence.input, proxy: proxy)
+                }
+                }
             }
         }
     }

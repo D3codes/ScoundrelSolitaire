@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PlankButtonView: View {
     var text: String
+    var isControllerFocused: Bool = false
     var action: () -> Void
     
     var body: some View {
@@ -24,6 +25,7 @@ struct PlankButtonView: View {
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
             }
         })
+        .controllerFocused(isControllerFocused)
     }
 }
 

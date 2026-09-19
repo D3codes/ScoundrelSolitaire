@@ -13,6 +13,7 @@ struct RoomView: View {
     @ObservedObject var room: Room
     
     @Binding var cardSelected: Int?
+    var controllerFocusedCardIndex: Int?
     
     var body: some View {
         GeometryReader { geometry in
@@ -32,6 +33,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 0, cornerRadius: 20)
                             
                             CardOrSpacerView(
                                 room: room,
@@ -39,6 +41,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 1, cornerRadius: 20)
                             
                             CardOrSpacerView(
                                 room: room,
@@ -46,6 +49,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 2, cornerRadius: 20)
                             
                             CardOrSpacerView(
                                 room: room,
@@ -53,6 +57,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 3, cornerRadius: 20)
                             
                             Spacer()
                         }
@@ -72,6 +77,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 0, cornerRadius: 20)
                             
                             CardOrSpacerView(
                                 room: room,
@@ -79,6 +85,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 1, cornerRadius: 20)
                             
                             Spacer()
                         }
@@ -92,6 +99,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 2, cornerRadius: 20)
                             
                             CardOrSpacerView(
                                 room: room,
@@ -99,6 +107,7 @@ struct RoomView: View {
                                 cardSelected: $cardSelected,
                                 animationNamespace: animationNamespace
                             )
+                            .controllerFocused(controllerFocusedCardIndex == 3, cornerRadius: 20)
                             
                             Spacer()
                         }
@@ -132,7 +141,8 @@ struct RoomView: View {
                 RoomView(
                     animationNamespace: animation,
                     room: room,
-                    cardSelected: $cardSelected
+                    cardSelected: $cardSelected,
+                    controllerFocusedCardIndex: nil
                 )
                 
                 VStack {
@@ -154,4 +164,3 @@ struct RoomView: View {
     
     return RoomView_Preview()
 }
-

@@ -11,6 +11,7 @@ struct PauseModalView: View {
     var continueGame: () -> Void
     var newGame: () -> Void
     var mainMenu: () -> Void
+    var controllerSelection: Int? = nil
     
     var body: some View {
         ZStack {
@@ -29,9 +30,9 @@ struct PauseModalView: View {
                     
                     Spacer()
                     
-                    PlankButtonView(text: "Main Menu", action: { mainMenu() })
-                    PlankButtonView(text: "New Game", action: { newGame() })
-                    PlankButtonView(text: "Continue", action: continueGame)
+                    PlankButtonView(text: "Main Menu", isControllerFocused: controllerSelection == 0, action: { mainMenu() })
+                    PlankButtonView(text: "New Game", isControllerFocused: controllerSelection == 1, action: { newGame() })
+                    PlankButtonView(text: "Continue", isControllerFocused: controllerSelection == 2, action: continueGame)
                         .padding(.top)
                     
                     Spacer()

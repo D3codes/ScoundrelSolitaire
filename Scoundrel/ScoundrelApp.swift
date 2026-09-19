@@ -17,6 +17,7 @@ struct ScoundrelApp: App {
     
     @StateObject var musicPlayer: MusicPlayer = MusicPlayer()
     @StateObject var game: Game = Game()
+    @StateObject private var controllerInput = ControllerInputMonitor()
     
     @State var appState: AppState = .MainMenu
     enum AppState: String, CaseIterable, Codable {
@@ -77,10 +78,12 @@ struct ScoundrelApp: App {
                     }
                 }
             }
+            .environmentObject(controllerInput)
             .background(Image(background).resizable().ignoresSafeArea())
             .onAppear {
                 musicPlayer.isPlaying = !backgroundMusicMuted
                 game.gameKitHelper.authenticateLocalPlayer()
+                controllerInput.startMonitoring()
             }
         }
         .onChange(of: scenePhase) { oldValue, newValue in
