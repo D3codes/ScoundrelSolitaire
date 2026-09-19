@@ -25,12 +25,16 @@ struct CardOrSpacerView: View {
                         .opacity(0)
                         .aspectRatio(0.75, contentMode: .fit)
                 } else {
-                    CardView(card: room.cards[cardIndex]!)
-                        .onTapGesture {
-                            if !room.isDealingCards {
-                                withAnimation { cardSelected = cardIndex }
-                            }
+                    Button {
+                        if !room.isDealingCards {
+                            withAnimation { cardSelected = cardIndex }
                         }
+                    } label: {
+                        CardView(card: room.cards[cardIndex]!)
+                    }
+                        .disabled(room.isDealingCards)
+                        .accessibilityLabel("Card \(cardIndex + 1), \(room.cards[cardIndex]!.getFirstButtonText())")
+                        .accessibilityHint("Selects this card")
                         .matchedGeometryEffect(
                             id: "Card\(cardIndex)",
                             in: animationNamespace,

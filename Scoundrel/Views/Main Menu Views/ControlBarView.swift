@@ -14,6 +14,10 @@ struct ControlBarView: View {
     
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
+    var settingsIsControllerFocused: Bool = false
+    var leaderboardIsControllerFocused: Bool = false
+    var showSettings: () -> Void
+    var showLeaderboard: () -> Void
     
     @State var page2Sound: AVAudioPlayer?
     
@@ -25,8 +29,6 @@ struct ControlBarView: View {
         }
     }
     
-    @State var isPresentingSettings: Bool = false
-    @State var isPresentingLeaderboards: Bool = false
     @State var showSignInPopup: Bool = false
     
     var body: some View {
@@ -36,7 +38,7 @@ struct ControlBarView: View {
                 
                 Button(action: {
                     if !soundEffectsMuted { page2Sound?.play() }
-                    isPresentingSettings = true
+                    showSettings()
                 },label: {
                     ZStack {
                         Image("stoneButton")
@@ -50,6 +52,7 @@ struct ControlBarView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
+                .controllerFocused(settingsIsControllerFocused)
                 
                 Spacer()
                 
@@ -62,7 +65,7 @@ struct ControlBarView: View {
                 
                 Button(action: {
                     if !soundEffectsMuted { page2Sound?.play() }
-                    isPresentingLeaderboards = true
+                    showLeaderboard()
                 },label: {
                     ZStack {
                         Image("stoneButton")
@@ -76,6 +79,7 @@ struct ControlBarView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
+                .controllerFocused(leaderboardIsControllerFocused)
                 .disabled(!gameKitHelper.localPlayerIsAuthenticated)
                 .blur(radius: gameKitHelper.localPlayerIsAuthenticated ? 0 : 0.5)
                 .onTapGesture {
@@ -101,12 +105,6 @@ struct ControlBarView: View {
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 15, x: 0, y: 5)
         )
-        .sheet(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
-        .sheet(isPresented: $isPresentingSettings) {
-            SettingsView(musicPlayer: musicPlayer)
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
-        }
         .onAppear() { initializeSounds() }
     }
 }
@@ -119,7 +117,9 @@ struct ControlBarView: View {
         var body: some View {
             ControlBarView(
                 musicPlayer: musicPlayer,
-                gameKitHelper: gameKitHelper
+                gameKitHelper: gameKitHelper,
+                showSettings: {},
+                showLeaderboard: {}
             )
         }
     }

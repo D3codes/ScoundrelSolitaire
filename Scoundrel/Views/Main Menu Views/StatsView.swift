@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StatsView: View {
     @ObservedObject var gameKitHelper: GameKitHelper
+    @EnvironmentObject private var controllerInput: ControllerInputMonitor
     
     let ubiquitousHelper = UbiquitousHelper()
     
@@ -23,6 +24,7 @@ struct StatsView: View {
     
     @State var showingRankPopover: Bool = false
     @State var showingAchievementsPopover: Bool = false
+    @State private var controllerScrollTarget = 0
     
     func fetchStats() {
         gamesAbandoned = ubiquitousHelper.getUbiquitousValue(for: .NumberOfGamesAbandoned)
@@ -121,6 +123,7 @@ struct StatsView: View {
                 
                 Spacer()
                 
+                ScrollViewReader { proxy in
                 List {
                     Section {
                         HStack {
@@ -131,6 +134,7 @@ struct StatsView: View {
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .id(0)
                         
                         HStack {
                             Text("Games Abandoned")
@@ -160,6 +164,7 @@ struct StatsView: View {
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .id(1)
                         
                         HStack {
                             Text("Dungeons Beat")
@@ -180,6 +185,7 @@ struct StatsView: View {
                                 .font(.custom("ModernAntiqua-Regular", size: 20))
                         }
                         .listRowBackground(Rectangle().fill(.thinMaterial))
+                        .id(2)
                         
                         HStack {
                             Text("High Score")
@@ -220,6 +226,7 @@ struct StatsView: View {
                             }
                         }
                         .listRowBackground(Rectangle().fill(leaderboardRank == nil ? .ultraThinMaterial : .thinMaterial))
+                        .id(3)
                         .onTapGesture {
                             if leaderboardRank == nil {
                                 showingRankPopover = true
@@ -264,6 +271,18 @@ struct StatsView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
+                .onChange(of: controllerInput.occurrence) { _, occurrence in
+                    guard controllerInput.isControllerConnected, let occurrence else { return }
+                    if occurrence.input == .down {
+                        controllerScrollTarget = min(controllerScrollTarget + 1, 3)
+                    } else if occurrence.input == .up {
+                        controllerScrollTarget = max(controllerScrollTarget - 1, 0)
+                    } else {
+                        return
+                    }
+                    withAnimation { proxy.scrollTo(controllerScrollTarget, anchor: .center) }
+                }
+                }
             }
         }
         .onAppear { fetchStats() }

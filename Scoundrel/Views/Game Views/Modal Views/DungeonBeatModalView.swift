@@ -12,6 +12,7 @@ struct DungeonBeatModalView: View {
     @ObservedObject var game: Game
 
     var nextDungeon: () -> Void
+    var isControllerFocused: Bool = false
     
     @State var achievementName: String?
     @State var achievementDescription: String?
@@ -70,6 +71,7 @@ struct DungeonBeatModalView: View {
                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                     }
                 })
+                .controllerFocused(isControllerFocused)
                 
                 Spacer()
             }

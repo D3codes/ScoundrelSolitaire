@@ -10,6 +10,7 @@ import SwiftUI
 struct ResumeButtonView: View {
     @ObservedObject var game: Game
     var resumeGame: () -> Void
+    var isControllerFocused: Bool = false
     
     var body: some View {
         VStack {
@@ -108,7 +109,11 @@ struct ResumeButtonView: View {
                 }
             }
             
-            PlankButtonView(text: "Resume", action: resumeGame)
+            PlankButtonView(
+                text: "Resume",
+                isControllerFocused: isControllerFocused,
+                action: resumeGame
+            )
         }
     }
 }

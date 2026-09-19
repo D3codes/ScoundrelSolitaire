@@ -15,6 +15,8 @@ struct SelectedCardView: View {
     var cancel: () -> Void
     var firstAction: () -> Void
     var secondAction: () -> Void
+    var firstActionIsControllerFocused: Bool = false
+    var secondActionIsControllerFocused: Bool = false
     
     var body: some View {
         ZStack {
@@ -78,6 +80,7 @@ struct SelectedCardView: View {
                         .padding(.horizontal)
                     }
                 })
+                .controllerFocused(firstActionIsControllerFocused)
                 .frame(width: 300, height: 50)
                 
                 if cardSelected != nil && !(room.cards[cardSelected!]?.getSecondButtonText() ?? "").isEmpty && player.canAttackWithWeapon(monsterStrength: room.cards[cardSelected!]!.strength) {
@@ -109,6 +112,7 @@ struct SelectedCardView: View {
                             .padding(.horizontal)
                         }
                     })
+                    .controllerFocused(secondActionIsControllerFocused)
                     .frame(width: 300, height: 50)
                 }
             }

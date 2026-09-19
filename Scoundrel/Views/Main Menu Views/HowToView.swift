@@ -343,6 +343,7 @@ struct HowToView: View {
                 }
                 .padding(.bottom)
             }
+            .controllerScrollable()
             .scrollIndicators(.hidden)
             .padding(.horizontal)
         }
