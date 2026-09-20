@@ -126,11 +126,7 @@ struct GameView: View {
             )
         }
         .onAppear() {
-            game.gameKitHelper.hideAccessPoint()
             initializeSounds()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                game.gameKitHelper.hideAccessPoint()
-            }
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import GameKit
 
-class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, ObservableObject {
+class GameKitHelper: UIViewController, ObservableObject {
     
     private let maxLeaderboardFetchCount: Int = 100
     
@@ -62,7 +62,6 @@ class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, Observabl
             if GKLocalPlayer.local.isMultiplayerGamingRestricted { /* Disable multiplayer game features. */ }
             if GKLocalPlayer.local.isPersonalizedCommunicationRestricted { /* Disable in game communication UI. */ }
             
-            GKAccessPoint.shared.showHighlights = true
         }
     }
     
@@ -78,10 +77,6 @@ class GameKitHelper: UIViewController, GKGameCenterControllerDelegate, Observabl
     
     func hideAccessPoint() {
         GKAccessPoint.shared.isActive = false
-    }
-    
-    @objc func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
-        gameCenterViewController.dismiss(animated:true)
     }
     
 //    func displayDashboard() {

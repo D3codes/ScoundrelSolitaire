@@ -20,7 +20,6 @@ struct SettingsView: View {
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
-    @State var showWhatsNew: Bool = false
     @State var showCredits: Bool = false
     @State var showMail = false
     
@@ -168,35 +167,6 @@ struct SettingsView: View {
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
                     Section {
-//                        Button(action: {
-//                            withAnimation {
-//                                showWhatsNew.toggle()
-//                                latestVersionNotesRead = appVersion!
-//                            }
-//                        }, label: {
-//                            HStack {
-//                                Text("What's New?")
-//                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-//
-//                                Spacer()
-//
-//                                if latestVersionNotesRead != appVersion! {
-//                                    Image(systemName: "exclamationmark.triangle.fill")
-//                                        .foregroundStyle(.teal)
-//                                }
-//
-//                                Image(systemName: "chevron.right")
-//                                    .rotationEffect(.degrees(showWhatsNew ? 90 : 0))
-//                            }
-//                            .foregroundStyle(.foreground)
-//                        })
-//                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        if showWhatsNew {
-                            WhatsNewView()
-                                .listRowBackground(Rectangle().fill(.regularMaterial))
-                        }
-                        
                         Button(action: { withAnimation { showCredits.toggle() } }, label: {
                             HStack {
                                 Text("Credits")

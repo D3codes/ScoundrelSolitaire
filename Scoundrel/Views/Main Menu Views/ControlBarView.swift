@@ -26,7 +26,6 @@ struct ControlBarView: View {
     }
     
     @State var isPresentingSettings: Bool = false
-    @State var isPresentingLeaderboards: Bool = false
     @State var showSignInPopup: Bool = false
     
     var body: some View {
@@ -61,8 +60,11 @@ struct ControlBarView: View {
                 Spacer()
                 
                 Button(action: {
-                    if !soundEffectsMuted { page2Sound?.play() }
-                    isPresentingLeaderboards = true
+                    GKAccessPoint.shared.trigger(
+                        leaderboardID: GameKitHelper.Leaderboard.ScoundrelAllTimeHighScore.rawValue,
+                        playerScope: .global,
+                        timeScope: .allTime
+                    ) {}
                 },label: {
                     ZStack {
                         Image("stoneButton")
@@ -101,11 +103,8 @@ struct ControlBarView: View {
                 .ignoresSafeArea()
                 .shadow(color: .black, radius: 15, x: 0, y: 5)
         )
-        .sheet(isPresented: $isPresentingLeaderboards) { LeaderboardView(gameKitHelper: gameKitHelper) }
         .sheet(isPresented: $isPresentingSettings) {
             SettingsView(musicPlayer: musicPlayer)
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .onAppear() { initializeSounds() }
     }

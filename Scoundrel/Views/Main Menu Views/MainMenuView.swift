@@ -95,13 +95,9 @@ struct MainMenuView: View {
         }
         .sheet(isPresented: $showHowToModal) {
             HowToView()
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .sheet(isPresented: $showStatsModal) {
             StatsView(gameKitHelper: game.gameKitHelper)
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .onAppear { initializeSounds() }
     }
