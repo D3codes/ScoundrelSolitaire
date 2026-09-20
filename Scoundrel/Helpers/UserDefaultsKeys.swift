@@ -17,4 +17,6 @@ struct UserDefaultsKeys {
     let game: String = "game"
     
     let latestVersionNotesRead: String = "latestVersionNotesRead"
+    
+    let quickPlayEnabled: String = "quickPlayEnabled"
 }

@@ -12,6 +12,7 @@ import AVFoundation
 struct GameView: View {
     let ubiquitousHelper: UbiquitousHelper = UbiquitousHelper()
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    @AppStorage(UserDefaultsKeys().quickPlayEnabled) private var quickPlayEnabled: Bool = false
     
     @Namespace var animation
     @ObservedObject var game: Game
@@ -106,15 +107,19 @@ struct GameView: View {
             }
             
             if selectedCardIndex != nil {
-                SelectedCardView(
-                    cardSelected: $selectedCardIndex,
-                    room: game.room,
-                    player: game.player,
-                    animationNamespace: animation,
-                    cancel: closeSelectedView,
-                    firstAction: firstActionTapped,
-                    secondAction: secondActionTapped
-                )
+                if quickPlayEnabled && ((game.room.cards[selectedCardIndex!]?.getSecondButtonText() ?? "").isEmpty || !game.player.canAttackWithWeapon(monsterStrength: game.room.cards[selectedCardIndex!]!.strength)) {
+                    Circle().opacity(0).onAppear { firstActionTapped() }
+                } else {
+                    SelectedCardView(
+                        cardSelected: $selectedCardIndex,
+                        room: game.room,
+                        player: game.player,
+                        animationNamespace: animation,
+                        cancel: closeSelectedView,
+                        firstAction: firstActionTapped,
+                        secondAction: secondActionTapped
+                    )
+                }
             }
             
             ModalOverlayView(
