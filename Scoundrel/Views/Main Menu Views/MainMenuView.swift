@@ -94,10 +94,10 @@ struct MainMenuView: View {
             }
         }
         .sheet(isPresented: $showHowToModal) {
-            HowToView()
+            HowToView(dismiss: { showHowToModal = false })
         }
         .sheet(isPresented: $showStatsModal) {
-            StatsView(gameKitHelper: game.gameKitHelper)
+            StatsView(dismiss: { showStatsModal = false }, gameKitHelper: game.gameKitHelper)
         }
         .onAppear { initializeSounds() }
     }

@@ -104,7 +104,7 @@ struct ControlBarView: View {
                 .shadow(color: .black, radius: 15, x: 0, y: 5)
         )
         .sheet(isPresented: $isPresentingSettings) {
-            SettingsView(musicPlayer: musicPlayer)
+            SettingsView(dismiss: { isPresentingSettings = false }, musicPlayer: musicPlayer)
         }
         .onAppear() { initializeSounds() }
     }

@@ -7,6 +7,11 @@
 		<string>ModernAntiqua-Regular.ttf</string>
 		<string>MorrisRoman-Black.ttf</string>
 	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array/>
 	<key>UILaunchScreen</key>
