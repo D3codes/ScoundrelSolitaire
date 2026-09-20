@@ -12,6 +12,7 @@ import AVFoundation
 struct GameView: View {
     let ubiquitousHelper: UbiquitousHelper = UbiquitousHelper()
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
+    @AppStorage(UserDefaultsKeys().quickPlayEnabled) private var quickPlayEnabled: Bool = false
     
     @Namespace var animation
     @ObservedObject var game: Game
@@ -57,6 +58,24 @@ struct GameView: View {
         }
     }
     
+    func closeSelectedView() {
+        withAnimation { selectedCardIndex = nil }
+    }
+    
+    func firstActionTapped() {
+        if selectedCardIndex == nil { return }
+        let selectedCard: Int = selectedCardIndex!
+        closeSelectedView()
+        actionSelected(cardIndex: selectedCard, firstAction: true)
+    }
+    
+    func secondActionTapped() {
+        if selectedCardIndex == nil { return }
+        let selectedCard: Int = selectedCardIndex!
+        closeSelectedView()
+        actionSelected(cardIndex: selectedCard, firstAction: false)
+    }
+    
     var body: some View {
         ZStack {
             VStack {
@@ -75,8 +94,6 @@ struct GameView: View {
                 RoomView(
                     animationNamespace: animation,
                     room: game.room,
-                    player: game.player,
-                    actionSelected: actionSelected,
                     cardSelected: $selectedCardIndex
                 )
                 
@@ -89,6 +106,22 @@ struct GameView: View {
                 )
             }
             
+            if selectedCardIndex != nil {
+                if quickPlayEnabled && ((game.room.cards[selectedCardIndex!]?.getSecondButtonText() ?? "").isEmpty || !game.player.canAttackWithWeapon(monsterStrength: game.room.cards[selectedCardIndex!]!.strength)) {
+                    Circle().opacity(0).onAppear { firstActionTapped() }
+                } else {
+                    SelectedCardView(
+                        cardSelected: $selectedCardIndex,
+                        room: game.room,
+                        player: game.player,
+                        animationNamespace: animation,
+                        cancel: closeSelectedView,
+                        firstAction: firstActionTapped,
+                        secondAction: secondActionTapped
+                    )
+                }
+            }
+            
             ModalOverlayView(
                 game: game,
                 resumeGame: { withAnimation { game.gameState = .Playing } },
@@ -98,11 +131,7 @@ struct GameView: View {
             )
         }
         .onAppear() {
-            game.gameKitHelper.hideAccessPoint()
             initializeSounds()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                game.gameKitHelper.hideAccessPoint()
-            }
         }
     }
 }

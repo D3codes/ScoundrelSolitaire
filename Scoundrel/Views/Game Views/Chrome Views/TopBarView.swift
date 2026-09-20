@@ -41,21 +41,18 @@ struct TopBarView: View {
                         Rectangle()
                             .opacity(0)
                             .frame(width: 50, height: 50)
-                            .matchedGeometryEffect(id: "Card\(index)", in: animationNamespace)
+                            .matchedGeometryEffect(
+                                id: "Card\(index)",
+                                in: animationNamespace,
+                                properties: .position
+                            )
                             .transition(.opacityAndScale)
                     }
                 }
                 
-                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .glassEffect(in: .rect(cornerRadius: 10))
-                } else {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
-                }
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: 50, height: 50)
+                    .glassEffect(in: .rect(cornerRadius: 10))
                     
                 if hapticsEnabled {
                     VStack(spacing: 0) {
@@ -89,16 +86,9 @@ struct TopBarView: View {
             }
             
             ZStack {
-                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 50)
-                        .glassEffect(in: .rect(cornerRadius: 10))
-                } else {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
-                }
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(height: 50)
+                    .glassEffect(in: .rect(cornerRadius: 10))
                     
                 VStack(spacing: 0) {
                     Text("Score")
@@ -112,16 +102,9 @@ struct TopBarView: View {
             .frame(minWidth: 50, maxWidth: 200)
             
             ZStack {
-                if #available(iOS 26.0, *) { // glass effect not available on older OS versions
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .glassEffect(in: .rect(cornerRadius: 10))
-                } else {
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(width: 50, height: 50)
-                        .foregroundStyle(.regularMaterial)
-                        .shadow(color: .black, radius: 5, x: 2, y: 2)
-                }
+                RoundedRectangle(cornerRadius: 10)
+                    .frame(width: 50, height: 50)
+                    .glassEffect(in: .rect(cornerRadius: 10))
                     
                 VStack(spacing: 0) {
                     Image("dungeonGlyph")
@@ -169,12 +152,6 @@ struct TopBarView: View {
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: 80)
-        .background(
-            Image("stoneSlab2")
-                .resizable()
-                .ignoresSafeArea()
-                .shadow(color: .black, radius: 15, x: 0, y: 5)
-        )
     }
 }
 

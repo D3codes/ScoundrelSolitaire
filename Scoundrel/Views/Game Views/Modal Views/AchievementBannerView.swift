@@ -10,6 +10,7 @@ import Vortex
 
 struct AchievementBannerView: View {
     var achievement: GameKitHelper.BinaryAchievement
+    var tall: Bool
     
     @State var achievementName: String = ""
     @State var achievementDescription: String = ""
@@ -71,31 +72,62 @@ struct AchievementBannerView: View {
                     .cornerRadius(20)
                 
                 if !achievementImage.isEmpty {
-                    HStack {
-                        Image(achievementImage)
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .mask(Circle())
-                        
+                    if tall {
                         VStack {
+                            Text("Achievement")
+                                .font(.custom("MorrisRoman-Black", size: 45))
+                                .foregroundStyle(.white)
+                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                .padding(.bottom, 2)
+                            
+                            Image(achievementImage)
+                                .resizable()
+                                .frame(width: 100, height: 100)
+                                .mask(Circle())
+                                .padding(.bottom)
+                            
                             Text(achievementName)
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                                .font(.custom("ModernAntiqua-Regular", size: 30))
                                 .foregroundStyle(.white)
                                 .shadow(color: .black, radius: 2, x: 0, y: 0)
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .multilineTextAlignment(.center)
+                                .padding(.bottom, 1)
                             
                             Text(achievementDescription)
-                                .font(.custom("ModernAntiqua-Regular", size: 15))
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
                                 .foregroundStyle(.black)
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .multilineTextAlignment(.center)
                         }
+                        .padding(.horizontal, 10)
+                    } else {
+                        HStack {
+                            Image(achievementImage)
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                                .mask(Circle())
+                            
+                            VStack() {
+                                Text(achievementName)
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                    .foregroundStyle(.white)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .multilineTextAlignment(.center)
+                                
+                                Text(achievementDescription)
+                                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                                    .foregroundStyle(.black)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .padding(.horizontal, 10)
                     }
-                    .padding(.horizontal, 10)
                 }
             }
-            .frame(width: 300, height: 100)
+            .frame(minWidth: 300, maxWidth: 300, maxHeight: tall ? 400 : 100)
         }
         .onAppear { setAchievement() }
     }
@@ -106,7 +138,8 @@ struct AchievementBannerView: View {
 
         var body: some View {
             AchievementBannerView(
-                achievement: .HangingByAThread
+                achievement: .Untouchable,
+                tall: true
             )
         }
     }

@@ -15,12 +15,12 @@ struct SettingsView: View {
     @AppStorage(UserDefaultsKeys().soundEffectsMuted) private var soundEffectsMuted: Bool = false
     @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
     @AppStorage(UserDefaultsKeys().latestVersionNotesRead) private var latestVersionNotesRead: String = "1.0"
+    @AppStorage(UserDefaultsKeys().quickPlayEnabled) private var quickPlayEnabled: Bool = false
     
     @ObservedObject var musicPlayer: MusicPlayer
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
-    @State var showWhatsNew: Bool = false
     @State var showCredits: Bool = false
     @State var showMail = false
     
@@ -168,35 +168,45 @@ struct SettingsView: View {
                     .listRowBackground(Rectangle().fill(.thinMaterial))
                     
                     Section {
-                        Button(action: {
-                            withAnimation {
-                                showWhatsNew.toggle()
-                                latestVersionNotesRead = appVersion!
-                            }
-                        }, label: {
-                            HStack {
-                                Text("What's New?")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                                
-                                Spacer()
-                                
-                                if latestVersionNotesRead != appVersion! {
-                                    Image(systemName: "exclamationmark.triangle.fill")
-                                        .foregroundStyle(.teal)
+                        Button(action: { self.quickPlayEnabled.toggle() },label: {
+                            VStack {
+                                HStack {
+                                    ZStack {
+                                        Image("stoneButton")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                        
+                                        if quickPlayEnabled {
+                                            Image(systemName: "bolt.fill")
+                                                .foregroundStyle(.white)
+                                                .font(.title2)
+                                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                        } else {
+                                            Image(systemName: "bolt.slash.fill")
+                                                .foregroundStyle(.white)
+                                                .font(.title2)
+                                                .shadow(color: .black, radius: 2, x: 0, y:0 )
+                                        }
+                                    }
+                                    
+                                    Text("Quick Play: \(self.quickPlayEnabled ? "On" : "Off")")
+                                        .font(.custom("ModernAntiqua-Regular", size: 20))
+                                        .foregroundStyle(.foreground)
                                 }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Capsule())
                                 
-                                Image(systemName: "chevron.right")
-                                    .rotationEffect(.degrees(showWhatsNew ? 90 : 0))
+                                Text("Bypass the confirmation dialog when selecting a card")
+                                    .font(.custom("ModernAntiqua-Regular", size: 15))
+                                    .foregroundStyle(.secondary)
                             }
-                            .foregroundStyle(.foreground)
                         })
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        if showWhatsNew {
-                            WhatsNewView()
-                                .listRowBackground(Rectangle().fill(.regularMaterial))
-                        }
-                        
+                        .buttonStyle(.plain)
+                    }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                    
+                    Section {
                         Button(action: { withAnimation { showCredits.toggle() } }, label: {
                             HStack {
                                 Text("Credits")

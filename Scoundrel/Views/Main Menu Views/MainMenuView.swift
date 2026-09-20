@@ -31,48 +31,73 @@ struct MainMenuView: View {
         }
     }
     
+    
+    
     var body: some View {
         ZStack {
             VStack {
-                TitleBarView()
-                
-                Spacer()
-                Spacer()
-                
-                if game.gameState != .GameOver && game.gameState != .Created {
-                    ResumeButtonView(game: game, resumeGame: resumeGame)
-                }
-                
-                PlankButtonView(text: "New Game", action: startGame)
-                    .padding(.bottom, 40)
-                
-                PlankButtonView(text: "How to Play", action: {
-                    showHowToModal = true
-                    if !soundEffectsMuted { page2Sound?.play() }
-                })
-                
-                PlankButtonView(text: "Stats", action: {
-                    showStatsModal = true
-                    if !soundEffectsMuted { page2Sound?.play() }
-                })
-                
-                Spacer()
-                
                 ControlBarView(
                     musicPlayer: musicPlayer,
                     gameKitHelper: gameKitHelper
                 )
+                
+                Spacer()
+                
+                ViewThatFits {
+                    VStack {
+                        if game.gameState != .GameOver && game.gameState != .Created {
+                            ResumeButtonView(game: game, resumeGame: resumeGame)
+                        }
+                        
+                        PlankButtonView(text: "New Game", action: startGame)
+                            .padding(.bottom, 40)
+                        
+                        PlankButtonView(text: "How to Play", action: {
+                            showHowToModal = true
+                            if !soundEffectsMuted { page2Sound?.play() }
+                        })
+                        
+                        PlankButtonView(text: "Stats", action: {
+                            showStatsModal = true
+                            if !soundEffectsMuted { page2Sound?.play() }
+                        })
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        
+                        VStack {
+                            PlankButtonView(text: "New Game", action: startGame)
+                                .padding(.bottom, 40)
+                            
+                            PlankButtonView(text: "How to Play", action: {
+                                showHowToModal = true
+                                if !soundEffectsMuted { page2Sound?.play() }
+                            })
+                            
+                            PlankButtonView(text: "Stats", action: {
+                                showStatsModal = true
+                                if !soundEffectsMuted { page2Sound?.play() }
+                            })
+                        }
+
+                        if game.gameState != .GameOver && game.gameState != .Created {
+                            Spacer()
+                            ResumeButtonView(game: game, resumeGame: resumeGame)
+                        }
+                        
+                        Spacer()
+                    }
+                }
+                
+                Spacer()
             }
         }
         .sheet(isPresented: $showHowToModal) {
             HowToView()
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .sheet(isPresented: $showStatsModal) {
             StatsView(gameKitHelper: game.gameKitHelper)
-                .onAppear { gameKitHelper.hideAccessPoint() }
-                .onDisappear { gameKitHelper.showAccessPoint() }
         }
         .onAppear { initializeSounds() }
     }

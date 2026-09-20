@@ -62,23 +62,15 @@ struct ScoundrelApp: App {
                             appState = .Game
                         }
                     )
-                    .onAppear { game.gameKitHelper.showAccessPoint() }
                 case .Game:
                     GameView(
                         game: game,
                         mainMenu: { appState = .MainMenu },
                         randomBackground: { background = backgrounds.randomElement()! }
                     )
-                    .onAppear {
-                        game.gameKitHelper.hideAccessPoint()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            game.gameKitHelper.hideAccessPoint()
-                        }
-                    }
                 }
             }
-            .frame(minHeight: 600)
-            .background(Image(background).resizable())
+            .background(Image(background).resizable().ignoresSafeArea())
             .onAppear {
                 musicPlayer.isPlaying = !backgroundMusicMuted
                 game.gameKitHelper.authenticateLocalPlayer()

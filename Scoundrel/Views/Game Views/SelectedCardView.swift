@@ -29,16 +29,16 @@ struct SelectedCardView: View {
                     switch cardSelected {
                     case 0:
                         CardView(card: room.cards[cardSelected!]!)
-                            .matchedGeometryEffect(id: "Card0", in: animationNamespace)
+                            .matchedGeometryEffect(id: "Card0", in: animationNamespace, properties: .position)
                     case 1:
                         CardView(card: room.cards[cardSelected!]!)
-                            .matchedGeometryEffect(id: "Card1", in: animationNamespace)
+                            .matchedGeometryEffect(id: "Card1", in: animationNamespace, properties: .position)
                     case 2:
                         CardView(card: room.cards[cardSelected!]!)
-                            .matchedGeometryEffect(id: "Card2", in: animationNamespace)
+                            .matchedGeometryEffect(id: "Card2", in: animationNamespace, properties: .position)
                     case 3:
                         CardView(card: room.cards[cardSelected!]!)
-                            .matchedGeometryEffect(id: "Card3", in: animationNamespace)
+                            .matchedGeometryEffect(id: "Card3", in: animationNamespace, properties: .position)
                     default:
                         RoundedRectangle(cornerRadius: 20)
                             .opacity(0)
