@@ -8,11 +8,40 @@
 import SwiftUI
 
 struct HowToView: View {
+    @State var dismiss = {}
+    
     var body: some View {
         ZStack {
             Image("paper")
                 .resizable()
                 .ignoresSafeArea(edges: .all)
+            
+            VStack {
+                ZStack {
+                    HStack {
+                        Button(action: { dismiss() }, label: {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(.foreground)
+                                .frame(width: 40, height: 40)
+                                .font(.system(size: 18))
+                                .bold()
+                                .glassEffect(.regular.interactive(), in: .circle)
+                        })
+                        
+                        Spacer()
+                    }
+                    
+                    Text("How to Play")
+                        .font(.custom("ModernAntiqua-Regular", size: 40))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.top)
+            .zIndex(10)
             
             ScrollView {
                 Text("How to Play")
@@ -20,6 +49,7 @@ struct HowToView: View {
                     .foregroundStyle(.white)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
                     .padding()
+                    .opacity(0)
                 
                 
                 Text("Objective")

@@ -17,6 +17,7 @@ struct SettingsView: View {
     @AppStorage(UserDefaultsKeys().latestVersionNotesRead) private var latestVersionNotesRead: String = "1.0"
     @AppStorage(UserDefaultsKeys().quickPlayEnabled) private var quickPlayEnabled: Bool = false
     
+    @State var dismiss = {}
     @ObservedObject var musicPlayer: MusicPlayer
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -31,79 +32,135 @@ struct SettingsView: View {
                 .ignoresSafeArea(edges: .all)
             
             VStack {
-                Text("Settings")
-                    .font(.custom("ModernAntiqua-Regular", size: 40))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                    .padding(.top)
-                
-                List {
-                    Section {
-                        Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
-                            HStack {
-                                ZStack {
-                                    Image("stoneButton")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    
-                                    if musicPlayer.isPlaying {
-                                        Image(systemName: "music.note")
-                                            .foregroundStyle(.white)
-                                            .font(.title2)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    } else {
-                                        Image("music.note.slash")
-                                            .foregroundStyle(.white)
-                                            .font(.title2)
-                                            .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                    }
-                                }
-                                
-                                Text("Music: \(self.musicPlayer.isPlaying ? "On" : "Off")")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                                    .foregroundStyle(.foreground)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Capsule())
+                ZStack {
+                    HStack {
+                        Button(action: { dismiss() }, label: {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(.foreground)
+                                .frame(width: 40, height: 40)
+                                .font(.system(size: 18))
+                                .bold()
+                                .glassEffect(.regular.interactive(), in: .circle)
                         })
-                        .buttonStyle(.plain)
                         
-                        Button(action: { self.musicPlayer.nextTrack() }, label: {
-                            HStack {
-                                ZStack {
-                                    Image("stoneButton")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    Image(systemName: "forward.end.fill")
-                                        .foregroundStyle(self.musicPlayer.isPlaying ? .white : .black)
+                        Spacer()
+                    }
+                    
+                    Text("Settings")
+                        .font(.custom("ModernAntiqua-Regular", size: 40))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.top)
+            .zIndex(10)
+                
+            List {
+                Rectangle()
+                    .frame(height: 1)
+                    .opacity(0)
+                    .listRowBackground(Rectangle().opacity(0))
+                
+                Section {
+                    Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
+                        HStack {
+                            ZStack {
+                                Image("stoneButton")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                
+                                if musicPlayer.isPlaying {
+                                    Image(systemName: "music.note")
+                                        .foregroundStyle(.white)
                                         .font(.title2)
                                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                }
-                                
-                                if self.musicPlayer.isPlaying {
-                                    Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
-                                        .font(.custom("ModernAntiqua-Regular", size: 18))
                                 } else {
-                                    Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
-                                        .font(.custom("ModernAntiqua-Regular", size: 18))
-                                        .foregroundStyle(.secondary)
+                                    Image("music.note.slash")
+                                        .foregroundStyle(.white)
+                                        .font(.title2)
+                                        .shadow(color: .black, radius: 2, x: 0, y:0 )
                                 }
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Capsule())
-                        })
-                        .buttonStyle(.plain)
+                            
+                            Text("Music: \(self.musicPlayer.isPlaying ? "On" : "Off")")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                                .foregroundStyle(.foreground)
+                        }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .contentShape(Capsule())
-                        .disabled(!self.musicPlayer.isPlaying)
-                        .blur(radius: self.musicPlayer.isPlaying ? 0 : 0.5)
-                    }
-                    .listRowBackground(Rectangle().fill(.thinMaterial))
-                     
-                    Section {
-                        Button(action: { self.soundEffectsMuted.toggle() },label: {
+                    })
+                    .buttonStyle(.plain)
+                    
+                    Button(action: { self.musicPlayer.nextTrack() }, label: {
+                        HStack {
+                            ZStack {
+                                Image("stoneButton")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                Image(systemName: "forward.end.fill")
+                                    .foregroundStyle(self.musicPlayer.isPlaying ? .white : .black)
+                                    .font(.title2)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            }
+                            
+                            if self.musicPlayer.isPlaying {
+                                Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
+                                    .font(.custom("ModernAntiqua-Regular", size: 18))
+                            } else {
+                                Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
+                                    .font(.custom("ModernAntiqua-Regular", size: 18))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Capsule())
+                    })
+                    .buttonStyle(.plain)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Capsule())
+                    .disabled(!self.musicPlayer.isPlaying)
+                    .blur(radius: self.musicPlayer.isPlaying ? 0 : 0.5)
+                }
+                .listRowBackground(Rectangle().fill(.thinMaterial))
+                 
+                Section {
+                    Button(action: { self.soundEffectsMuted.toggle() },label: {
+                        HStack {
+                            ZStack {
+                                Image("stoneButton")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                
+                                if !soundEffectsMuted {
+                                    Image(systemName: "speaker.wave.2.fill")
+                                        .foregroundStyle(.white)
+                                        .font(.title2)
+                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                } else {
+                                    Image(systemName: "speaker.slash.fill")
+                                        .foregroundStyle(.white)
+                                        .font(.title2)
+                                        .shadow(color: .black, radius: 2, x: 0, y:0 )
+                                }
+                            }
+                            
+                            Text("Sound Effects: \(!self.soundEffectsMuted ? "On" : "Off")")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                                .foregroundStyle(.foreground)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Capsule())
+                    })
+                    .buttonStyle(.plain)
+                    
+                    if UIDevice.current.model == "iPhone" {
+                        Button(action: { self.hapticsEnabled.toggle() },label: {
                             HStack {
                                 ZStack {
                                     Image("stoneButton")
@@ -111,20 +168,20 @@ struct SettingsView: View {
                                         .frame(width: 50, height: 50)
                                         .shadow(color: .black, radius: 2, x: 0, y: 0)
                                     
-                                    if !soundEffectsMuted {
-                                        Image(systemName: "speaker.wave.2.fill")
+                                    if hapticsEnabled {
+                                        Image(systemName: "hand.tap.fill")
                                             .foregroundStyle(.white)
                                             .font(.title2)
                                             .shadow(color: .black, radius: 2, x: 0, y: 0)
                                     } else {
-                                        Image(systemName: "speaker.slash.fill")
+                                        Image("hand.tap.slash.fill")
                                             .foregroundStyle(.white)
                                             .font(.title2)
                                             .shadow(color: .black, radius: 2, x: 0, y:0 )
                                     }
                                 }
                                 
-                                Text("Sound Effects: \(!self.soundEffectsMuted ? "On" : "Off")")
+                                Text("Haptic Feedback: \(self.hapticsEnabled ? "On" : "Off")")
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
                                     .foregroundStyle(.foreground)
                             }
@@ -132,163 +189,131 @@ struct SettingsView: View {
                             .contentShape(Capsule())
                         })
                         .buttonStyle(.plain)
-                        
-                        if UIDevice.current.model == "iPhone" {
-                            Button(action: { self.hapticsEnabled.toggle() },label: {
-                                HStack {
-                                    ZStack {
-                                        Image("stoneButton")
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        
-                                        if hapticsEnabled {
-                                            Image(systemName: "hand.tap.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        } else {
-                                            Image("hand.tap.slash.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                        }
-                                    }
-                                    
-                                    Text("Haptic Feedback: \(self.hapticsEnabled ? "On" : "Off")")
-                                        .font(.custom("ModernAntiqua-Regular", size: 20))
-                                        .foregroundStyle(.foreground)
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .contentShape(Capsule())
-                            })
-                            .buttonStyle(.plain)
-                        }
                     }
-                    .listRowBackground(Rectangle().fill(.thinMaterial))
-                    
-                    Section {
-                        Button(action: { self.quickPlayEnabled.toggle() },label: {
-                            VStack {
-                                HStack {
-                                    ZStack {
-                                        Image("stoneButton")
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        
-                                        if quickPlayEnabled {
-                                            Image(systemName: "bolt.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        } else {
-                                            Image(systemName: "bolt.slash.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                        }
-                                    }
-                                    
-                                    Text("Quick Play: \(self.quickPlayEnabled ? "On" : "Off")")
-                                        .font(.custom("ModernAntiqua-Regular", size: 20))
-                                        .foregroundStyle(.foreground)
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .contentShape(Capsule())
-                                
-                                Text("Bypass the confirmation dialog when selecting a card")
-                                    .font(.custom("ModernAntiqua-Regular", size: 15))
-                                    .foregroundStyle(.secondary)
-                            }
-                        })
-                        .buttonStyle(.plain)
-                    }
-                    .listRowBackground(Rectangle().fill(.thinMaterial))
-                    
-                    Section {
-                        Button(action: { withAnimation { showCredits.toggle() } }, label: {
-                            HStack {
-                                Text("Credits")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .rotationEffect(.degrees(showCredits ? 90 : 0))
-                            }
-                            .foregroundStyle(.foreground)
-                        })
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        if showCredits {
-                            CreditsView()
-                                .listRowBackground(Rectangle().fill(.regularMaterial))
-                        }
-                    }
-                    
-                    Section {
-                        Button(action: { showMail = true }, label: {
-                            HStack {
-                                Text("Send Feedback")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                                
-                                Spacer()
-                                
-                                Image(systemName: "envelope")
-                            }
-                            .contentShape(Capsule())
-                        })
-                        .buttonStyle(.plain)
-                        .sheet(isPresented: $showMail) { MailView() }
-                        
-                        Button(action: { requestReview() }, label: {
-                            HStack {
-                                Text("Rate Scoundrel Solitaire")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                                
-                                Spacer()
-                                
-                                Image(systemName: "star")
-                            }
-                            .contentShape(Capsule())
-                        })
-                        .buttonStyle(.plain)
-                    }
-                    .listRowBackground(Rectangle().fill(.thinMaterial))
-                    
-                    Section {
-                        HStack {
-                            Text("Privacy Policy")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            
-                            Spacer()
-                            
-                            Image(systemName: "link")
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
-                        }
-                        
-                        HStack {
-                            Text("Support")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            
-                            Spacer()
-                            
-                            Image(systemName: "link")
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
-                        }
-                    }
-                    .listRowBackground(Rectangle().fill(.thinMaterial))
                 }
-                .scrollContentBackground(.hidden)
-                .scrollIndicators(.hidden)
+                .listRowBackground(Rectangle().fill(.thinMaterial))
+                
+                Section {
+                    Button(action: { self.quickPlayEnabled.toggle() },label: {
+                        VStack {
+                            HStack {
+                                ZStack {
+                                    Image("stoneButton")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                    
+                                    if quickPlayEnabled {
+                                        Image(systemName: "bolt.fill")
+                                            .foregroundStyle(.white)
+                                            .font(.title2)
+                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                    } else {
+                                        Image(systemName: "bolt.slash.fill")
+                                            .foregroundStyle(.white)
+                                            .font(.title2)
+                                            .shadow(color: .black, radius: 2, x: 0, y:0 )
+                                    }
+                                }
+                                
+                                Text("Quick Play: \(self.quickPlayEnabled ? "On" : "Off")")
+                                    .font(.custom("ModernAntiqua-Regular", size: 20))
+                                    .foregroundStyle(.foreground)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Capsule())
+                            
+                            Text("Bypass the confirmation dialog when selecting a card")
+                                .font(.custom("ModernAntiqua-Regular", size: 15))
+                                .foregroundStyle(.secondary)
+                        }
+                    })
+                    .buttonStyle(.plain)
+                }
+                .listRowBackground(Rectangle().fill(.thinMaterial))
+                
+                Section {
+                    Button(action: { withAnimation { showCredits.toggle() } }, label: {
+                        HStack {
+                            Text("Credits")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .rotationEffect(.degrees(showCredits ? 90 : 0))
+                        }
+                        .foregroundStyle(.foreground)
+                    })
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                    
+                    if showCredits {
+                        CreditsView()
+                            .listRowBackground(Rectangle().fill(.regularMaterial))
+                    }
+                }
+                
+                Section {
+                    Button(action: { showMail = true }, label: {
+                        HStack {
+                            Text("Send Feedback")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            
+                            Spacer()
+                            
+                            Image(systemName: "envelope")
+                        }
+                        .contentShape(Capsule())
+                    })
+                    .buttonStyle(.plain)
+                    .sheet(isPresented: $showMail) { MailView() }
+                    
+                    Button(action: { requestReview() }, label: {
+                        HStack {
+                            Text("Rate Scoundrel Solitaire")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                            
+                            Spacer()
+                            
+                            Image(systemName: "star")
+                        }
+                        .contentShape(Capsule())
+                    })
+                    .buttonStyle(.plain)
+                }
+                .listRowBackground(Rectangle().fill(.thinMaterial))
+                
+                Section {
+                    HStack {
+                        Text("Privacy Policy")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        
+                        Spacer()
+                        
+                        Image(systemName: "link")
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/privacypolicy/")!)
+                    }
+                    
+                    HStack {
+                        Text("Support")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        
+                        Spacer()
+                        
+                        Image(systemName: "link")
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        openURL(URL(string: "https://d3.codes/apps/scoundrelsolitaire/support/")!)
+                    }
+                }
+                .listRowBackground(Rectangle().fill(.thinMaterial))
             }
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
         }
     }
 }

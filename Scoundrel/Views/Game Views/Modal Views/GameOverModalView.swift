@@ -33,24 +33,6 @@ struct GameOverModalView: View {
                 .cornerRadius(20)
             
             VStack {
-//                HStack {
-//                    Spacer()
-//                    ShareLink(item: getShareItem(), preview: SharePreview(
-//                        getSharePreviewTitle(),
-//                        image: Image("logo")
-//                    )) {
-//                        Image(systemName: "square.and.arrow.up")
-//                            .foregroundStyle(.teal)
-//                            .frame(width: 40, height: 40)
-//                            .font(.system(size: 18))
-//                            .bold()
-//                            .glassEffect(.regular.interactive(), in: .circle)
-//                    }
-//                }
-//                .padding(.top, 20)
-//                .padding(.trailing, 20)
-//                .padding(.bottom, 1)
-                
                 HStack {
                     Text("Game Over")
                         .font(.custom("MorrisRoman-Black", size: 45))
@@ -64,7 +46,7 @@ struct GameOverModalView: View {
                         image: Image("logo")
                     )) {
                         Image(systemName: "square.and.arrow.up")
-                            .foregroundStyle(.teal)
+                            .foregroundStyle(.foreground)
                             .frame(width: 40, height: 40)
                             .font(.system(size: 18))
                             .bold()

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct StatsView: View {
+    @State var dismiss = {}
     @ObservedObject var gameKitHelper: GameKitHelper
     
     let ubiquitousHelper = UbiquitousHelper()
@@ -95,6 +96,15 @@ struct StatsView: View {
             VStack {
                 ZStack {
                     HStack {
+                        Button(action: { dismiss() }, label: {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(.foreground)
+                                .frame(width: 40, height: 40)
+                                .font(.system(size: 18))
+                                .bold()
+                                .glassEffect(.regular.interactive(), in: .circle)
+                        })
+                        
                         Spacer()
                         
                         ShareLink(item: getShareItem(), preview: SharePreview(
@@ -102,169 +112,174 @@ struct StatsView: View {
                             image: Image("logo")
                         )) {
                             Image(systemName: "square.and.arrow.up")
-                                .foregroundStyle(.teal)
+                                .foregroundStyle(.foreground)
                                 .frame(width: 40, height: 40)
                                 .font(.system(size: 18))
                                 .bold()
                                 .glassEffect(.regular.interactive(), in: .circle)
                         }
                     }
-                    .padding(.trailing, 50)
-                    .padding(.top, 10)
                     
                     Text("Stats")
                         .font(.custom("ModernAntiqua-Regular", size: 40))
                         .foregroundStyle(.white)
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        .padding(.top)
                 }
                 
                 Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.top)
+            .zIndex(10)
                 
-                List {
-                    Section {
-                        HStack {
-                            Text("Games Played")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(gamesAbandoned + gamesCompleted)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        HStack {
-                            Text("Games Abandoned")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(gamesAbandoned)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        HStack {
-                            Text("Games Completed")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(gamesCompleted)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
+            List {
+                Rectangle()
+                    .frame(height: 1)
+                    .opacity(0)
+                    .listRowBackground(Rectangle().opacity(0))
+                
+                Section {
+                    HStack {
+                        Text("Games Played")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(gamesAbandoned + gamesCompleted)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
                     }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Section {
-                        HStack {
-                            Text("Rooms Fled")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(roomsFled)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        HStack {
-                            Text("Dungeons Beat")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(dungeonsBeaten)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                    HStack {
+                        Text("Games Abandoned")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(gamesAbandoned)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
                     }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Section {
-                        HStack {
-                            Text("Average Score")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(averageScore)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
-                        
-                        HStack {
-                            Text("High Score")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                            Spacer()
-                            Text("\(highScore)")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                        }
-                        .listRowBackground(Rectangle().fill(.thinMaterial))
+                    HStack {
+                        Text("Games Completed")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(gamesCompleted)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
                     }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                }
+                
+                Section {
+                    HStack {
+                        Text("Rooms Fled")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(roomsFled)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                    }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
                     
-                    Section {
-                        HStack {
-                            Text("Leaderboard Rank")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                                .foregroundStyle(leaderboardRank == nil ? .secondary : .primary)
-                            Spacer()
-                            if leaderboardRank != nil {
-                                if leaderboardRank == 1 {
-                                    Image("goldMedal")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                } else if leaderboardRank == 2 {
-                                    Image("silverMedal")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                } else if leaderboardRank == 3 {
-                                    Image("bronzeMedal")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                }
-                                
-                                Text("\(leaderboardRank!)")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                            } else {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(.teal)
-                            }
-                        }
-                        .listRowBackground(Rectangle().fill(leaderboardRank == nil ? .ultraThinMaterial : .thinMaterial))
-                        .onTapGesture {
-                            if leaderboardRank == nil {
-                                showingRankPopover = true
-                            }
-                        }
-                        .popover(isPresented: $showingRankPopover) {
-                            Text("Sign in to Game Center to view Rank")
-                                .fixedSize(horizontal: false, vertical: true)
-                                .font(.headline)
-                                .padding()
-                                .presentationCompactAdaptation(.popover)
-                        }
-                        
-                        HStack {
-                            Text("Achievements Unlocked")
-                                .font(.custom("ModernAntiqua-Regular", size: 20))
-                                .foregroundStyle(achievementsUnlocked == nil ? .secondary : .primary)
-                            Spacer()
-                            if achievementsUnlocked != nil {
-                                Text("\(achievementsUnlocked!)")
-                                    .font(.custom("ModernAntiqua-Regular", size: 20))
-                            } else {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(.teal)
+                    HStack {
+                        Text("Dungeons Beat")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(dungeonsBeaten)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                    }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                }
+                
+                Section {
+                    HStack {
+                        Text("Average Score")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(averageScore)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                    }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                    
+                    HStack {
+                        Text("High Score")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                        Spacer()
+                        Text("\(highScore)")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                    }
+                    .listRowBackground(Rectangle().fill(.thinMaterial))
+                }
+                
+                Section {
+                    HStack {
+                        Text("Leaderboard Rank")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                            .foregroundStyle(leaderboardRank == nil ? .secondary : .primary)
+                        Spacer()
+                        if leaderboardRank != nil {
+                            if leaderboardRank == 1 {
+                                Image("goldMedal")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                            } else if leaderboardRank == 2 {
+                                Image("silverMedal")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                            } else if leaderboardRank == 3 {
+                                Image("bronzeMedal")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
                             }
                             
-                        }
-                        .listRowBackground(Rectangle().fill(achievementsUnlocked == nil ? .ultraThinMaterial : .thinMaterial))
-                        .onTapGesture {
-                            if achievementsUnlocked == nil {
-                                showingAchievementsPopover = true
-                            }
-                        }
-                        .popover(isPresented: $showingAchievementsPopover) {
-                            Text("Sign in to Game Center to view Achievements")
-                                .fixedSize(horizontal: false, vertical: true)
-                                .font(.headline)
-                                .padding()
-                                .presentationCompactAdaptation(.popover)
+                            Text("\(leaderboardRank!)")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                        } else {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.teal)
                         }
                     }
+                    .listRowBackground(Rectangle().fill(leaderboardRank == nil ? .ultraThinMaterial : .thinMaterial))
+                    .onTapGesture {
+                        if leaderboardRank == nil {
+                            showingRankPopover = true
+                        }
+                    }
+                    .popover(isPresented: $showingRankPopover) {
+                        Text("Sign in to Game Center to view Rank")
+                            .fixedSize(horizontal: false, vertical: true)
+                            .font(.headline)
+                            .padding()
+                            .presentationCompactAdaptation(.popover)
+                    }
+                    
+                    HStack {
+                        Text("Achievements Unlocked")
+                            .font(.custom("ModernAntiqua-Regular", size: 20))
+                            .foregroundStyle(achievementsUnlocked == nil ? .secondary : .primary)
+                        Spacer()
+                        if achievementsUnlocked != nil {
+                            Text("\(achievementsUnlocked!)")
+                                .font(.custom("ModernAntiqua-Regular", size: 20))
+                        } else {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.teal)
+                        }
+                        
+                    }
+                    .listRowBackground(Rectangle().fill(achievementsUnlocked == nil ? .ultraThinMaterial : .thinMaterial))
+                    .onTapGesture {
+                        if achievementsUnlocked == nil {
+                            showingAchievementsPopover = true
+                        }
+                    }
+                    .popover(isPresented: $showingAchievementsPopover) {
+                        Text("Sign in to Game Center to view Achievements")
+                            .fixedSize(horizontal: false, vertical: true)
+                            .font(.headline)
+                            .padding()
+                            .presentationCompactAdaptation(.popover)
+                    }
                 }
-                .scrollContentBackground(.hidden)
-                .scrollIndicators(.hidden)
             }
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
         }
         .onAppear { fetchStats() }
     }
@@ -275,6 +290,7 @@ struct StatsView: View {
         
         var body: some View {
             StatsView(
+                dismiss: {},
                 gameKitHelper: GameKitHelper()
             )
         }
