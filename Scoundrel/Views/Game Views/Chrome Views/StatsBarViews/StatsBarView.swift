@@ -12,7 +12,9 @@ struct StatsBarView: View {
     @ObservedObject var room: Room
     var animationNamespace: Namespace.ID
     
-    var body: some View {
+    var foldFrame: CGRect? = nil
+    
+    private var statsBarLayout: some View {
         ViewThatFits(in: .horizontal) {
             HStack {
                 HealthBarView(
@@ -70,6 +72,38 @@ struct StatsBarView: View {
             }
         }
         .frame(minHeight: 50)
+    }
+    
+    private func foldAwareStatsBarLayout(foldFrame: CGRect) -> some View {
+        HStack(spacing: 0) {
+            HealthBarView(
+                room: room,
+                player: player,
+                animationNamespace: animationNamespace
+            )
+            .padding(.horizontal)
+            .frame(width: foldFrame.minX)
+
+            Color.clear
+                .frame(width: foldFrame.width)
+
+            WeaponBarView(
+                player: player,
+                room: room,
+                animationNamespace: animationNamespace
+            )
+            .padding(.horizontal)
+            .frame(width: foldFrame.minX)
+        }
+        .frame(minHeight: 50)
+    }
+    
+    var body: some View {
+        if let foldFrame {
+            foldAwareStatsBarLayout(foldFrame: foldFrame)
+        } else {
+            statsBarLayout
+        }
     }
 }
 

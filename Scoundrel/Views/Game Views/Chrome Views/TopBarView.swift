@@ -18,8 +18,7 @@ struct TopBarView: View {
     @State var showingDeckCountPopover: Bool = false
     @State var showingDungeonCountPopover: Bool = false
     
-    var body: some View {
-        HStack {
+    private var pauseButton: some View {
             Button(action: { pause() }, label: {
                 ZStack {
                     Image("stoneButton")
@@ -34,7 +33,9 @@ struct TopBarView: View {
             })
             .disabled(game.room.isDealingCards)
             .blur(radius: !game.room.isDealingCards ? 0 : 0.5)
-            
+    }
+
+    private var deckButton: some View {
             ZStack {
                 ForEach(0..<4) { index in
                     if game.room.cards[index] == nil && game.room.destinations[index] == .deck {
@@ -84,7 +85,9 @@ struct TopBarView: View {
                     .padding()
                     .presentationCompactAdaptation(.popover)
             }
-            
+    }
+
+    private var scoreView: some View {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .frame(height: 50)
@@ -100,7 +103,9 @@ struct TopBarView: View {
                 }
             }
             .frame(minWidth: 50, maxWidth: 200)
-            
+    }
+
+    private var dungeonButton: some View {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .frame(width: 50, height: 50)
@@ -122,7 +127,9 @@ struct TopBarView: View {
                     .padding()
                     .presentationCompactAdaptation(.popover)
             }
-            
+    }
+
+    private var fleeButton: some View {
             ZStack {
                 Button(action: {
                     selectedCardIndex = nil
@@ -149,9 +156,34 @@ struct TopBarView: View {
                         .opacity(0.5)
                 }
             }
+    }
+
+    private func topBarLayout(addSpacer: Bool) -> some View {
+        HStack {
+            pauseButton
+            deckButton
+            if addSpacer {
+                Spacer()
+            }
+            scoreView
+            dungeonButton
+            fleeButton
         }
         .padding(.horizontal)
-        .frame(maxWidth: .infinity, maxHeight: 80)
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion, fold.frame.height > fold.frame.width {
+                topBarLayout(addSpacer: true)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                topBarLayout(addSpacer: false)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 80)
     }
 }
 
