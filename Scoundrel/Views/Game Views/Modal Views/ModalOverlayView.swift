@@ -133,7 +133,7 @@ struct ModalOverlayView: View {
                         .transition(.opacityAndMoveFromBottom)
                     } else {
                         dungeonBeatModal(isLandscape: isLandscape)
-                        .transition(.opacityAndMoveFromBottom)
+                            .transition(.opacityAndMoveFromBottom)
                     }
                 case .GameOver:
                     if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion {
@@ -144,14 +144,14 @@ struct ModalOverlayView: View {
                         .transition(.opacityAndMoveFromBottom)
                     } else {
                         gameOverModal(isLandscape: isLandscape)
-                        .transition(.opacityAndMoveFromBottom)
+                            .transition(.opacityAndMoveFromBottom)
                     }
                 case .Paused:
                     if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion {
                         foldAwareModal(in: geometry, fold: fold) {
                             pauseModal
                         }
-                            .transition(.opacityAndMoveFromBottom)
+                        .transition(.opacityAndMoveFromBottom)
                     } else {
                         pauseModal
                             .transition(.opacityAndMoveFromBottom)

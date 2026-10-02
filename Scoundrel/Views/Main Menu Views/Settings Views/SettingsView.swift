@@ -298,6 +298,14 @@ struct SettingsView: View {
                         }
                     }
                     .listRowBackground(Rectangle().fill(.thinMaterial))
+                    
+                    HStack {
+                        Spacer()
+                        Text("\(appVersion != nil ? "\(appVersion!)" : "")")
+                            .font(.custom("MorrisRoman-Black", size: 20))
+                        Spacer()
+                    }
+                    .listRowBackground(Rectangle().fill(.clear))
                 }
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)

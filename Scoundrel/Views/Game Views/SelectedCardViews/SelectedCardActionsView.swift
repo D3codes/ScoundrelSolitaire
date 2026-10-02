@@ -17,50 +17,20 @@ struct SelectedCardActionsView: View {
     var secondAction: () -> Void
     
     var body: some View {
-        Button(action: { if cardSelected != nil { firstAction() } }, label: {
-            ZStack {
-                Image("plank1")
-                    .resizable()
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                HStack {
-                    Text(
-                        cardSelected == nil ? ""
-                        : room.cards[cardSelected!]?.getFirstButtonText() ?? ""
-                    )
-                    .font(.custom("ModernAntiqua-Regular", size: 25))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black, radius: 2, x: 0, y: 0)
-                    
-                    if cardSelected != nil && room.cards[cardSelected!]?.suit == .monster {
-                        ZStack {
-                            Image("heart1")
-                                .resizable()
-                                .frame(width: 45, height: 45)
-                            
-                            Text("-\(room.cards[cardSelected!]?.strength ?? 0)")
-                                .font(.custom("ModernAntiqua-Regular", size: 25))
-                                .foregroundStyle(.white)
-                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                        }
-                    }
-                }
-                .padding(.horizontal)
-            }
-        })
-        .frame(width: 300, height: 50)
-        
-        if cardSelected != nil && !(room.cards[cardSelected!]?.getSecondButtonText() ?? "").isEmpty && player.canAttackWithWeapon(monsterStrength: room.cards[cardSelected!]!.strength) {
-            Button(action: { secondAction() }, label: {
+        VStack {
+            Button(action: { if cardSelected != nil { firstAction() } }, label: {
                 ZStack {
                     Image("plank1")
                         .resizable()
                         .shadow(color: .black, radius: 2, x: 0, y: 0)
-                    
                     HStack {
-                        Text(room.cards[cardSelected!]?.getSecondButtonText() ?? "")
-                            .font(.custom("ModernAntiqua-Regular", size: 25))
-                            .foregroundStyle(.white)
-                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        Text(
+                            cardSelected == nil ? ""
+                            : room.cards[cardSelected!]?.getFirstButtonText() ?? ""
+                        )
+                        .font(.custom("ModernAntiqua-Regular", size: 25))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black, radius: 2, x: 0, y: 0)
                         
                         if cardSelected != nil && room.cards[cardSelected!]?.suit == .monster {
                             ZStack {
@@ -68,7 +38,7 @@ struct SelectedCardActionsView: View {
                                     .resizable()
                                     .frame(width: 45, height: 45)
                                 
-                                Text("-\(max((room.cards[cardSelected!]?.strength ?? 0) - player.weapon!, 0))")
+                                Text("-\(room.cards[cardSelected!]?.strength ?? 0)")
                                     .font(.custom("ModernAntiqua-Regular", size: 25))
                                     .foregroundStyle(.white)
                                     .shadow(color: .black, radius: 2, x: 0, y: 0)
@@ -79,6 +49,38 @@ struct SelectedCardActionsView: View {
                 }
             })
             .frame(width: 300, height: 50)
+            
+            if cardSelected != nil && !(room.cards[cardSelected!]?.getSecondButtonText() ?? "").isEmpty && player.canAttackWithWeapon(monsterStrength: room.cards[cardSelected!]!.strength) {
+                Button(action: { secondAction() }, label: {
+                    ZStack {
+                        Image("plank1")
+                            .resizable()
+                            .shadow(color: .black, radius: 2, x: 0, y: 0)
+                        
+                        HStack {
+                            Text(room.cards[cardSelected!]?.getSecondButtonText() ?? "")
+                                .font(.custom("ModernAntiqua-Regular", size: 25))
+                                .foregroundStyle(.white)
+                                .shadow(color: .black, radius: 2, x: 0, y: 0)
+                            
+                            if cardSelected != nil && room.cards[cardSelected!]?.suit == .monster {
+                                ZStack {
+                                    Image("heart1")
+                                        .resizable()
+                                        .frame(width: 45, height: 45)
+                                    
+                                    Text("-\(max((room.cards[cardSelected!]?.strength ?? 0) - player.weapon!, 0))")
+                                        .font(.custom("ModernAntiqua-Regular", size: 25))
+                                        .foregroundStyle(.white)
+                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                })
+                .frame(width: 300, height: 50)
+            }
         }
     }
 }

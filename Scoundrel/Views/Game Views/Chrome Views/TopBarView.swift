@@ -170,6 +170,7 @@ struct TopBarView: View {
             fleeButton
         }
         .padding(.horizontal)
+        .padding(.trailing, addSpacer ? 40 : 0)
     }
 
     var body: some View {

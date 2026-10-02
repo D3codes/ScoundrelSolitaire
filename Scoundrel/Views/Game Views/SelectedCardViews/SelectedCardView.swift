@@ -69,6 +69,7 @@ struct SelectedCardView: View {
                     secondAction: secondAction
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .padding(.bottom, 100)
             }
         }
     }
