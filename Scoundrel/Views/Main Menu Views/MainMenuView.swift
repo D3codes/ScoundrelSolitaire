@@ -95,20 +95,29 @@ struct MainMenuView: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                ControlBarView(
-                    musicPlayer: musicPlayer,
-                    gameKitHelper: gameKitHelper
-                )
+        GeometryReader { geometry in
+            if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion {
+                let isLandscape: Bool = fold.frame.height > fold.frame.width
                 
-                GeometryReader { geometry in
-                    if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion {
-                        foldAwareMenu(in: geometry, fold: fold)
-                    } else {
-                        menuActions
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
+                VStack {
+                    ControlBarView(
+                        musicPlayer: musicPlayer,
+                        gameKitHelper: gameKitHelper,
+                        showSpacer: isLandscape
+                    )
+                    
+                    foldAwareMenu(in: geometry, fold: fold)
+                }
+            } else {
+                VStack {
+                    ControlBarView(
+                        musicPlayer: musicPlayer,
+                        gameKitHelper: gameKitHelper,
+                        showSpacer: false
+                    )
+                    
+                    menuActions
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         }

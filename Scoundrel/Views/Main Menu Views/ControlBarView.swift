@@ -15,6 +15,8 @@ struct ControlBarView: View {
     @ObservedObject var musicPlayer: MusicPlayer
     @ObservedObject var gameKitHelper: GameKitHelper
     
+    var showSpacer: Bool
+    
     @State var page2Sound: AVAudioPlayer?
     
     func initializeSounds() {
@@ -31,8 +33,6 @@ struct ControlBarView: View {
     var body: some View {
         ZStack {
             HStack {
-                Spacer()
-                
                 Button(action: {
                     if !soundEffectsMuted { page2Sound?.play() }
                     isPresentingSettings = true
@@ -50,14 +50,15 @@ struct ControlBarView: View {
                     }
                 })
                 
-                Spacer()
+                if showSpacer {
+                    Spacer()
+                }
                 
                 Text("SCOUNDREL")
                     .font(.custom("MorrisRoman-Black", size: 30))
                     .foregroundStyle(.white)
                     .shadow(color: .black, radius: 2, x: 0, y: 0)
-                
-                Spacer()
+                    .padding(.horizontal)
                 
                 Button(action: {
                     GKAccessPoint.shared.trigger(
@@ -92,10 +93,10 @@ struct ControlBarView: View {
                         .padding()
                         .presentationCompactAdaptation(.popover)
                 }
-                
-                Spacer()
             }
         }
+        .padding(.horizontal)
+        .padding(.leading, showSpacer ? 20 : 0)
         .frame(maxWidth: .infinity, maxHeight: 80)
         .background(
             Image("stoneSlab2")
@@ -118,7 +119,8 @@ struct ControlBarView: View {
         var body: some View {
             ControlBarView(
                 musicPlayer: musicPlayer,
-                gameKitHelper: gameKitHelper
+                gameKitHelper: gameKitHelper,
+                showSpacer: false
             )
         }
     }
