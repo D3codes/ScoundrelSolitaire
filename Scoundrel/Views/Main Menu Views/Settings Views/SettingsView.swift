@@ -54,24 +54,11 @@ struct SettingsView: View {
                     Section {
                         Button(action: { self.musicPlayer.isPlaying.toggle() },label: {
                             HStack {
-                                ZStack {
-                                    Image("stoneButton")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    
-                                    if musicPlayer.isPlaying {
-                                        Image(systemName: "music.note")
-                                            .foregroundStyle(.white)
-                                            .font(.title2)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    } else {
-                                        Image("music.note.slash")
-                                            .foregroundStyle(.white)
-                                            .font(.title2)
-                                            .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                    }
-                                }
+                                StoneIconView(
+                                    enabledImage: Image(systemName: "music.note"),
+                                    disabledImage: Image("music.note.slash"),
+                                    isEnabled: musicPlayer.isPlaying
+                                )
                                 
                                 Text("Music: \(self.musicPlayer.isPlaying ? "On" : "Off")")
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
@@ -84,16 +71,9 @@ struct SettingsView: View {
                         
                         Button(action: { self.musicPlayer.nextTrack() }, label: {
                             HStack {
-                                ZStack {
-                                    Image("stoneButton")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    Image(systemName: "forward.end.fill")
-                                        .foregroundStyle(self.musicPlayer.isPlaying ? .white : .black)
-                                        .font(.title2)
-                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                }
+                                StoneIconView(
+                                    enabledImage: Image(systemName: "forward.end.fill")
+                                )
                                 
                                 if self.musicPlayer.isPlaying {
                                     Text(self.musicPlayer.songs[self.musicPlayer.currentTrackIndex])
@@ -118,24 +98,11 @@ struct SettingsView: View {
                     Section {
                         Button(action: { self.soundEffectsMuted.toggle() },label: {
                             HStack {
-                                ZStack {
-                                    Image("stoneButton")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    
-                                    if !soundEffectsMuted {
-                                        Image(systemName: "speaker.wave.2.fill")
-                                            .foregroundStyle(.white)
-                                            .font(.title2)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                    } else {
-                                        Image(systemName: "speaker.slash.fill")
-                                            .foregroundStyle(.white)
-                                            .font(.title2)
-                                            .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                    }
-                                }
+                                StoneIconView(
+                                    enabledImage: Image(systemName: "speaker.wave.2.fill"),
+                                    disabledImage: Image(systemName: "speaker.slash.fill"),
+                                    isEnabled: !soundEffectsMuted
+                                )
                                 
                                 Text("Sound Effects: \(!self.soundEffectsMuted ? "On" : "Off")")
                                     .font(.custom("ModernAntiqua-Regular", size: 20))
@@ -149,24 +116,11 @@ struct SettingsView: View {
                         if UIDevice.current.model == "iPhone" {
                             Button(action: { self.hapticsEnabled.toggle() },label: {
                                 HStack {
-                                    ZStack {
-                                        Image("stoneButton")
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        
-                                        if hapticsEnabled {
-                                            Image(systemName: "hand.tap.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        } else {
-                                            Image("hand.tap.slash.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                        }
-                                    }
+                                    StoneIconView(
+                                        enabledImage: Image(systemName: "hand.tap.fill"),
+                                        disabledImage: Image("hand.tap.slash.fill"),
+                                        isEnabled: hapticsEnabled
+                                    )
                                     
                                     Text("Haptic Feedback: \(self.hapticsEnabled ? "On" : "Off")")
                                         .font(.custom("ModernAntiqua-Regular", size: 20))
@@ -184,24 +138,11 @@ struct SettingsView: View {
                         Button(action: { self.quickPlayEnabled.toggle() },label: {
                             VStack {
                                 HStack {
-                                    ZStack {
-                                        Image("stoneButton")
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        
-                                        if quickPlayEnabled {
-                                            Image(systemName: "bolt.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y: 0)
-                                        } else {
-                                            Image(systemName: "bolt.slash.fill")
-                                                .foregroundStyle(.white)
-                                                .font(.title2)
-                                                .shadow(color: .black, radius: 2, x: 0, y:0 )
-                                        }
-                                    }
+                                    StoneIconView(
+                                        enabledImage: Image(systemName: "bolt.fill"),
+                                        disabledImage: Image(systemName: "bolt.slash.fill"),
+                                        isEnabled: quickPlayEnabled
+                                    )
                                     
                                     Text("Quick Play: \(self.quickPlayEnabled ? "On" : "Off")")
                                         .font(.custom("ModernAntiqua-Regular", size: 20))
@@ -227,16 +168,6 @@ struct SettingsView: View {
                         .listRowBackground(Rectangle().fill(.thinMaterial))
                         .foregroundStyle(.foreground)
                     }
-                    
-//                    Section {
-//                        ForEach(ThemeHelper.Theme.allCases, id: \.rawValue) { theme in
-//                            Button(action: { selectedTheme = theme }, label: {
-//                                ThemePreviewView(theme: theme, isSelected: selectedTheme == theme)
-//                            })
-//                            .listRowBackground(Rectangle().fill(.thinMaterial))
-//                            .foregroundStyle(.foreground)
-//                        }
-//                    }
                     
                     Section {
                         Button(action: { withAnimation { showCredits.toggle() } }, label: {
