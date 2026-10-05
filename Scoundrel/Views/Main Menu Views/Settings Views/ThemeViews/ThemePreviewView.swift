@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 
 struct ThemePreviewView: View {
+    private let cardDesignSize = CGSize(width: 180, height: 240)
+
     var theme: ThemeHelper.Theme
     var isSelected: Bool
     
@@ -31,9 +33,9 @@ struct ThemePreviewView: View {
             }
             
             HStack {
-                CardView(card: Card(suit: .monster, strength: monsterStrength), themePreview: theme)
-                CardView(card: Card(suit: .weapon, strength: weaponStrength), themePreview: theme)
-                CardView(card: Card(suit: .healthPotion, strength: healthStrength), themePreview: theme)
+                scaledCard(suit: .monster, strength: monsterStrength)
+                scaledCard(suit: .weapon, strength: weaponStrength)
+                scaledCard(suit: .healthPotion, strength: healthStrength)
             }
         }
         .onAppear {
@@ -43,6 +45,20 @@ struct ThemePreviewView: View {
                 self.healthStrength = Int.random(in: 2...10)
             }
         }
+    }
+
+    private func scaledCard(suit: Card.Suit, strength: Int) -> some View {
+        GeometryReader { proxy in
+            let scale = proxy.size.width / cardDesignSize.width
+
+            CardView(
+                card: Card(suit: suit, strength: strength),
+                themePreview: theme
+            )
+            .frame(width: cardDesignSize.width, height: cardDesignSize.height)
+            .scaleEffect(scale, anchor: .topLeading)
+        }
+        .aspectRatio(cardDesignSize.width / cardDesignSize.height, contentMode: .fit)
     }
 }
 

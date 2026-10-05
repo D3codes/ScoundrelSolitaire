@@ -18,40 +18,51 @@ struct CardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: .black, radius: 5, x: 5, y: 5)
                 
-            ViewThatFits(in: .vertical) {
-                VStack(spacing: 0) {
-                    Image("\(card.getImageName(themePreview: themePreview))")
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .padding()
-                        .frame(minWidth: 10, minHeight: 10)
-                    
-                    HStack {
-                        Image("\(card.getIcon())")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                        
-                        Text("\(card.strength)")
-                            .font(.custom("ModernAntiqua-Regular", size: 30))
-                            .foregroundStyle(.black)
-                    }
-                }
-                
-                VStack {
-                    Image("\(card.getIcon())")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 30, maxHeight: 30)
-                    
-                    Text("\(card.strength)")
-                        .font(.custom("ModernAntiqua-Regular", size: 30))
-                        .foregroundStyle(.black)
+            if themePreview != nil {
+                largeLayout
+            } else {
+                ViewThatFits(in: .vertical) {
+                    largeLayout
+                    compactLayout
                 }
             }
         }
         .aspectRatio(0.75, contentMode: .fit)
+    }
+
+    private var largeLayout: some View {
+        VStack(spacing: 0) {
+            Image("\(card.getImageName(themePreview: themePreview))")
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .padding()
+                .frame(minWidth: 10, minHeight: 10)
+
+            HStack {
+                Image("\(card.getIcon())")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 30, maxHeight: 30)
+
+                Text("\(card.strength)")
+                    .font(.custom("ModernAntiqua-Regular", size: 30))
+                    .foregroundStyle(.black)
+            }
+        }
+    }
+
+    private var compactLayout: some View {
+        VStack {
+            Image("\(card.getIcon())")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 30, maxHeight: 30)
+
+            Text("\(card.strength)")
+                .font(.custom("ModernAntiqua-Regular", size: 30))
+                .foregroundStyle(.black)
+        }
     }
 }
 
