@@ -16,6 +16,7 @@ struct SettingsView: View {
     @AppStorage(UserDefaultsKeys().hapticsEnabled) private var hapticsEnabled: Bool = true
     @AppStorage(UserDefaultsKeys().latestVersionNotesRead) private var latestVersionNotesRead: String = "1.0"
     @AppStorage(UserDefaultsKeys().quickPlayEnabled) private var quickPlayEnabled: Bool = false
+    @AppStorage(UserDefaultsKeys().selectedTheme) private var selectedTheme: ThemeHelper.Theme = ThemeHelper.Theme.Original
     
     @State var dismiss = {}
     @ObservedObject var musicPlayer: MusicPlayer
@@ -218,6 +219,16 @@ struct SettingsView: View {
                         .buttonStyle(.plain)
                     }
                     .listRowBackground(Rectangle().fill(.thinMaterial))
+                    
+                    Section {
+                        ForEach(ThemeHelper.Theme.allCases, id: \.rawValue) { theme in
+                            Button(action: { selectedTheme = theme }, label: {
+                                ThemePreviewView(theme: theme, isSelected: selectedTheme == theme)
+                            })
+                            .listRowBackground(Rectangle().fill(.thinMaterial))
+                            .foregroundStyle(.foreground)
+                        }
+                    }
                     
                     Section {
                         Button(action: { withAnimation { showCredits.toggle() } }, label: {

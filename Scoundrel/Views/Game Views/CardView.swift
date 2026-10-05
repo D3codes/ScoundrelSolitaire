@@ -9,17 +9,18 @@ import SwiftUI
 
 struct CardView: View {
     @ObservedObject var card: Card
+    var themePreview: ThemeHelper.Theme? = nil
     
     var body: some View {
         ZStack {
-            Image("paper")
+            Image("\(card.getBackgroundName(themePreview: themePreview))")
                 .resizable()
                 .clipShape(RoundedRectangle(cornerRadius: 20))
                 .shadow(color: .black, radius: 5, x: 5, y: 5)
                 
             ViewThatFits(in: .vertical) {
                 VStack(spacing: 0) {
-                    Image("\(card.getImageName())")
+                    Image("\(card.getImageName(themePreview: themePreview))")
                         .resizable()
                         .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 20))
