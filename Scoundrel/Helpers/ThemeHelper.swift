@@ -18,12 +18,15 @@ class ThemeHelper {
     enum Theme: String, CaseIterable, Codable {
         case Original
         case Sketch
+        case Pixelated
     }
     
     func getCardBackgroundName() -> String {
         let theme = themePreview ?? selectedTheme
         
         switch theme {
+        case .Pixelated:
+            return PixelatedTheme().getCardBackgroundName()
         case .Sketch:
             return SketchTheme().getCardBackgroundName()
         case .Original:
@@ -37,6 +40,8 @@ class ThemeHelper {
         let theme = themePreview ?? selectedTheme
         
         switch theme {
+        case .Pixelated:
+            return PixelatedTheme().getCardImageName(suit: suit, strength: strength)
         case .Sketch:
             return SketchTheme().getCardImageName(suit: suit, strength: strength)
         case .Original:

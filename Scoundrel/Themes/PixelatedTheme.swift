@@ -1,5 +1,5 @@
 //
-//  SketchTheme.swift
+//  PixelatedTheme.swift
 //  Scoundrel
 //
 //  Created by David Freeman on 10/5/26.
@@ -7,30 +7,30 @@
 
 import SwiftUI
 
-struct SketchTheme {
+struct PixelatedTheme {
     
     func getCardBackgroundName() -> String {
-        return "hd_paper"
+        return "pix_paper"
     }
     
     func getCardImageName(suit: Card.Suit, strength: Int) -> String {
         switch suit {
         case .healthPotion:
             if strength < 5 {
-                return "hd_smallHealthPotion"
+                return "pix_smallHealthPotion"
             } else if strength < 8 {
-                return "hd_mediumHealthPotion"
+                return "pix_mediumHealthPotion"
             } else {
-                return "hd_largeHealthPotion"
+                return "pix_largeHealthPotion"
             }
         case .weapon:
-            return "hd_weapon\(strength)"
+            return "pix_weapon\(strength)"
         default:
-            return "hd_monster\(strength)"
+            return "pix_monster\(strength)"
         }
     }
 }
 
 #Preview {
-    ThemePreviewView(theme: .Sketch, isSelected: true)
+    ThemePreviewView(theme: .Pixelated, isSelected: true)
 }

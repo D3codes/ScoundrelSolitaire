@@ -5,6 +5,8 @@
 //  Created by David Freeman on 10/5/26.
 //
 
+import SwiftUI
+
 struct OriginalTheme {
     
     func getCardBackgroundName() -> String {
@@ -27,4 +29,8 @@ struct OriginalTheme {
             return "monster\(strength)"
         }
     }
+}
+
+#Preview {
+    ThemePreviewView(theme: .Original, isSelected: true)
 }

@@ -38,11 +38,43 @@ struct ThemePreviewView: View {
                 scaledCard(suit: .healthPotion, strength: healthStrength)
             }
         }
-        .onAppear {
-            Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-                self.monsterStrength = Int.random(in: 2...14)
-                self.weaponStrength = Int.random(in: 2...10)
-                self.healthStrength = Int.random(in: 2...10)
+        .task {
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(for: .seconds(Double.random(in: 1...5)))
+                } catch {
+                    return
+                }
+
+                withAnimation {
+                    monsterStrength = Int.random(in: 2...14)
+                }
+            }
+        }
+        .task {
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(for: .seconds(Double.random(in: 1...5)))
+                } catch {
+                    return
+                }
+
+                withAnimation {
+                    weaponStrength = Int.random(in: 2...10)
+                }
+            }
+        }
+        .task {
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(for: .seconds(Double.random(in: 1...5)))
+                } catch {
+                    return
+                }
+
+                withAnimation {
+                    healthStrength = Int.random(in: 2...10)
+                }
             }
         }
     }
