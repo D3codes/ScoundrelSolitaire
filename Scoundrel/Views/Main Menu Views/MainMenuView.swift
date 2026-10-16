@@ -30,67 +30,95 @@ struct MainMenuView: View {
             // couldn't load file :(
         }
     }
-    
-    
+
+    @ViewBuilder
+    private var menuActions: some View {
+        ViewThatFits {
+            VStack {
+                if game.gameState != .GameOver && game.gameState != .Created {
+                    ResumeButtonView(game: game, resumeGame: resumeGame)
+                }
+
+                PlankButtonView(text: "New Game", action: startGame)
+                    .padding(.bottom, 40)
+
+                PlankButtonView(text: "How to Play", action: {
+                    showHowToModal = true
+                    if !soundEffectsMuted { page2Sound?.play() }
+                })
+
+                PlankButtonView(text: "Stats", action: {
+                    showStatsModal = true
+                    if !soundEffectsMuted { page2Sound?.play() }
+                })
+            }
+
+            HStack {
+                Spacer()
+
+                VStack {
+                    PlankButtonView(text: "New Game", action: startGame)
+                        .padding(.bottom, 40)
+
+                    PlankButtonView(text: "How to Play", action: {
+                        showHowToModal = true
+                        if !soundEffectsMuted { page2Sound?.play() }
+                    })
+
+                    PlankButtonView(text: "Stats", action: {
+                        showStatsModal = true
+                        if !soundEffectsMuted { page2Sound?.play() }
+                    })
+                }
+
+                if game.gameState != .GameOver && game.gameState != .Created {
+                    Spacer()
+                    ResumeButtonView(game: game, resumeGame: resumeGame)
+                }
+
+                Spacer()
+            }
+        }
+    }
+
+    @available(iOS 27.1, *)
+    @ViewBuilder
+    private func foldAwareMenu(in geometry: GeometryProxy, fold: ReservedRegion) -> some View {
+        let isLandscape: Bool = fold.frame.height > fold.frame.width
+        let width: CGFloat = isLandscape ? max(0, geometry.size.width - fold.frame.maxX) : geometry.size.width
+        let height: CGFloat = isLandscape ? geometry.size.height : max(0, geometry.size.height - fold.frame.maxY)
+        let alignment: Alignment = isLandscape ? .trailing : .bottom
+        
+        menuActions
+            .frame(width: width, height: height)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
+    }
     
     var body: some View {
-        ZStack {
-            VStack {
-                ControlBarView(
-                    musicPlayer: musicPlayer,
-                    gameKitHelper: gameKitHelper
-                )
+        GeometryReader { geometry in
+            if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion {
+                let isLandscape: Bool = fold.frame.height > fold.frame.width
                 
-                Spacer()
-                
-                ViewThatFits {
-                    VStack {
-                        if game.gameState != .GameOver && game.gameState != .Created {
-                            ResumeButtonView(game: game, resumeGame: resumeGame)
-                        }
-                        
-                        PlankButtonView(text: "New Game", action: startGame)
-                            .padding(.bottom, 40)
-                        
-                        PlankButtonView(text: "How to Play", action: {
-                            showHowToModal = true
-                            if !soundEffectsMuted { page2Sound?.play() }
-                        })
-                        
-                        PlankButtonView(text: "Stats", action: {
-                            showStatsModal = true
-                            if !soundEffectsMuted { page2Sound?.play() }
-                        })
-                    }
+                VStack {
+                    ControlBarView(
+                        musicPlayer: musicPlayer,
+                        gameKitHelper: gameKitHelper,
+                        showSpacer: isLandscape
+                    )
                     
-                    HStack {
-                        Spacer()
-                        
-                        VStack {
-                            PlankButtonView(text: "New Game", action: startGame)
-                                .padding(.bottom, 40)
-                            
-                            PlankButtonView(text: "How to Play", action: {
-                                showHowToModal = true
-                                if !soundEffectsMuted { page2Sound?.play() }
-                            })
-                            
-                            PlankButtonView(text: "Stats", action: {
-                                showStatsModal = true
-                                if !soundEffectsMuted { page2Sound?.play() }
-                            })
-                        }
-
-                        if game.gameState != .GameOver && game.gameState != .Created {
-                            Spacer()
-                            ResumeButtonView(game: game, resumeGame: resumeGame)
-                        }
-                        
-                        Spacer()
-                    }
+                    foldAwareMenu(in: geometry, fold: fold)
                 }
-                
-                Spacer()
+            } else {
+                VStack {
+                    ControlBarView(
+                        musicPlayer: musicPlayer,
+                        gameKitHelper: gameKitHelper,
+                        showSpacer: false
+                    )
+                    
+                    menuActions
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
             }
         }
         .sheet(isPresented: $showHowToModal) {

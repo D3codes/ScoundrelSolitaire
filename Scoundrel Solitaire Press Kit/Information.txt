@@ -1,4 +1,8 @@
-Scoundrel Solitaire is a rogue-like card game where every shuffle could be your last. The deck is your dungeon, and each room is revealed one hand at a time. Make strategic decisions, manage your health, and battle through an unpredictable gauntlet of monsters, weapons, and potions. How deep can you go before your luck runs out?
+Scoundrel Solitaire is a rogue-like card game where the deck becomes the dungeon.
+Each hand reveals a new room filled with monsters, weapons, and potions. You’ll need to decide when to fight, when to heal, and when it’s better to run. Every choice affects how long you survive, and every shuffled deck plays out a little differently.
+As you play, you can unlock achievements, compete for a spot on the global leaderboard, and switch between decks of cards to give the game a different feel.
+
+How deep can you go before your luck runs out?
 
 How to Play
 • Explore the Deck: Each room consists of four cards, drawn from the top of the deck.
@@ -6,15 +10,18 @@ How to Play
 • Plan Ahead: The fourth card carries over to the next room. Choose wisely.
 • Survive or Perish: If your life reaches 0, your run is over.
 
-Features
-• Rogue-Like Solitaire – No two runs are the same. Adapt your strategy on the fly.
-• Simple Yet Deep – Easy to learn, but full of challenging decisions.
-• Risk vs. Reward – Flee a fight or stand your ground? Every move matters.
-• Climb the Global Leaderboards – Compete against players worldwide for the highest score.
-• Unlock Hidden Achievements – Discover secret challenges as you master the game.
+Features:
+•Rogue-Like Solitaire – Every run is different, so you’ll need to adapt as you go.
+•Simple to Learn, Hard to Master – The rules are straightforward, but surviving takes some planning.
+•Risk vs. Reward – Fight, flee, heal, or save that weapon for later. Small decisions can make a big difference.
+•Endless Runs – Keep going until you’re defeated and see how high you can push your score.
+•Global Leaderboards – Compete against players worldwide for the highest score.
+•Achievements – Unlock challenges and hidden achievements as you play.
+•Multiple Themes – Change up the look of the game with different decks of cards.
+•Uninterrupted Gameplay – No Ads. Ever.
 
 Business model:
-$1.99 one-time purchase. no subscriptions. eligible for family sharing
+$0.99 one-time purchase. no subscriptions. eligible for family sharing
 
 Accolades:
 

@@ -19,4 +19,6 @@ struct UserDefaultsKeys {
     let latestVersionNotesRead: String = "latestVersionNotesRead"
     
     let quickPlayEnabled: String = "quickPlayEnabled"
+    
+    let selectedTheme: String = "selectedTheme"
 }

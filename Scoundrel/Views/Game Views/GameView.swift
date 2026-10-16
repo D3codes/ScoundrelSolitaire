@@ -44,41 +44,68 @@ struct GameView: View {
         game.nextDungeon()
     }
     
-    func actionSelected(cardIndex: Int, firstAction: Bool) {
-        switch game.room.cards[cardIndex]!.suit {
-        case .healthPotion:
-            game.useHealthPotion(cardIndex: cardIndex)
-            break
-        case .weapon:
-            game.equipWeapon(cardIndex: cardIndex)
-            break
-        case .monster:
-            game.attackMonster(cardIndex: cardIndex, attackUnarmed: firstAction)
-            break
-        }
-    }
-    
     func closeSelectedView() {
         withAnimation { selectedCardIndex = nil }
     }
     
-    func firstActionTapped() {
+    func actionSelected(firstAction: Bool) {
         if selectedCardIndex == nil { return }
         let selectedCard: Int = selectedCardIndex!
         closeSelectedView()
-        actionSelected(cardIndex: selectedCard, firstAction: true)
+        
+        switch game.room.cards[selectedCard]!.suit {
+        case .healthPotion:
+            game.useHealthPotion(cardIndex: selectedCard)
+            break
+        case .weapon:
+            game.equipWeapon(cardIndex: selectedCard)
+            break
+        case .monster:
+            game.attackMonster(cardIndex: selectedCard, attackUnarmed: firstAction)
+            break
+        }
     }
     
-    func secondActionTapped() {
-        if selectedCardIndex == nil { return }
-        let selectedCard: Int = selectedCardIndex!
-        closeSelectedView()
-        actionSelected(cardIndex: selectedCard, firstAction: false)
+    func canQuickPlaySelectedCard() -> Bool {
+        return ((game.room.cards[selectedCardIndex!]?.getSecondButtonText() ?? "").isEmpty || !game.player.canAttackWithWeapon(monsterStrength: game.room.cards[selectedCardIndex!]!.strength))
     }
-    
-    var body: some View {
-        ZStack {
-            VStack {
+
+    private var gameLayout: some View {
+        VStack {
+            TopBarView(
+                game: game,
+                pause: {
+                    withAnimation { game.gameState = .Paused }
+                    if !soundEffectsMuted { pageSound?.play() }
+                },
+                animationNamespace: animation,
+                selectedCardIndex: $selectedCardIndex
+            )
+
+            Spacer()
+
+            RoomView(
+                animationNamespace: animation,
+                room: game.room,
+                cardSelected: $selectedCardIndex
+            )
+
+            Spacer()
+
+            StatsBarView(
+                player: game.player,
+                room: game.room,
+                animationNamespace: animation
+            )
+        }
+    }
+
+    @available(iOS 27.1, *)
+    @ViewBuilder
+    private func foldAwareGameLayout(in geometry: GeometryProxy, fold: ReservedRegion) -> some View {
+        let isLandscape: Bool = fold.frame.height > fold.frame.width
+        if isLandscape {
+            VStack(spacing: 0) {
                 TopBarView(
                     game: game,
                     pause: {
@@ -88,27 +115,45 @@ struct GameView: View {
                     animationNamespace: animation,
                     selectedCardIndex: $selectedCardIndex
                 )
-                
-                Spacer()
-                
+
                 RoomView(
                     animationNamespace: animation,
                     room: game.room,
                     cardSelected: $selectedCardIndex
                 )
-                
-                Spacer()
-                
+                .frame(maxHeight: .infinity)
+
                 StatsBarView(
                     player: game.player,
                     room: game.room,
-                    animationNamespace: animation
+                    animationNamespace: animation,
+                    foldFrame: fold.frame
                 )
+                .frame(height: 80)
+            }
+        } else {
+            gameLayout
+                .frame(
+                    width: geometry.size.width,
+                    height: max(0, geometry.size.height - fold.frame.maxY)
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            GeometryReader { geometry in
+                if #available(iOS 27.1, *), let fold = geometry.dividingReservedRegion {
+                    foldAwareGameLayout(in: geometry, fold: fold)
+                } else {
+                    gameLayout
+                }
             }
             
             if selectedCardIndex != nil {
-                if quickPlayEnabled && ((game.room.cards[selectedCardIndex!]?.getSecondButtonText() ?? "").isEmpty || !game.player.canAttackWithWeapon(monsterStrength: game.room.cards[selectedCardIndex!]!.strength)) {
-                    Circle().opacity(0).onAppear { firstActionTapped() }
+                if quickPlayEnabled && canQuickPlaySelectedCard() {
+                    Circle().opacity(0).onAppear { actionSelected(firstAction: true) }
                 } else {
                     SelectedCardView(
                         cardSelected: $selectedCardIndex,
@@ -116,8 +161,8 @@ struct GameView: View {
                         player: game.player,
                         animationNamespace: animation,
                         cancel: closeSelectedView,
-                        firstAction: firstActionTapped,
-                        secondAction: secondActionTapped
+                        firstAction: { actionSelected(firstAction: true) },
+                        secondAction: { actionSelected(firstAction: false) }
                     )
                 }
             }

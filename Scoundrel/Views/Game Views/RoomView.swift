@@ -13,99 +13,91 @@ struct RoomView: View {
     @ObservedObject var room: Room
     
     @Binding var cardSelected: Int?
+
+    @ViewBuilder
+    private func card(at index: Int) -> some View {
+        CardOrSpacerView(
+            room: room,
+            cardIndex: index,
+            cardSelected: $cardSelected,
+            animationNamespace: animationNamespace
+        )
+    }
+
+    private func cardPair(_ firstIndex: Int, _ secondIndex: Int) -> some View {
+        HStack {
+            Spacer()
+            card(at: firstIndex)
+            card(at: secondIndex)
+            Spacer()
+        }
+    }
+
+    private var cardRow: some View {
+        HStack {
+            Spacer()
+            card(at: 0)
+            card(at: 1)
+            card(at: 2)
+            card(at: 3)
+            Spacer()
+        }
+    }
+
+    private var cardGrid: some View {
+        VStack {
+            Spacer()
+            cardPair(0, 1)
+            cardPair(2, 3)
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    private func roomLayout(isLandscape: Bool) -> some View {
+        if isLandscape {
+            VStack {
+                Spacer()
+                cardRow
+                Spacer()
+            }
+        } else {
+            cardGrid
+        }
+    }
+
+    @available(iOS 27.1, *)
+    @ViewBuilder
+    private func foldAwareRoomLayout(in geometry: GeometryProxy, fold: ReservedRegion) -> some View {
+        let leftRegionWidth = fold.frame.minX
+        let rightRegionWidth = max(0, geometry.size.width - fold.frame.maxX)
+        let cardRegionWidth = min(leftRegionWidth, rightRegionWidth)
+
+        ZStack {
+            cardPair(0, 1)
+                .frame(width: cardRegionWidth, height: geometry.size.height)
+                .position(
+                    x: fold.frame.minX - (cardRegionWidth / 2),
+                    y: geometry.size.height / 2
+                )
+
+            cardPair(2, 3)
+                .frame(width: cardRegionWidth, height: geometry.size.height)
+                .position(
+                    x: fold.frame.maxX + (cardRegionWidth / 2),
+                    y: geometry.size.height / 2
+                )
+        }
+    }
     
     var body: some View {
         GeometryReader { geometry in
             let isLandscape = geometry.size.width > geometry.size.height
-            
-            ZStack {
-                if isLandscape {
-                    VStack {
-                        Spacer()
-                        
-                        HStack {
-                            Spacer()
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 0,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 1,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 2,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 3,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            Spacer()
-                        }
-                        
-                        Spacer()
-                    }
-                } else {
-                    VStack {
-                        Spacer()
-                        
-                        HStack {
-                            Spacer()
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 0,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 1,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            Spacer()
-                        }
-                        
-                        HStack {
-                            Spacer()
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 2,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            CardOrSpacerView(
-                                room: room,
-                                cardIndex: 3,
-                                cardSelected: $cardSelected,
-                                animationNamespace: animationNamespace
-                            )
-                            
-                            Spacer()
-                        }
-                        
-                        Spacer()
-                    }
-                }
+
+            if #available(iOS 27.1, *), isLandscape, let fold = geometry.dividingReservedRegion {
+                foldAwareRoomLayout(in: geometry, fold: fold)
+            } else {
+                roomLayout(isLandscape: isLandscape)
             }
         }
         .frame(minHeight: 100)
@@ -154,4 +146,3 @@ struct RoomView: View {
     
     return RoomView_Preview()
 }
-

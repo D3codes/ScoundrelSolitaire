@@ -36,19 +36,12 @@ class Card: ObservableObject, Codable {
         self.strength = strength
     }
     
-    func getImageName() -> String {
-        switch suit {
-        case .healthPotion:
-            if strength < 5 {
-                return "healthPotion2"
-            } else if strength < 8 {
-                return "healthPotion5"
-            } else {
-                return "healthPotion8"
-            }
-        default:
-            return "\(suit.rawValue)\(strength)"
-        }
+    func getBackgroundName(themePreview: ThemeHelper.Theme?) -> String {
+        return ThemeHelper(themePreview: themePreview).getCardBackgroundName()
+    }
+    
+    func getImageName(themePreview: ThemeHelper.Theme?) -> String {
+        return ThemeHelper(themePreview: themePreview).getCardImageName(suit: suit, strength: strength)
     }
     
     func getIcon() -> String {
